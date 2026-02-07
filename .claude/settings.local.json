@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun:*)",
+      "Bash(node --version:*)",
+      "Bash(bunx @nestjs/cli --version:*)",
+      "WebSearch",
+      "Bash(npx @nestjs/cli new:*)",
+      "Bash(git init:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm rebuild:*)",
+      "Bash(node -e:*)",
+      "Bash(pnpm exec husky:*)",
+      "Bash(docker compose:*)",
+      "Bash(pnpm exec prisma:*)",
+      "Bash(pnpm run build:*)",
+      "WebFetch(domain:www.prisma.io)",
+      "Bash(pnpm run prisma:seed:*)",
+      "Bash(timeout:*)",
+      "Bash(pnpm run test:*)",
+      "Bash(pnpm run test:e2e:*)",
+      "Bash(pnpm run lint:*)"
+    ]
+  }
+}

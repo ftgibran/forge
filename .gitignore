@@ -1,0 +1,32 @@
+# compiled output
+dist/
+
+# dependencies
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# env
+.env
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# coverage
+coverage/
+
+# prisma
+prisma/*.db
+prisma/*.db-journal
+
+src/generated/
