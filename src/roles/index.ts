@@ -1,2 +1,2 @@
-export { RolesModule } from './roles.module.js'
-export { RolesService } from './roles.service.js'
+export { RolesModule } from './roles.module'
+export { RolesService } from './roles.service'

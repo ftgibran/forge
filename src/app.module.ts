@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { PrismaModule } from './prisma/index.js'
-import { AuthModule } from './auth/auth.module.js'
-import { UsersModule } from './users/users.module.js'
-import { RolesModule } from './roles/roles.module.js'
-import { PermissionsModule } from './permissions/permissions.module.js'
+import { PrismaModule } from '@/prisma'
+import { AuthModule } from '@/auth'
+import { UsersModule } from '@/users'
+import { RolesModule } from '@/roles'
+import { PermissionsModule } from '@/permissions'
 
 @Module({
   imports: [

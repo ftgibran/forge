@@ -1,2 +1,2 @@
-export { CreatePermissionDto } from './create-permission.dto.js'
-export { UpdatePermissionDto } from './update-permission.dto.js'
+export { CreatePermissionDto } from './create-permission.dto'
+export { UpdatePermissionDto } from './update-permission.dto'

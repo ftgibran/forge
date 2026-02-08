@@ -1,1 +1,1 @@
-export { PaginationQueryDto } from './pagination-query.dto.js'
+export { PaginationQueryDto } from './pagination-query.dto'

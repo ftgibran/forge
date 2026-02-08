@@ -1,8 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
-import { AppModule } from './app.module.js'
-import { HttpExceptionFilter } from './common/filters/index.js'
-import { TransformInterceptor } from './common/interceptors/index.js'
+import { AppModule } from '@/app.module'
+import { HttpExceptionFilter, TransformInterceptor } from '@/common'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

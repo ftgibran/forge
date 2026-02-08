@@ -8,13 +8,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { UsersService } from './users.service.js'
-import { CreateUserDto } from './dto/create-user.dto.js'
-import { UpdateUserDto } from './dto/update-user.dto.js'
-import { AssignRoleDto } from './dto/assign-role.dto.js'
-import { AssignPermissionDto } from './dto/assign-permission.dto.js'
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto.js'
-import { RequirePermissions } from '../auth/decorators/require-permissions.decorator.js'
+import { UsersService } from './users.service'
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  AssignRoleDto,
+  AssignPermissionDto,
+} from './dto'
+import { PaginationQueryDto } from '@/common'
+import { RequirePermissions } from '@/auth/decorators'
 
 @Controller('users')
 export class UsersController {

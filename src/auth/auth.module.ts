@@ -3,11 +3,10 @@ import { ConfigService } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
-import { AuthController } from './auth.controller.js'
-import { AuthService } from './auth.service.js'
-import { JwtAuthGuard } from './guards/jwt-auth.guard.js'
-import { PermissionsGuard } from './guards/permissions.guard.js'
-import { JwtStrategy } from './strategies/jwt.strategy.js'
+import { AuthController } from './auth.controller'
+import { AuthService } from './auth.service'
+import { JwtAuthGuard, PermissionsGuard } from './guards'
+import { JwtStrategy } from './strategies/jwt.strategy'
 
 @Module({
   imports: [

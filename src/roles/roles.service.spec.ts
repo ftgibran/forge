@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException, NotFoundException } from '@nestjs/common'
-import { RolesService } from './roles.service.js'
-import { PrismaService } from '../prisma/prisma.service.js'
+import { RolesService } from './roles.service'
+import { PrismaService } from '@/prisma'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 const mockPrismaService = {

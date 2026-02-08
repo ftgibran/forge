@@ -4,10 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-import { PrismaService } from '../prisma/prisma.service.js'
-import { CreateUserDto } from './dto/create-user.dto.js'
-import { UpdateUserDto } from './dto/update-user.dto.js'
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto.js'
+import { PrismaService } from '@/prisma'
+import { CreateUserDto, UpdateUserDto } from './dto'
+import { PaginationQueryDto } from '@/common'
 
 const userSelect = {
   id: true,

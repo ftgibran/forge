@@ -1,2 +1,2 @@
-export { JwtAuthGuard } from './jwt-auth.guard.js'
-export { PermissionsGuard } from './permissions.guard.js'
+export { JwtAuthGuard } from './jwt-auth.guard'
+export { PermissionsGuard } from './permissions.guard'

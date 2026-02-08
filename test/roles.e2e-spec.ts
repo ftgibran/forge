@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { PrismaService } from '../src/prisma/prisma.service.js'
+import { PrismaService } from '@/prisma'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as bcrypt from 'bcrypt'
-import { createTestApp } from './setup-app.js'
+import { createTestApp } from './setup-app'
 
 let app: INestApplication
 let prisma: PrismaService

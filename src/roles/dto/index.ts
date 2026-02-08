@@ -1,3 +1,3 @@
-export { CreateRoleDto } from './create-role.dto.js'
-export { UpdateRoleDto } from './update-role.dto.js'
-export { AssignPermissionDto } from './assign-permission.dto.js'
+export { CreateRoleDto } from './create-role.dto'
+export { UpdateRoleDto } from './update-role.dto'
+export { AssignPermissionDto } from './assign-permission.dto'

@@ -1,2 +1,2 @@
-export { UsersModule } from './users.module.js'
-export { UsersService } from './users.service.js'
+export { UsersModule } from './users.module'
+export { UsersService } from './users.service'

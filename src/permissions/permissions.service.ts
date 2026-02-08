@@ -3,10 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service.js'
-import { CreatePermissionDto } from './dto/create-permission.dto.js'
-import { UpdatePermissionDto } from './dto/update-permission.dto.js'
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto.js'
+import { PrismaService } from '@/prisma'
+import { CreatePermissionDto, UpdatePermissionDto } from './dto'
+import { PaginationQueryDto } from '@/common'
 
 @Injectable()
 export class PermissionsService {
