@@ -6,12 +6,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"prisma/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix && prettier \"{src,test}/**/*.ts\" --write",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"prisma/**/*.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
@@ -24,12 +24,6 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -67,7 +61,6 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^16.0.0",
-    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "prisma": "^7.3.0",
     "source-map-support": "^0.5.21",

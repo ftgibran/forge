@@ -3,16 +3,32 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @app/api run start:dev",
+    "dev": "pnpm --filter @app/api run start:dev & pnpm --filter @app/admin run dev",
+    "dev:api": "pnpm --filter @app/api run start:dev",
+    "dev:admin": "pnpm --filter @app/admin run dev",
     "build": "pnpm --filter @app/api run build",
+    "build:admin": "pnpm --filter @app/admin run build",
     "test": "pnpm --filter @app/api run test",
     "test:e2e": "pnpm --filter @app/api run test:e2e",
     "lint": "pnpm -r run lint",
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "apps/api/**/*.ts": [
+      "eslint --flag unstable_config_lookup_from_file --fix",
+      "prettier --write"
+    ],
+    "apps/admin/**/*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "packages/utils/**/*.ts": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2"
   }
 }

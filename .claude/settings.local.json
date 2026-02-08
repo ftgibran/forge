@@ -26,7 +26,19 @@
       "Bash(git mv:*)",
       "Bash(pnpm:*)",
       "WebFetch(domain:pnpm.io)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:pro.chakra-ui.com)",
+      "mcp__chakra-ui__get_theme",
+      "WebFetch(domain:chakra-ui.com)",
+      "WebFetch(domain:github.com)",
+      "mcp__chakra-ui__list_components",
+      "mcp__chakra-ui__installation",
+      "mcp__chakra-ui__get_component_example",
+      "mcp__chakra-ui__v2_to_v3_code_review",
+      "Bash(ls:*)",
+      "Bash(npx @chakra-ui/cli@latest snippet add:*)",
+      "Bash(npx tsx:*)",
+      "Bash(echo:*)"
     ]
   }
 }

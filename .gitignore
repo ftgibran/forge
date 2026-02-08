@@ -31,3 +31,7 @@ prisma/*.db-journal
 
 # generated
 **/src/generated/
+
+# next.js
+**/.next/
+**/out/
