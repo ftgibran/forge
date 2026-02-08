@@ -1,8 +1,8 @@
 # compiled output
-dist/
+**/dist/
 
 # dependencies
-node_modules/
+**/node_modules/
 
 # IDE
 .idea/
@@ -23,10 +23,11 @@ npm-debug.log*
 pnpm-debug.log*
 
 # coverage
-coverage/
+**/coverage/
 
 # prisma
 prisma/*.db
 prisma/*.db-journal
 
-src/generated/
+# generated
+**/src/generated/

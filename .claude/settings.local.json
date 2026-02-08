@@ -22,7 +22,11 @@
       "Bash(timeout:*)",
       "Bash(pnpm run test:*)",
       "Bash(pnpm run test:e2e:*)",
-      "Bash(pnpm run lint:*)"
+      "Bash(pnpm run lint:*)",
+      "Bash(git mv:*)",
+      "Bash(pnpm:*)",
+      "WebFetch(domain:pnpm.io)",
+      "Bash(git add:*)"
     ]
   }
 }
