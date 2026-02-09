@@ -1,8 +1,9 @@
 'use client'
 
 import { Card, Icon } from '@chakra-ui/react'
-import { StatLabel, StatRoot, StatValueText } from '@/components/ui/stat'
 import type { IconType } from 'react-icons'
+
+import { StatLabel, StatRoot, StatValueText } from '@/components/ui/stat'
 
 interface StatCardProps {
   label: string
@@ -16,7 +17,7 @@ export function StatCard({ label, value, icon: IconComponent }: StatCardProps) {
       <Card.Body>
         <StatRoot>
           <StatLabel>
-            <Icon mr='2'>
+            <Icon mr={'2'}>
               <IconComponent />
             </Icon>
             {label}

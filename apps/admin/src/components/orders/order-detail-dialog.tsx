@@ -1,21 +1,22 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import { Badge, Button, HStack, Stack, Table, Text } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
-  DialogFooter,
   DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
+import { Field } from '@/components/ui/field'
 import {
   NativeSelectField,
   NativeSelectRoot,
 } from '@/components/ui/native-select'
-import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
 import { ordersApi } from '@/lib/api/orders'
 import type { Order } from '@/types'
@@ -57,8 +58,10 @@ export function OrderDetailDialog({
 
   const fetch = useCallback(async () => {
     if (!orderId) return
+
     try {
       const o = await ordersApi.get(orderId)
+
       setOrder(o)
       setNewStatus(o.status)
     } catch {
@@ -72,6 +75,7 @@ export function OrderDetailDialog({
 
   const handleUpdateStatus = async () => {
     if (!orderId || !newStatus) return
+
     setUpdating(true)
     try {
       await ordersApi.updateStatus(orderId, newStatus)
@@ -91,35 +95,35 @@ export function OrderDetailDialog({
     <DialogRoot
       open={open}
       onOpenChange={(e) => onOpenChange(e.open)}
-      size='xl'
+      size={'xl'}
     >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Order #{order.id.slice(0, 8)}</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <Stack gap='4'>
-            <HStack gap='4'>
-              <Text fontSize='sm'>
+          <Stack gap={'4'}>
+            <HStack gap={'4'}>
+              <Text fontSize={'sm'}>
                 <strong>Customer:</strong> {order.user?.name}
               </Text>
-              <Text fontSize='sm'>
+              <Text fontSize={'sm'}>
                 <strong>Vendor:</strong> {order.vendor?.name}
               </Text>
-              <Badge colorPalette={statusColor[order.status]} size='sm'>
+              <Badge colorPalette={statusColor[order.status]} size={'sm'}>
                 {order.status}
               </Badge>
             </HStack>
-            <Text fontSize='sm'>
+            <Text fontSize={'sm'}>
               <strong>Total:</strong> ${Number(order.totalAmount).toFixed(2)}
             </Text>
-            <Text fontSize='sm'>
+            <Text fontSize={'sm'}>
               <strong>Ship to:</strong> {order.shippingAddress?.street},{' '}
               {order.shippingAddress?.city}, {order.shippingAddress?.state}{' '}
               {order.shippingAddress?.zipCode}, {order.shippingAddress?.country}
             </Text>
 
-            <Table.Root size='sm' variant='outline'>
+            <Table.Root size={'sm'} variant={'outline'}>
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeader>Product</Table.ColumnHeader>
@@ -148,9 +152,9 @@ export function OrderDetailDialog({
           </Stack>
         </DialogBody>
         <DialogFooter>
-          <HStack gap='2'>
-            <Field label='Update Status'>
-              <NativeSelectRoot size='sm'>
+          <HStack gap={'2'}>
+            <Field label={'Update Status'}>
+              <NativeSelectRoot size={'sm'}>
                 <NativeSelectField
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
@@ -164,11 +168,11 @@ export function OrderDetailDialog({
               </NativeSelectRoot>
             </Field>
             <Button
-              colorPalette='blue'
-              size='sm'
+              colorPalette={'blue'}
+              size={'sm'}
               onClick={handleUpdateStatus}
               loading={updating}
-              alignSelf='flex-end'
+              alignSelf={'flex-end'}
             >
               Update
             </Button>

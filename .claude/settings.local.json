@@ -39,7 +39,11 @@
       "Bash(npx @chakra-ui/cli@latest snippet add:*)",
       "Bash(npx tsx:*)",
       "Bash(echo:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx prettier:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npm ls:*)"
     ]
   }
 }

@@ -1,17 +1,18 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Button, Badge, HStack, IconButton } from '@chakra-ui/react'
-import { LuPlus, LuPencil, LuTrash2, LuKey } from 'react-icons/lu'
 import { formatDate } from '@app/utils'
-import { PageHeader } from '@/components/page-header'
-import { DataTable } from '@/components/data-table'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuKey, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
+
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { DataTable } from '@/components/data-table'
+import { PageHeader } from '@/components/page-header'
 import { RoleFormDialog } from '@/components/roles/role-form-dialog'
 import { RolePermissionsDialog } from '@/components/roles/role-permissions-dialog'
-import { rolesApi } from '@/lib/api/roles'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
+import { rolesApi } from '@/lib/api/roles'
 import type { Role } from '@/types'
 
 export default function RolesPage() {
@@ -36,6 +37,7 @@ export default function RolesPage() {
     setLoading(true)
     try {
       const res = await rolesApi.list(page, limit)
+
       setRoles(res.items)
       setTotal(res.total)
     } catch {
@@ -51,6 +53,7 @@ export default function RolesPage() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return
+
     setDeleting(true)
     try {
       await rolesApi.delete(deleteTarget.id)
@@ -74,7 +77,7 @@ export default function RolesPage() {
       header: 'Permissions',
       accessor: (r: Role) =>
         r.rolePermissions?.length ? (
-          <Badge size='sm'>{r.rolePermissions.length} permissions</Badge>
+          <Badge size={'sm'}>{r.rolePermissions.length} permissions</Badge>
         ) : (
           '-'
         ),
@@ -86,11 +89,11 @@ export default function RolesPage() {
     {
       header: 'Actions',
       accessor: (r: Role) => (
-        <HStack gap='1'>
+        <HStack gap={'1'}>
           <IconButton
-            aria-label='Edit'
-            size='xs'
-            variant='ghost'
+            aria-label={'Edit'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setEditRole(r)
               setFormOpen(true)
@@ -99,9 +102,9 @@ export default function RolesPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label='Manage permissions'
-            size='xs'
-            variant='ghost'
+            aria-label={'Manage permissions'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setPermsTarget(r)
               setPermsOpen(true)
@@ -110,10 +113,10 @@ export default function RolesPage() {
             <LuKey />
           </IconButton>
           <IconButton
-            aria-label='Delete'
-            size='xs'
-            variant='ghost'
-            colorPalette='red'
+            aria-label={'Delete'}
+            size={'xs'}
+            variant={'ghost'}
+            colorPalette={'red'}
             onClick={() => {
               setDeleteTarget(r)
               setDeleteOpen(true)
@@ -128,10 +131,10 @@ export default function RolesPage() {
 
   return (
     <>
-      <PageHeader title='Roles'>
+      <PageHeader title={'Roles'}>
         <Button
-          colorPalette='blue'
-          size='sm'
+          colorPalette={'blue'}
+          size={'sm'}
           onClick={() => {
             setEditRole(null)
             setFormOpen(true)
@@ -165,7 +168,7 @@ export default function RolesPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title='Delete Role'
+        title={'Delete Role'}
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
         onConfirm={handleDelete}
         loading={deleting}

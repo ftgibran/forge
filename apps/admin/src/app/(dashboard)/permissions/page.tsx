@@ -1,16 +1,17 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Button, HStack, IconButton } from '@chakra-ui/react'
-import { LuPlus, LuPencil, LuTrash2 } from 'react-icons/lu'
 import { formatDate, formatPermission } from '@app/utils'
-import { PageHeader } from '@/components/page-header'
-import { DataTable } from '@/components/data-table'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { Button, HStack, IconButton } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
+
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { DataTable } from '@/components/data-table'
+import { PageHeader } from '@/components/page-header'
 import { PermissionFormDialog } from '@/components/permissions/permission-form-dialog'
-import { permissionsApi } from '@/lib/api/permissions'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
+import { permissionsApi } from '@/lib/api/permissions'
 import type { Permission } from '@/types'
 
 export default function PermissionsPage() {
@@ -32,6 +33,7 @@ export default function PermissionsPage() {
     setLoading(true)
     try {
       const res = await permissionsApi.list(page, limit)
+
       setPermissions(res.items)
       setTotal(res.total)
     } catch {
@@ -47,6 +49,7 @@ export default function PermissionsPage() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return
+
     setDeleting(true)
     try {
       await permissionsApi.delete(deleteTarget.id)
@@ -78,11 +81,11 @@ export default function PermissionsPage() {
     {
       header: 'Actions',
       accessor: (p: Permission) => (
-        <HStack gap='1'>
+        <HStack gap={'1'}>
           <IconButton
-            aria-label='Edit'
-            size='xs'
-            variant='ghost'
+            aria-label={'Edit'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setEditPerm(p)
               setFormOpen(true)
@@ -91,10 +94,10 @@ export default function PermissionsPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label='Delete'
-            size='xs'
-            variant='ghost'
-            colorPalette='red'
+            aria-label={'Delete'}
+            size={'xs'}
+            variant={'ghost'}
+            colorPalette={'red'}
             onClick={() => {
               setDeleteTarget(p)
               setDeleteOpen(true)
@@ -109,10 +112,10 @@ export default function PermissionsPage() {
 
   return (
     <>
-      <PageHeader title='Permissions'>
+      <PageHeader title={'Permissions'}>
         <Button
-          colorPalette='blue'
-          size='sm'
+          colorPalette={'blue'}
+          size={'sm'}
           onClick={() => {
             setEditPerm(null)
             setFormOpen(true)
@@ -146,7 +149,7 @@ export default function PermissionsPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title='Delete Permission'
+        title={'Delete Permission'}
         description={`Are you sure you want to delete "${deleteTarget ? `${deleteTarget.action}:${deleteTarget.resource}` : ''}"? This action cannot be undone.`}
         onConfirm={handleDelete}
         loading={deleting}

@@ -1,6 +1,5 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import {
   Button,
   HStack,
@@ -9,14 +8,16 @@ import {
   Stack,
   Table,
 } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
   DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
@@ -45,8 +46,10 @@ export function ProductImagesDialog({
 
   const fetch = useCallback(async () => {
     if (!product) return
+
     try {
       const p = await productsApi.get(product.id)
+
       setImages(p.images ?? [])
     } catch {
       toaster.error({ title: 'Failed to load images' })
@@ -59,7 +62,9 @@ export function ProductImagesDialog({
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault()
+
     if (!product) return
+
     setSaving(true)
     try {
       await productsApi.addImage(product.id, {
@@ -83,6 +88,7 @@ export function ProductImagesDialog({
 
   const handleDelete = async (imageId: string) => {
     if (!product) return
+
     try {
       await productsApi.deleteImage(product.id, imageId)
       toaster.success({ title: 'Image deleted' })
@@ -97,14 +103,14 @@ export function ProductImagesDialog({
     <DialogRoot
       open={open}
       onOpenChange={(e) => onOpenChange(e.open)}
-      size='xl'
+      size={'xl'}
     >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Images - {product?.name}</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <Table.Root size='sm' variant='outline'>
+          <Table.Root size={'sm'} variant={'outline'}>
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader>URL</Table.ColumnHeader>
@@ -116,17 +122,17 @@ export function ProductImagesDialog({
             <Table.Body>
               {images.map((img) => (
                 <Table.Row key={img.id}>
-                  <Table.Cell maxW='300px' truncate>
+                  <Table.Cell maxW={'300px'} truncate>
                     {img.url}
                   </Table.Cell>
                   <Table.Cell>{img.altText ?? '-'}</Table.Cell>
                   <Table.Cell>{img.position}</Table.Cell>
                   <Table.Cell>
                     <IconButton
-                      aria-label='Delete'
-                      size='xs'
-                      variant='ghost'
-                      colorPalette='red'
+                      aria-label={'Delete'}
+                      size={'xs'}
+                      variant={'ghost'}
+                      colorPalette={'red'}
                       onClick={() => handleDelete(img.id)}
                     >
                       <LuTrash2 />
@@ -139,24 +145,24 @@ export function ProductImagesDialog({
 
           {showForm ? (
             <form onSubmit={handleAdd}>
-              <Stack gap='3' mt='4'>
-                <Field label='Image URL'>
+              <Stack gap={'3'} mt={'4'}>
+                <Field label={'Image URL'}>
                   <Input
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     required
                   />
                 </Field>
-                <HStack gap='3'>
-                  <Field label='Alt Text'>
+                <HStack gap={'3'}>
+                  <Field label={'Alt Text'}>
                     <Input
                       value={altText}
                       onChange={(e) => setAltText(e.target.value)}
                     />
                   </Field>
-                  <Field label='Position'>
+                  <Field label={'Position'}>
                     <Input
-                      type='number'
+                      type={'number'}
                       value={position}
                       onChange={(e) => setPosition(e.target.value)}
                     />
@@ -164,16 +170,16 @@ export function ProductImagesDialog({
                 </HStack>
                 <HStack>
                   <Button
-                    type='submit'
-                    colorPalette='blue'
-                    size='sm'
+                    type={'submit'}
+                    colorPalette={'blue'}
+                    size={'sm'}
                     loading={saving}
                   >
                     Add Image
                   </Button>
                   <Button
-                    variant='outline'
-                    size='sm'
+                    variant={'outline'}
+                    size={'sm'}
                     onClick={() => setShowForm(false)}
                   >
                     Cancel
@@ -183,9 +189,9 @@ export function ProductImagesDialog({
             </form>
           ) : (
             <Button
-              mt='4'
-              size='sm'
-              variant='outline'
+              mt={'4'}
+              size={'sm'}
+              variant={'outline'}
               onClick={() => setShowForm(true)}
             >
               <LuPlus />

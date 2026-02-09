@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Button, Input, Stack } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
-  DialogFooter,
   DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
@@ -52,13 +53,16 @@ export function UserFormDialog({
     try {
       if (user) {
         const data: Record<string, string> = { name, email }
+
         if (password) data.password = password
+
         await usersApi.update(user.id, data)
         toaster.success({ title: 'User updated' })
       } else {
         await usersApi.create({ name, email, password })
         toaster.success({ title: 'User created' })
       }
+
       onOpenChange(false)
       onSaved()
     } catch {
@@ -76,17 +80,17 @@ export function UserFormDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <Stack gap='4'>
-              <Field label='Name'>
+            <Stack gap={'4'}>
+              <Field label={'Name'}>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label='Email'>
+              <Field label={'Email'}>
                 <Input
-                  type='email'
+                  type={'email'}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -96,7 +100,7 @@ export function UserFormDialog({
                 label={user ? 'Password (leave empty to keep)' : 'Password'}
               >
                 <Input
-                  type='password'
+                  type={'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required={!user}
@@ -106,10 +110,10 @@ export function UserFormDialog({
             </Stack>
           </DialogBody>
           <DialogFooter>
-            <Button variant='outline' onClick={() => onOpenChange(false)}>
+            <Button variant={'outline'} onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type='submit' colorPalette='blue' loading={loading}>
+            <Button type={'submit'} colorPalette={'blue'} loading={loading}>
               {user ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>

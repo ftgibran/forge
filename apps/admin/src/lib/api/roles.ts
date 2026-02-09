@@ -1,5 +1,6 @@
+import type { PaginatedList, Role } from '@/types'
+
 import { api } from '../api-client'
-import type { Role, PaginatedList } from '@/types'
 
 export const rolesApi = {
   list: (page = 1, limit = 10) =>

@@ -1,6 +1,7 @@
 'use client'
 
 import { Box, HStack, Table } from '@chakra-ui/react'
+
 import {
   PaginationItems,
   PaginationNextTrigger,
@@ -32,7 +33,7 @@ export function DataTable<T extends { id: string }>({
 }: DataTableProps<T>) {
   return (
     <Box>
-      <Table.Root size='sm' variant='outline' interactive>
+      <Table.Root size={'sm'} variant={'outline'} interactive>
         <Table.Header>
           <Table.Row>
             {columns.map((col, i) => (
@@ -55,7 +56,7 @@ export function DataTable<T extends { id: string }>({
         </Table.Body>
       </Table.Root>
       {total > limit && (
-        <HStack mt='4' justify='center'>
+        <HStack mt={'4'} justify={'center'}>
           <PaginationRoot
             count={total}
             pageSize={limit}

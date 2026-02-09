@@ -1,21 +1,22 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Button, Badge, HStack, IconButton } from '@chakra-ui/react'
-import { LuPlus, LuPencil, LuTrash2, LuLayers, LuImage } from 'react-icons/lu'
 import { formatDate } from '@app/utils'
-import { PageHeader } from '@/components/page-header'
-import { DataTable } from '@/components/data-table'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuImage, LuLayers, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
+
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { DataTable } from '@/components/data-table'
+import { PageHeader } from '@/components/page-header'
 import { ProductFormDialog } from '@/components/products/product-form-dialog'
-import { ProductVariantsDialog } from '@/components/products/product-variants-dialog'
 import { ProductImagesDialog } from '@/components/products/product-images-dialog'
-import { productsApi } from '@/lib/api/products'
-import { categoriesApi } from '@/lib/api/categories'
-import { vendorsApi } from '@/lib/api/vendors'
+import { ProductVariantsDialog } from '@/components/products/product-variants-dialog'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
-import type { Product, Category, Vendor } from '@/types'
+import { categoriesApi } from '@/lib/api/categories'
+import { productsApi } from '@/lib/api/products'
+import { vendorsApi } from '@/lib/api/vendors'
+import type { Category, Product, Vendor } from '@/types'
 
 const statusColor: Record<string, string> = {
   DRAFT: 'gray',
@@ -51,6 +52,7 @@ export default function ProductsPage() {
     setLoading(true)
     try {
       const res = await productsApi.list({ page, limit })
+
       setProducts(res.items)
       setTotal(res.total)
     } catch {
@@ -74,6 +76,7 @@ export default function ProductsPage() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return
+
     setDeleting(true)
     try {
       await productsApi.delete(deleteTarget.id)
@@ -100,7 +103,7 @@ export default function ProductsPage() {
     {
       header: 'Status',
       accessor: (p: Product) => (
-        <Badge colorPalette={statusColor[p.status]} size='sm'>
+        <Badge colorPalette={statusColor[p.status]} size={'sm'}>
           {p.status}
         </Badge>
       ),
@@ -116,11 +119,11 @@ export default function ProductsPage() {
     {
       header: 'Actions',
       accessor: (p: Product) => (
-        <HStack gap='1'>
+        <HStack gap={'1'}>
           <IconButton
-            aria-label='Edit'
-            size='xs'
-            variant='ghost'
+            aria-label={'Edit'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setEditProduct(p)
               setFormOpen(true)
@@ -129,9 +132,9 @@ export default function ProductsPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label='Variants'
-            size='xs'
-            variant='ghost'
+            aria-label={'Variants'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setVariantsTarget(p)
               setVariantsOpen(true)
@@ -140,9 +143,9 @@ export default function ProductsPage() {
             <LuLayers />
           </IconButton>
           <IconButton
-            aria-label='Images'
-            size='xs'
-            variant='ghost'
+            aria-label={'Images'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setImagesTarget(p)
               setImagesOpen(true)
@@ -151,10 +154,10 @@ export default function ProductsPage() {
             <LuImage />
           </IconButton>
           <IconButton
-            aria-label='Delete'
-            size='xs'
-            variant='ghost'
-            colorPalette='red'
+            aria-label={'Delete'}
+            size={'xs'}
+            variant={'ghost'}
+            colorPalette={'red'}
             onClick={() => {
               setDeleteTarget(p)
               setDeleteOpen(true)
@@ -169,10 +172,10 @@ export default function ProductsPage() {
 
   return (
     <>
-      <PageHeader title='Products'>
+      <PageHeader title={'Products'}>
         <Button
-          colorPalette='blue'
-          size='sm'
+          colorPalette={'blue'}
+          size={'sm'}
           onClick={() => {
             setEditProduct(null)
             setFormOpen(true)
@@ -208,7 +211,7 @@ export default function ProductsPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title='Delete Product'
+        title={'Delete Product'}
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
         onConfirm={handleDelete}
         loading={deleting}

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+
 import { Provider } from '@/components/ui/provider'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -13,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang={'en'} suppressHydrationWarning>
       <body>
         <Provider>
           {children}

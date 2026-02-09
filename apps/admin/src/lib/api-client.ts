@@ -36,6 +36,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
+
     throw new ApiError(
       res.status,
       body.message || `Request failed with status ${res.status}`,
@@ -43,6 +44,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 
   const json = await res.json()
+
   return json.data !== undefined ? json.data : json
 }
 

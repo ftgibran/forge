@@ -1,8 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import {
   Box,
   Button,
@@ -12,6 +9,10 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
 import { authApi } from '@/lib/api/auth'
@@ -27,6 +28,7 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const res = await authApi.login(email, password)
+
       localStorage.setItem('token', res.accessToken)
       router.push('/')
     } catch {
@@ -40,48 +42,48 @@ export default function LoginPage() {
   }
 
   return (
-    <Box w='full' maxW='sm'>
+    <Box w={'full'} maxW={'sm'}>
       <Card.Root>
         <Card.Header>
-          <Heading size='lg' textAlign='center'>
+          <Heading size={'lg'} textAlign={'center'}>
             Admin Panel
           </Heading>
-          <Text color='fg.muted' textAlign='center'>
+          <Text color={'fg.muted'} textAlign={'center'}>
             Sign in to your account
           </Text>
         </Card.Header>
         <Card.Body>
           <form onSubmit={handleSubmit}>
-            <Stack gap='4'>
-              <Field label='Email'>
+            <Stack gap={'4'}>
+              <Field label={'Email'}>
                 <Input
-                  type='email'
-                  placeholder='admin@example.com'
+                  type={'email'}
+                  placeholder={'admin@example.com'}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
-              <Field label='Password'>
+              <Field label={'Password'}>
                 <Input
-                  type='password'
-                  placeholder='Enter your password'
+                  type={'password'}
+                  placeholder={'Enter your password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Field>
-              <Button type='submit' colorPalette='blue' loading={loading}>
+              <Button type={'submit'} colorPalette={'blue'} loading={loading}>
                 Sign in
               </Button>
             </Stack>
           </form>
         </Card.Body>
-        <Card.Footer justifyContent='center'>
-          <Text fontSize='sm' color='fg.muted'>
+        <Card.Footer justifyContent={'center'}>
+          <Text fontSize={'sm'} color={'fg.muted'}>
             Don&apos;t have an account?{' '}
-            <Link href='/register'>
-              <Text as='span' color='blue.fg' fontWeight='medium'>
+            <Link href={'/register'}>
+              <Text as={'span'} color={'blue.fg'} fontWeight={'medium'}>
                 Sign up
               </Text>
             </Link>

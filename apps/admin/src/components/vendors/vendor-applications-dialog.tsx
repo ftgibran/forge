@@ -1,18 +1,19 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, Table, Text } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
   DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
 import { vendorsApi } from '@/lib/api/vendors'
-import { formatDate } from '@app/utils'
 import type { VendorApplication } from '@/types'
 
 interface VendorApplicationsDialogProps {
@@ -39,6 +40,7 @@ export function VendorApplicationsDialog({
     setLoading(true)
     try {
       const res = await vendorsApi.listApplications(1, 50)
+
       setApplications(res.items)
     } catch {
       toaster.error({ title: 'Failed to load applications' })
@@ -66,7 +68,7 @@ export function VendorApplicationsDialog({
     <DialogRoot
       open={open}
       onOpenChange={(e) => onOpenChange(e.open)}
-      size='xl'
+      size={'xl'}
     >
       <DialogContent>
         <DialogHeader>
@@ -76,9 +78,9 @@ export function VendorApplicationsDialog({
           {loading ? (
             <Text>Loading...</Text>
           ) : applications.length === 0 ? (
-            <Text color='fg.muted'>No applications found.</Text>
+            <Text color={'fg.muted'}>No applications found.</Text>
           ) : (
-            <Table.Root size='sm' variant='outline'>
+            <Table.Root size={'sm'} variant={'outline'}>
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeader>Vendor</Table.ColumnHeader>
@@ -91,34 +93,34 @@ export function VendorApplicationsDialog({
               <Table.Body>
                 {applications.map((app) => (
                   <Table.Row key={app.id}>
-                    <Table.Cell fontWeight='medium'>
+                    <Table.Cell fontWeight={'medium'}>
                       {app.vendor?.name}
                     </Table.Cell>
-                    <Table.Cell maxW='200px' truncate>
+                    <Table.Cell maxW={'200px'} truncate>
                       {app.message}
                     </Table.Cell>
                     <Table.Cell>
-                      <Badge colorPalette={statusColor[app.status]} size='sm'>
+                      <Badge colorPalette={statusColor[app.status]} size={'sm'}>
                         {app.status}
                       </Badge>
                     </Table.Cell>
-                    <Table.Cell color='fg.muted'>
+                    <Table.Cell color={'fg.muted'}>
                       {formatDate(app.createdAt)}
                     </Table.Cell>
                     <Table.Cell>
                       {app.status === 'PENDING' && (
-                        <HStack gap='1'>
+                        <HStack gap={'1'}>
                           <Button
-                            size='xs'
-                            colorPalette='green'
+                            size={'xs'}
+                            colorPalette={'green'}
                             onClick={() => handleReview(app.id, 'APPROVED')}
                           >
                             Approve
                           </Button>
                           <Button
-                            size='xs'
-                            colorPalette='red'
-                            variant='outline'
+                            size={'xs'}
+                            colorPalette={'red'}
+                            variant={'outline'}
                             onClick={() => handleReview(app.id, 'REJECTED')}
                           >
                             Reject

@@ -1,14 +1,15 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import { Stack, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
   DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
 import { reviewsApi } from '@/lib/api/reviews'
@@ -27,19 +28,14 @@ export function ReviewDetailDialog({
 }: ReviewDetailDialogProps) {
   const [review, setReview] = useState<Review | null>(null)
 
-  const fetch = useCallback(async () => {
-    if (!reviewId) return
-    try {
-      const r = await reviewsApi.get(reviewId)
-      setReview(r)
-    } catch {
-      toaster.error({ title: 'Failed to load review' })
-    }
-  }, [reviewId])
-
   useEffect(() => {
-    if (open && reviewId) fetch()
-  }, [open, reviewId, fetch])
+    if (!open || !reviewId) return
+
+    reviewsApi
+      .get(reviewId)
+      .then(setReview)
+      .catch(() => toaster.error({ title: 'Failed to load review' }))
+  }, [open, reviewId])
 
   if (!review) return null
 
@@ -50,24 +46,24 @@ export function ReviewDetailDialog({
           <DialogTitle>Review Details</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <Stack gap='3'>
-            <Text fontSize='sm'>
+          <Stack gap={'3'}>
+            <Text fontSize={'sm'}>
               <strong>Product:</strong> {review.product?.name}
             </Text>
-            <Text fontSize='sm'>
+            <Text fontSize={'sm'}>
               <strong>User:</strong> {review.user?.name}
             </Text>
-            <Text fontSize='sm'>
+            <Text fontSize={'sm'}>
               <strong>Rating:</strong> {'★'.repeat(review.rating)}
               {'☆'.repeat(5 - review.rating)}
             </Text>
             {review.title && (
-              <Text fontSize='sm'>
+              <Text fontSize={'sm'}>
                 <strong>Title:</strong> {review.title}
               </Text>
             )}
             {review.comment && (
-              <Text fontSize='sm'>
+              <Text fontSize={'sm'}>
                 <strong>Comment:</strong> {review.comment}
               </Text>
             )}

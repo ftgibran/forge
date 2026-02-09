@@ -1,15 +1,16 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Badge, HStack, IconButton } from '@chakra-ui/react'
-import { LuEye } from 'react-icons/lu'
 import { formatDate } from '@app/utils'
-import { PageHeader } from '@/components/page-header'
+import { Badge, HStack, IconButton } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuEye } from 'react-icons/lu'
+
 import { DataTable } from '@/components/data-table'
-import { TableSkeleton } from '@/components/table-skeleton'
 import { OrderDetailDialog } from '@/components/orders/order-detail-dialog'
-import { ordersApi } from '@/lib/api/orders'
+import { PageHeader } from '@/components/page-header'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
+import { ordersApi } from '@/lib/api/orders'
 import type { Order } from '@/types'
 
 const statusColor: Record<string, string> = {
@@ -36,6 +37,7 @@ export default function OrdersPage() {
     setLoading(true)
     try {
       const res = await ordersApi.list(page, limit)
+
       setOrders(res.items)
       setTotal(res.total)
     } catch {
@@ -65,7 +67,7 @@ export default function OrdersPage() {
     {
       header: 'Status',
       accessor: (o: Order) => (
-        <Badge colorPalette={statusColor[o.status]} size='sm'>
+        <Badge colorPalette={statusColor[o.status]} size={'sm'}>
           {o.status}
         </Badge>
       ),
@@ -81,11 +83,11 @@ export default function OrdersPage() {
     {
       header: 'Actions',
       accessor: (o: Order) => (
-        <HStack gap='1'>
+        <HStack gap={'1'}>
           <IconButton
-            aria-label='View'
-            size='xs'
-            variant='ghost'
+            aria-label={'View'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setDetailOrderId(o.id)
               setDetailOpen(true)
@@ -100,7 +102,7 @@ export default function OrdersPage() {
 
   return (
     <>
-      <PageHeader title='Orders' />
+      <PageHeader title={'Orders'} />
 
       {loading ? (
         <TableSkeleton />

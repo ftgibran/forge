@@ -8,7 +8,7 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <Flex minH='100vh' align='center' justify='center' bg='bg.subtle'>
+    <Flex minH={'100vh'} align={'center'} justify={'center'} bg={'bg.subtle'}>
       {children}
     </Flex>
   )

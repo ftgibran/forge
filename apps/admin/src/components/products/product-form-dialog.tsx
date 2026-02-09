@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button, Input, Stack, Textarea, SimpleGrid } from '@chakra-ui/react'
+import { Button, Input, SimpleGrid, Stack, Textarea } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
-  DialogFooter,
   DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import {
@@ -18,7 +19,7 @@ import {
 } from '@/components/ui/native-select'
 import { toaster } from '@/components/ui/toaster'
 import { productsApi } from '@/lib/api/products'
-import type { Product, Category, Vendor } from '@/types'
+import type { Category, Product, Vendor } from '@/types'
 
 interface ProductFormDialogProps {
   open: boolean
@@ -113,6 +114,7 @@ export function ProductFormDialog({
           : undefined,
         supportsRequired: supportsRequired === 'true',
       }
+
       if (product) {
         delete data.vendorId
         await productsApi.update(product.id, data)
@@ -121,6 +123,7 @@ export function ProductFormDialog({
         await productsApi.create(data)
         toaster.success({ title: 'Product created' })
       }
+
       onOpenChange(false)
       onSaved()
     } catch {
@@ -134,7 +137,9 @@ export function ProductFormDialog({
 
   const flatCategories = categories.flatMap((c) => {
     const items = [c]
+
     if (c.children) items.push(...c.children)
+
     return items
   })
 
@@ -142,7 +147,7 @@ export function ProductFormDialog({
     <DialogRoot
       open={open}
       onOpenChange={(e) => onOpenChange(e.open)}
-      size='xl'
+      size={'xl'}
     >
       <DialogContent>
         <DialogHeader>
@@ -152,16 +157,16 @@ export function ProductFormDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <Stack gap='4'>
-              <SimpleGrid columns={2} gap='4'>
-                <Field label='Name'>
+            <Stack gap={'4'}>
+              <SimpleGrid columns={2} gap={'4'}>
+                <Field label={'Name'}>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </Field>
-                <Field label='Slug'>
+                <Field label={'Slug'}>
                   <Input
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
@@ -169,21 +174,21 @@ export function ProductFormDialog({
                   />
                 </Field>
               </SimpleGrid>
-              <Field label='Description'>
+              <Field label={'Description'}>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Field>
-              <SimpleGrid columns={3} gap='4'>
+              <SimpleGrid columns={3} gap={'4'}>
                 {!product && (
-                  <Field label='Vendor'>
+                  <Field label={'Vendor'}>
                     <NativeSelectRoot>
                       <NativeSelectField
                         value={vendorId}
                         onChange={(e) => setVendorId(e.target.value)}
                       >
-                        <option value=''>Select vendor</option>
+                        <option value={''}>Select vendor</option>
                         {vendors.map((v) => (
                           <option key={v.id} value={v.id}>
                             {v.name}
@@ -193,13 +198,13 @@ export function ProductFormDialog({
                     </NativeSelectRoot>
                   </Field>
                 )}
-                <Field label='Category'>
+                <Field label={'Category'}>
                   <NativeSelectRoot>
                     <NativeSelectField
                       value={categoryId}
                       onChange={(e) => setCategoryId(e.target.value)}
                     >
-                      <option value=''>None</option>
+                      <option value={''}>None</option>
                       {flatCategories.map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.name}
@@ -208,96 +213,96 @@ export function ProductFormDialog({
                     </NativeSelectField>
                   </NativeSelectRoot>
                 </Field>
-                <Field label='Status'>
+                <Field label={'Status'}>
                   <NativeSelectRoot>
                     <NativeSelectField
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value='DRAFT'>Draft</option>
-                      <option value='ACTIVE'>Active</option>
-                      <option value='ARCHIVED'>Archived</option>
+                      <option value={'DRAFT'}>Draft</option>
+                      <option value={'ACTIVE'}>Active</option>
+                      <option value={'ARCHIVED'}>Archived</option>
                     </NativeSelectField>
                   </NativeSelectRoot>
                 </Field>
               </SimpleGrid>
 
-              <SimpleGrid columns={3} gap='4'>
-                <Field label='Filament Type'>
+              <SimpleGrid columns={3} gap={'4'}>
+                <Field label={'Filament Type'}>
                   <Input
                     value={filamentType}
                     onChange={(e) => setFilamentType(e.target.value)}
-                    placeholder='PLA, ABS, PETG...'
+                    placeholder={'PLA, ABS, PETG...'}
                   />
                 </Field>
-                <Field label='Print Time (hours)'>
+                <Field label={'Print Time (hours)'}>
                   <Input
-                    type='number'
-                    step='0.1'
+                    type={'number'}
+                    step={'0.1'}
                     value={printTimeHours}
                     onChange={(e) => setPrintTimeHours(e.target.value)}
                   />
                 </Field>
-                <Field label='File Format'>
+                <Field label={'File Format'}>
                   <Input
                     value={fileFormat}
                     onChange={(e) => setFileFormat(e.target.value)}
-                    placeholder='STL, OBJ...'
+                    placeholder={'STL, OBJ...'}
                   />
                 </Field>
               </SimpleGrid>
-              <SimpleGrid columns={3} gap='4'>
-                <Field label='Dimension X (mm)'>
+              <SimpleGrid columns={3} gap={'4'}>
+                <Field label={'Dimension X (mm)'}>
                   <Input
-                    type='number'
-                    step='0.1'
+                    type={'number'}
+                    step={'0.1'}
                     value={dimensionX}
                     onChange={(e) => setDimensionX(e.target.value)}
                   />
                 </Field>
-                <Field label='Dimension Y (mm)'>
+                <Field label={'Dimension Y (mm)'}>
                   <Input
-                    type='number'
-                    step='0.1'
+                    type={'number'}
+                    step={'0.1'}
                     value={dimensionY}
                     onChange={(e) => setDimensionY(e.target.value)}
                   />
                 </Field>
-                <Field label='Dimension Z (mm)'>
+                <Field label={'Dimension Z (mm)'}>
                   <Input
-                    type='number'
-                    step='0.1'
+                    type={'number'}
+                    step={'0.1'}
                     value={dimensionZ}
                     onChange={(e) => setDimensionZ(e.target.value)}
                   />
                 </Field>
               </SimpleGrid>
-              <SimpleGrid columns={3} gap='4'>
-                <Field label='Nozzle Size (mm)'>
+              <SimpleGrid columns={3} gap={'4'}>
+                <Field label={'Nozzle Size (mm)'}>
                   <Input
-                    type='number'
-                    step='0.01'
+                    type={'number'}
+                    step={'0.01'}
                     value={nozzleSize}
                     onChange={(e) => setNozzleSize(e.target.value)}
                   />
                 </Field>
-                <Field label='Infill %'>
+                <Field label={'Infill %'}>
                   <Input
-                    type='number'
-                    min='0'
-                    max='100'
+                    type={'number'}
+                    min={'0'}
+                    max={'100'}
                     value={infillPercentage}
                     onChange={(e) => setInfillPercentage(e.target.value)}
                   />
                 </Field>
-                <Field label='Supports Required'>
+                <Field label={'Supports Required'}>
                   <NativeSelectRoot>
                     <NativeSelectField
                       value={supportsRequired}
                       onChange={(e) => setSupportsRequired(e.target.value)}
                     >
-                      <option value='false'>No</option>
-                      <option value='true'>Yes</option>
+                      <option value={'false'}>No</option>
+                      <option value={'true'}>Yes</option>
                     </NativeSelectField>
                   </NativeSelectRoot>
                 </Field>
@@ -305,10 +310,10 @@ export function ProductFormDialog({
             </Stack>
           </DialogBody>
           <DialogFooter>
-            <Button variant='outline' onClick={() => onOpenChange(false)}>
+            <Button variant={'outline'} onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type='submit' colorPalette='blue' loading={loading}>
+            <Button type={'submit'} colorPalette={'blue'} loading={loading}>
               {product ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>

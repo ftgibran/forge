@@ -1,18 +1,19 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Button, Badge, HStack, IconButton } from '@chakra-ui/react'
-import { LuPlus, LuPencil, LuTrash2, LuShield, LuKey } from 'react-icons/lu'
 import { formatDate } from '@app/utils'
-import { PageHeader } from '@/components/page-header'
-import { DataTable } from '@/components/data-table'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuKey, LuPencil, LuPlus, LuShield, LuTrash2 } from 'react-icons/lu'
+
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { UserFormDialog } from '@/components/users/user-form-dialog'
-import { UserRolesDialog } from '@/components/users/user-roles-dialog'
-import { UserPermissionsDialog } from '@/components/users/user-permissions-dialog'
-import { usersApi } from '@/lib/api/users'
+import { DataTable } from '@/components/data-table'
+import { PageHeader } from '@/components/page-header'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
+import { UserFormDialog } from '@/components/users/user-form-dialog'
+import { UserPermissionsDialog } from '@/components/users/user-permissions-dialog'
+import { UserRolesDialog } from '@/components/users/user-roles-dialog'
+import { usersApi } from '@/lib/api/users'
 import type { User } from '@/types'
 
 export default function UsersPage() {
@@ -40,6 +41,7 @@ export default function UsersPage() {
     setLoading(true)
     try {
       const res = await usersApi.list(page, limit)
+
       setUsers(res.items)
       setTotal(res.total)
     } catch {
@@ -55,6 +57,7 @@ export default function UsersPage() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return
+
     setDeleting(true)
     try {
       await usersApi.delete(deleteTarget.id)
@@ -75,7 +78,7 @@ export default function UsersPage() {
       header: 'Roles',
       accessor: (u: User) =>
         u.userRoles?.map((ur) => (
-          <Badge key={ur.role.id} mr='1' size='sm'>
+          <Badge key={ur.role.id} mr={'1'} size={'sm'}>
             {ur.role.name}
           </Badge>
         )) ?? '-',
@@ -87,11 +90,11 @@ export default function UsersPage() {
     {
       header: 'Actions',
       accessor: (u: User) => (
-        <HStack gap='1'>
+        <HStack gap={'1'}>
           <IconButton
-            aria-label='Edit'
-            size='xs'
-            variant='ghost'
+            aria-label={'Edit'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setEditUser(u)
               setFormOpen(true)
@@ -100,9 +103,9 @@ export default function UsersPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label='Manage roles'
-            size='xs'
-            variant='ghost'
+            aria-label={'Manage roles'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setRolesTarget(u)
               setRolesOpen(true)
@@ -111,9 +114,9 @@ export default function UsersPage() {
             <LuShield />
           </IconButton>
           <IconButton
-            aria-label='Manage permissions'
-            size='xs'
-            variant='ghost'
+            aria-label={'Manage permissions'}
+            size={'xs'}
+            variant={'ghost'}
             onClick={() => {
               setPermsTarget(u)
               setPermsOpen(true)
@@ -122,10 +125,10 @@ export default function UsersPage() {
             <LuKey />
           </IconButton>
           <IconButton
-            aria-label='Delete'
-            size='xs'
-            variant='ghost'
-            colorPalette='red'
+            aria-label={'Delete'}
+            size={'xs'}
+            variant={'ghost'}
+            colorPalette={'red'}
             onClick={() => {
               setDeleteTarget(u)
               setDeleteOpen(true)
@@ -140,10 +143,10 @@ export default function UsersPage() {
 
   return (
     <>
-      <PageHeader title='Users'>
+      <PageHeader title={'Users'}>
         <Button
-          colorPalette='blue'
-          size='sm'
+          colorPalette={'blue'}
+          size={'sm'}
           onClick={() => {
             setEditUser(null)
             setFormOpen(true)
@@ -177,7 +180,7 @@ export default function UsersPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title='Delete User'
+        title={'Delete User'}
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
         onConfirm={handleDelete}
         loading={deleting}

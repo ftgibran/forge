@@ -1,16 +1,17 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Button, Badge, HStack, IconButton } from '@chakra-ui/react'
-import { LuPlus, LuPencil, LuTrash2 } from 'react-icons/lu'
 import { formatDate } from '@app/utils'
+import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { Box, Table } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
+
+import { CategoryFormDialog } from '@/components/categories/category-form-dialog'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { CategoryFormDialog } from '@/components/categories/category-form-dialog'
-import { categoriesApi } from '@/lib/api/categories'
 import { toaster } from '@/components/ui/toaster'
-import { Box, Table } from '@chakra-ui/react'
+import { categoriesApi } from '@/lib/api/categories'
 import type { Category } from '@/types'
 
 export default function CategoriesPage() {
@@ -28,6 +29,7 @@ export default function CategoriesPage() {
     setLoading(true)
     try {
       const res = await categoriesApi.list()
+
       setCategories(res)
     } catch {
       toaster.error({ title: 'Failed to load categories' })
@@ -42,6 +44,7 @@ export default function CategoriesPage() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return
+
     setDeleting(true)
     try {
       await categoriesApi.delete(deleteTarget.id)
@@ -60,17 +63,19 @@ export default function CategoriesPage() {
   const flatten = (cats: Category[], depth: number) => {
     for (const cat of cats) {
       flatRows.push({ ...cat, depth })
+
       if (cat.children) flatten(cat.children, depth + 1)
     }
   }
+
   flatten(categories, 0)
 
   return (
     <>
-      <PageHeader title='Categories'>
+      <PageHeader title={'Categories'}>
         <Button
-          colorPalette='blue'
-          size='sm'
+          colorPalette={'blue'}
+          size={'sm'}
           onClick={() => {
             setEditCategory(null)
             setFormOpen(true)
@@ -85,7 +90,7 @@ export default function CategoriesPage() {
         <TableSkeleton />
       ) : (
         <Box>
-          <Table.Root size='sm' variant='outline' interactive>
+          <Table.Root size={'sm'} variant={'outline'} interactive>
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader>Name</Table.ColumnHeader>
@@ -98,26 +103,26 @@ export default function CategoriesPage() {
             <Table.Body>
               {flatRows.map((cat) => (
                 <Table.Row key={cat.id}>
-                  <Table.Cell fontWeight='medium'>
+                  <Table.Cell fontWeight={'medium'}>
                     {'  '.repeat(cat.depth)}
                     {cat.depth > 0 && '└ '}
                     {cat.name}
                   </Table.Cell>
                   <Table.Cell>
-                    <Badge size='sm' variant='outline'>
+                    <Badge size={'sm'} variant={'outline'}>
                       {cat.slug}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>{cat._count?.products ?? 0}</Table.Cell>
-                  <Table.Cell color='fg.muted'>
+                  <Table.Cell color={'fg.muted'}>
                     {formatDate(cat.createdAt)}
                   </Table.Cell>
                   <Table.Cell>
-                    <HStack gap='1'>
+                    <HStack gap={'1'}>
                       <IconButton
-                        aria-label='Edit'
-                        size='xs'
-                        variant='ghost'
+                        aria-label={'Edit'}
+                        size={'xs'}
+                        variant={'ghost'}
                         onClick={() => {
                           setEditCategory(cat)
                           setFormOpen(true)
@@ -126,10 +131,10 @@ export default function CategoriesPage() {
                         <LuPencil />
                       </IconButton>
                       <IconButton
-                        aria-label='Delete'
-                        size='xs'
-                        variant='ghost'
-                        colorPalette='red'
+                        aria-label={'Delete'}
+                        size={'xs'}
+                        variant={'ghost'}
+                        colorPalette={'red'}
                         onClick={() => {
                           setDeleteTarget(cat)
                           setDeleteOpen(true)
@@ -157,7 +162,7 @@ export default function CategoriesPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title='Delete Category'
+        title={'Delete Category'}
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
         onConfirm={handleDelete}
         loading={deleting}

@@ -1,5 +1,6 @@
+import type { PaginatedList, Vendor, VendorApplication } from '@/types'
+
 import { api } from '../api-client'
-import type { Vendor, VendorApplication, PaginatedList } from '@/types'
 
 export const vendorsApi = {
   list: (page = 1, limit = 10, status?: string) => {
@@ -7,7 +8,9 @@ export const vendorsApi = {
       page: String(page),
       limit: String(limit),
     })
+
     if (status) params.set('status', status)
+
     return api.get<PaginatedList<Vendor>>(`/vendors?${params}`)
   },
   get: (id: string) => api.get<Vendor>(`/vendors/${id}`),

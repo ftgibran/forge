@@ -1,5 +1,6 @@
+import type { PaginatedList, User } from '@/types'
+
 import { api } from '../api-client'
-import type { User, PaginatedList } from '@/types'
 
 export const usersApi = {
   list: (page = 1, limit = 10) =>

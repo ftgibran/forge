@@ -20,6 +20,7 @@
       "prettier --write"
     ],
     "apps/admin/**/*.{ts,tsx}": [
+      "eslint --flag unstable_config_lookup_from_file --fix",
       "prettier --write"
     ],
     "packages/utils/**/*.ts": [

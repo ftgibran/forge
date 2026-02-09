@@ -1,5 +1,6 @@
+import type { PaginatedList, Review } from '@/types'
+
 import { api } from '../api-client'
-import type { Review, PaginatedList } from '@/types'
 
 export const reviewsApi = {
   listByProduct: (productId: string, page = 1, limit = 10) =>

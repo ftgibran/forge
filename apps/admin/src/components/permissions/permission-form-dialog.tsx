@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
-  DialogFooter,
   DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
@@ -51,6 +52,7 @@ export function PermissionFormDialog({
     setLoading(true)
     try {
       const data = { action, resource, description: description || undefined }
+
       if (permission) {
         await permissionsApi.update(permission.id, data)
         toaster.success({ title: 'Permission updated' })
@@ -58,6 +60,7 @@ export function PermissionFormDialog({
         await permissionsApi.create(data)
         toaster.success({ title: 'Permission created' })
       }
+
       onOpenChange(false)
       onSaved()
     } catch {
@@ -79,24 +82,24 @@ export function PermissionFormDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <Stack gap='4'>
-              <Field label='Action'>
+            <Stack gap={'4'}>
+              <Field label={'Action'}>
                 <Input
-                  placeholder='e.g. create, read, update, delete'
+                  placeholder={'e.g. create, read, update, delete'}
                   value={action}
                   onChange={(e) => setAction(e.target.value)}
                   required
                 />
               </Field>
-              <Field label='Resource'>
+              <Field label={'Resource'}>
                 <Input
-                  placeholder='e.g. user, role, permission'
+                  placeholder={'e.g. user, role, permission'}
                   value={resource}
                   onChange={(e) => setResource(e.target.value)}
                   required
                 />
               </Field>
-              <Field label='Description'>
+              <Field label={'Description'}>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -105,10 +108,10 @@ export function PermissionFormDialog({
             </Stack>
           </DialogBody>
           <DialogFooter>
-            <Button variant='outline' onClick={() => onOpenChange(false)}>
+            <Button variant={'outline'} onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type='submit' colorPalette='blue' loading={loading}>
+            <Button type={'submit'} colorPalette={'blue'} loading={loading}>
               {permission ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>

@@ -1,20 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button, Stack, Badge, Flex, Text, Spinner } from '@chakra-ui/react'
+import { formatPermission } from '@app/utils'
+import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
   DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
-import { formatPermission } from '@app/utils'
-import { usersApi } from '@/lib/api/users'
 import { permissionsApi } from '@/lib/api/permissions'
-import type { User, Permission } from '@/types'
+import { usersApi } from '@/lib/api/users'
+import type { Permission, User } from '@/types'
 
 interface UserPermissionsDialogProps {
   open: boolean
@@ -36,6 +37,7 @@ export function UserPermissionsDialog({
 
   useEffect(() => {
     if (!open || !user) return
+
     setLoading(true)
     Promise.all([permissionsApi.list(1, 100), usersApi.get(user.id)])
       .then(([permsRes, freshUser]) => {
@@ -51,13 +53,16 @@ export function UserPermissionsDialog({
 
   const toggle = async (permissionId: string) => {
     if (!user) return
+
     setActionLoading(permissionId)
     try {
       if (assignedIds.has(permissionId)) {
         await usersApi.removePermission(user.id, permissionId)
         setAssignedIds((prev) => {
           const next = new Set(prev)
+
           next.delete(permissionId)
+
           return next
         })
         toaster.success({ title: 'Permission removed' })
@@ -66,6 +71,7 @@ export function UserPermissionsDialog({
         setAssignedIds((prev) => new Set(prev).add(permissionId))
         toaster.success({ title: 'Permission assigned' })
       }
+
       onSaved()
     } catch {
       toaster.error({ title: 'Operation failed' })
@@ -82,25 +88,25 @@ export function UserPermissionsDialog({
         </DialogHeader>
         <DialogBody>
           {loading ? (
-            <Flex justify='center' py='4'>
+            <Flex justify={'center'} py={'4'}>
               <Spinner />
             </Flex>
           ) : (
-            <Stack gap='2'>
+            <Stack gap={'2'}>
               {allPermissions.map((perm) => (
-                <Flex key={perm.id} align='center' justify='space-between'>
-                  <Flex align='center' gap='2'>
-                    <Text fontWeight='medium'>
+                <Flex key={perm.id} align={'center'} justify={'space-between'}>
+                  <Flex align={'center'} gap={'2'}>
+                    <Text fontWeight={'medium'}>
                       {formatPermission(perm.action, perm.resource)}
                     </Text>
                     {assignedIds.has(perm.id) && (
-                      <Badge colorPalette='green' size='sm'>
+                      <Badge colorPalette={'green'} size={'sm'}>
                         Assigned
                       </Badge>
                     )}
                   </Flex>
                   <Button
-                    size='sm'
+                    size={'sm'}
                     variant={assignedIds.has(perm.id) ? 'outline' : 'solid'}
                     colorPalette={assignedIds.has(perm.id) ? 'red' : 'blue'}
                     onClick={() => toggle(perm.id)}

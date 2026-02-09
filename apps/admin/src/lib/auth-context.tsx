@@ -7,7 +7,9 @@ import {
   useEffect,
   useState,
 } from 'react'
+
 import type { User } from '@/types'
+
 import { authApi } from './api/auth'
 
 interface AuthContextValue {
@@ -25,10 +27,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
+
     if (!token) {
-      setIsLoading(false)
+      queueMicrotask(() => setIsLoading(false))
+
       return
     }
+
     authApi
       .me()
       .then(setUser)
@@ -38,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     const res = await authApi.login(email, password)
+
     localStorage.setItem('token', res.accessToken)
     setUser(res.user)
   }, [])
@@ -57,6 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext)
+
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')
+
   return ctx
 }

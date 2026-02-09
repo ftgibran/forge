@@ -1,14 +1,15 @@
 'use client'
 
 import { Button, Stack } from '@chakra-ui/react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
-  DialogFooter,
   DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 
 interface ConfirmDialogProps {
@@ -32,7 +33,7 @@ export function ConfirmDialog({
     <DialogRoot
       open={open}
       onOpenChange={(e) => onOpenChange(e.open)}
-      role='alertdialog'
+      role={'alertdialog'}
     >
       <DialogContent>
         <DialogHeader>
@@ -40,11 +41,11 @@ export function ConfirmDialog({
         </DialogHeader>
         <DialogBody>{description}</DialogBody>
         <DialogFooter>
-          <Stack direction='row' gap='2'>
-            <Button variant='outline' onClick={() => onOpenChange(false)}>
+          <Stack direction={'row'} gap={'2'}>
+            <Button variant={'outline'} onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button colorPalette='red' onClick={onConfirm} loading={loading}>
+            <Button colorPalette={'red'} onClick={onConfirm} loading={loading}>
               Delete
             </Button>
           </Stack>

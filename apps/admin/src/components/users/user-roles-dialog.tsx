@@ -1,19 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button, Stack, Badge, Flex, Text, Spinner } from '@chakra-ui/react'
+import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
   DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
-import { usersApi } from '@/lib/api/users'
 import { rolesApi } from '@/lib/api/roles'
-import type { User, Role } from '@/types'
+import { usersApi } from '@/lib/api/users'
+import type { Role, User } from '@/types'
 
 interface UserRolesDialogProps {
   open: boolean
@@ -35,6 +36,7 @@ export function UserRolesDialog({
 
   useEffect(() => {
     if (!open || !user) return
+
     setLoading(true)
     Promise.all([rolesApi.list(1, 100), usersApi.get(user.id)])
       .then(([rolesRes, freshUser]) => {
@@ -48,13 +50,16 @@ export function UserRolesDialog({
 
   const toggle = async (roleId: string) => {
     if (!user) return
+
     setActionLoading(roleId)
     try {
       if (assignedIds.has(roleId)) {
         await usersApi.removeRole(user.id, roleId)
         setAssignedIds((prev) => {
           const next = new Set(prev)
+
           next.delete(roleId)
+
           return next
         })
         toaster.success({ title: 'Role removed' })
@@ -63,6 +68,7 @@ export function UserRolesDialog({
         setAssignedIds((prev) => new Set(prev).add(roleId))
         toaster.success({ title: 'Role assigned' })
       }
+
       onSaved()
     } catch {
       toaster.error({ title: 'Operation failed' })
@@ -79,23 +85,23 @@ export function UserRolesDialog({
         </DialogHeader>
         <DialogBody>
           {loading ? (
-            <Flex justify='center' py='4'>
+            <Flex justify={'center'} py={'4'}>
               <Spinner />
             </Flex>
           ) : (
-            <Stack gap='2'>
+            <Stack gap={'2'}>
               {allRoles.map((role) => (
-                <Flex key={role.id} align='center' justify='space-between'>
-                  <Flex align='center' gap='2'>
-                    <Text fontWeight='medium'>{role.name}</Text>
+                <Flex key={role.id} align={'center'} justify={'space-between'}>
+                  <Flex align={'center'} gap={'2'}>
+                    <Text fontWeight={'medium'}>{role.name}</Text>
                     {assignedIds.has(role.id) && (
-                      <Badge colorPalette='green' size='sm'>
+                      <Badge colorPalette={'green'} size={'sm'}>
                         Assigned
                       </Badge>
                     )}
                   </Flex>
                   <Button
-                    size='sm'
+                    size={'sm'}
                     variant={assignedIds.has(role.id) ? 'outline' : 'solid'}
                     colorPalette={assignedIds.has(role.id) ? 'red' : 'blue'}
                     onClick={() => toggle(role.id)}

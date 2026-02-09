@@ -1,10 +1,11 @@
-import { api } from '../api-client'
 import type {
-  Product,
-  ProductVariant,
-  ProductImage,
   PaginatedList,
+  Product,
+  ProductImage,
+  ProductVariant,
 } from '@/types'
+
+import { api } from '../api-client'
 
 export const productsApi = {
   list: (params?: {
@@ -18,14 +19,23 @@ export const productsApi = {
     sortBy?: string
   }) => {
     const sp = new URLSearchParams()
+
     if (params?.page) sp.set('page', String(params.page))
+
     if (params?.limit) sp.set('limit', String(params.limit))
+
     if (params?.search) sp.set('search', params.search)
+
     if (params?.categoryId) sp.set('categoryId', params.categoryId)
+
     if (params?.vendorId) sp.set('vendorId', params.vendorId)
+
     if (params?.status) sp.set('status', params.status)
+
     if (params?.filamentType) sp.set('filamentType', params.filamentType)
+
     if (params?.sortBy) sp.set('sortBy', params.sortBy)
+
     return api.get<PaginatedList<Product>>(`/products?${sp}`)
   },
   get: (id: string) => api.get<Product>(`/products/${id}`),

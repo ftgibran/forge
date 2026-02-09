@@ -1,19 +1,19 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { Box, Button, Heading, Icon, Stack } from '@chakra-ui/react'
 import Link from 'next/link'
-import { Box, Heading, Stack, Button, Icon } from '@chakra-ui/react'
+import { usePathname } from 'next/navigation'
 import {
-  LuLayoutDashboard,
-  LuUsers,
-  LuShield,
-  LuKey,
-  LuUser,
-  LuStore,
-  LuFolderTree,
   LuBox,
+  LuFolderTree,
+  LuKey,
+  LuLayoutDashboard,
+  LuShield,
   LuShoppingCart,
   LuStar,
+  LuStore,
+  LuUser,
+  LuUsers,
 } from 'react-icons/lu'
 
 const navItems = [
@@ -34,33 +34,34 @@ export function Sidebar() {
 
   return (
     <Box
-      as='nav'
-      pos='fixed'
-      top='0'
-      left='0'
-      h='100vh'
-      w='240px'
-      bg='bg.panel'
-      borderRightWidth='1px'
-      py='4'
-      px='3'
+      as={'nav'}
+      pos={'fixed'}
+      top={'0'}
+      left={'0'}
+      h={'100vh'}
+      w={'240px'}
+      bg={'bg.panel'}
+      borderRightWidth={'1px'}
+      py={'4'}
+      px={'3'}
     >
-      <Heading size='md' px='3' mb='6'>
+      <Heading size={'md'} px={'3'} mb={'6'}>
         Admin
       </Heading>
-      <Stack gap='1'>
+      <Stack gap={'1'}>
         {navItems.map((item) => {
           const active =
             item.href === '/'
               ? pathname === '/'
               : pathname.startsWith(item.href)
+
           return (
             <Button
               key={item.href}
               asChild
               variant={active ? 'subtle' : 'ghost'}
-              justifyContent='flex-start'
-              w='full'
+              justifyContent={'flex-start'}
+              w={'full'}
             >
               <Link href={item.href}>
                 <Icon>

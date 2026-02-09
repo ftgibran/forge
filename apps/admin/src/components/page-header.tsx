@@ -9,9 +9,9 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, children }: PageHeaderProps) {
   return (
-    <Flex mb='6' align='center' justify='space-between'>
-      <Heading size='xl'>{title}</Heading>
-      <Flex gap='2'>{children}</Flex>
+    <Flex mb={'6'} align={'center'} justify={'space-between'}>
+      <Heading size={'xl'}>{title}</Heading>
+      <Flex gap={'2'}>{children}</Flex>
     </Flex>
   )
 }

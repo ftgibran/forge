@@ -1,18 +1,19 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { HStack, IconButton, Input } from '@chakra-ui/react'
-import { LuEye, LuTrash2 } from 'react-icons/lu'
 import { formatDate } from '@app/utils'
-import { PageHeader } from '@/components/page-header'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { HStack, IconButton, Input } from '@chakra-ui/react'
+import { Box, Table, Text } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
+import { LuEye, LuTrash2 } from 'react-icons/lu'
+
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { PageHeader } from '@/components/page-header'
 import { ReviewDetailDialog } from '@/components/reviews/review-detail-dialog'
+import { TableSkeleton } from '@/components/table-skeleton'
+import { toaster } from '@/components/ui/toaster'
 import { productsApi } from '@/lib/api/products'
 import { reviewsApi } from '@/lib/api/reviews'
-import { toaster } from '@/components/ui/toaster'
-import { Box, Table, Text } from '@chakra-ui/react'
-import type { Review, Product } from '@/types'
+import type { Product, Review } from '@/types'
 
 export default function ReviewsPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -34,6 +35,7 @@ export default function ReviewsPage() {
       .list({ limit: 100 })
       .then((r) => {
         setProducts(r.items)
+
         if (r.items.length > 0) {
           setSelectedProductId(r.items[0].id)
         }
@@ -44,9 +46,11 @@ export default function ReviewsPage() {
 
   const fetchReviews = useCallback(async () => {
     if (!selectedProductId) return
+
     setLoading(true)
     try {
       const res = await reviewsApi.listByProduct(selectedProductId, 1, 50)
+
       setReviews(res.items)
     } catch {
       toaster.error({ title: 'Failed to load reviews' })
@@ -61,6 +65,7 @@ export default function ReviewsPage() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return
+
     setDeleting(true)
     try {
       await reviewsApi.delete(deleteTarget.id)
@@ -76,16 +81,16 @@ export default function ReviewsPage() {
 
   return (
     <>
-      <PageHeader title='Reviews' />
+      <PageHeader title={'Reviews'} />
 
-      <Box mb='4'>
-        <Text fontSize='sm' mb='2' fontWeight='medium'>
+      <Box mb={'4'}>
+        <Text fontSize={'sm'} mb={'2'} fontWeight={'medium'}>
           Select Product:
         </Text>
         <Input
-          as='select'
-          size='sm'
-          maxW='400px'
+          as={'select'}
+          size={'sm'}
+          maxW={'400px'}
           value={selectedProductId ?? ''}
           onChange={(e) => setSelectedProductId(e.target.value || null)}
         >
@@ -100,9 +105,9 @@ export default function ReviewsPage() {
       {loading ? (
         <TableSkeleton rows={5} />
       ) : reviews.length === 0 ? (
-        <Text color='fg.muted'>No reviews for this product.</Text>
+        <Text color={'fg.muted'}>No reviews for this product.</Text>
       ) : (
-        <Table.Root size='sm' variant='outline' interactive>
+        <Table.Root size={'sm'} variant={'outline'} interactive>
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>User</Table.ColumnHeader>
@@ -115,7 +120,7 @@ export default function ReviewsPage() {
           <Table.Body>
             {reviews.map((r) => (
               <Table.Row key={r.id}>
-                <Table.Cell fontWeight='medium'>
+                <Table.Cell fontWeight={'medium'}>
                   {r.user?.name ?? '-'}
                 </Table.Cell>
                 <Table.Cell>
@@ -123,15 +128,15 @@ export default function ReviewsPage() {
                   {'☆'.repeat(5 - r.rating)}
                 </Table.Cell>
                 <Table.Cell>{r.title ?? '-'}</Table.Cell>
-                <Table.Cell color='fg.muted'>
+                <Table.Cell color={'fg.muted'}>
                   {formatDate(r.createdAt)}
                 </Table.Cell>
                 <Table.Cell>
-                  <HStack gap='1'>
+                  <HStack gap={'1'}>
                     <IconButton
-                      aria-label='View'
-                      size='xs'
-                      variant='ghost'
+                      aria-label={'View'}
+                      size={'xs'}
+                      variant={'ghost'}
                       onClick={() => {
                         setDetailReviewId(r.id)
                         setDetailOpen(true)
@@ -140,10 +145,10 @@ export default function ReviewsPage() {
                       <LuEye />
                     </IconButton>
                     <IconButton
-                      aria-label='Delete'
-                      size='xs'
-                      variant='ghost'
-                      colorPalette='red'
+                      aria-label={'Delete'}
+                      size={'xs'}
+                      variant={'ghost'}
+                      colorPalette={'red'}
                       onClick={() => {
                         setDeleteTarget(r)
                         setDeleteOpen(true)
@@ -168,8 +173,10 @@ export default function ReviewsPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title='Delete Review'
-        description='Are you sure you want to delete this review? This action cannot be undone.'
+        title={'Delete Review'}
+        description={
+          'Are you sure you want to delete this review? This action cannot be undone.'
+        }
         onConfirm={handleDelete}
         loading={deleting}
       />

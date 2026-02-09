@@ -1,25 +1,26 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { SimpleGrid, Table, Badge, Box, Text } from '@chakra-ui/react'
-import {
-  LuUsers,
-  LuShield,
-  LuKey,
-  LuStore,
-  LuBox,
-  LuShoppingCart,
-} from 'react-icons/lu'
 import { formatDate } from '@app/utils'
+import { Badge, Box, SimpleGrid, Table, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import {
+  LuBox,
+  LuKey,
+  LuShield,
+  LuShoppingCart,
+  LuStore,
+  LuUsers,
+} from 'react-icons/lu'
+
 import { PageHeader } from '@/components/page-header'
 import { StatCard } from '@/components/stat-card'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { usersApi } from '@/lib/api/users'
-import { rolesApi } from '@/lib/api/roles'
-import { permissionsApi } from '@/lib/api/permissions'
-import { vendorsApi } from '@/lib/api/vendors'
-import { productsApi } from '@/lib/api/products'
 import { ordersApi } from '@/lib/api/orders'
+import { permissionsApi } from '@/lib/api/permissions'
+import { productsApi } from '@/lib/api/products'
+import { rolesApi } from '@/lib/api/roles'
+import { usersApi } from '@/lib/api/users'
+import { vendorsApi } from '@/lib/api/vendors'
 import type { User } from '@/types'
 
 export default function DashboardPage() {
@@ -59,25 +60,33 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader title='Dashboard' />
+      <PageHeader title={'Dashboard'} />
 
-      <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} gap='6' mb='8'>
-        <StatCard label='Users' value={counts.users} icon={LuUsers} />
-        <StatCard label='Roles' value={counts.roles} icon={LuShield} />
-        <StatCard label='Permissions' value={counts.permissions} icon={LuKey} />
-        <StatCard label='Vendors' value={counts.vendors} icon={LuStore} />
-        <StatCard label='Products' value={counts.products} icon={LuBox} />
-        <StatCard label='Orders' value={counts.orders} icon={LuShoppingCart} />
+      <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} gap={'6'} mb={'8'}>
+        <StatCard label={'Users'} value={counts.users} icon={LuUsers} />
+        <StatCard label={'Roles'} value={counts.roles} icon={LuShield} />
+        <StatCard
+          label={'Permissions'}
+          value={counts.permissions}
+          icon={LuKey}
+        />
+        <StatCard label={'Vendors'} value={counts.vendors} icon={LuStore} />
+        <StatCard label={'Products'} value={counts.products} icon={LuBox} />
+        <StatCard
+          label={'Orders'}
+          value={counts.orders}
+          icon={LuShoppingCart}
+        />
       </SimpleGrid>
 
       <Box>
-        <Text fontWeight='medium' mb='4' fontSize='lg'>
+        <Text fontWeight={'medium'} mb={'4'} fontSize={'lg'}>
           Recent Users
         </Text>
         {loading ? (
           <TableSkeleton rows={5} />
         ) : (
-          <Table.Root size='sm' variant='outline'>
+          <Table.Root size={'sm'} variant={'outline'}>
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader>Name</Table.ColumnHeader>
@@ -89,16 +98,16 @@ export default function DashboardPage() {
             <Table.Body>
               {users.map((user) => (
                 <Table.Row key={user.id}>
-                  <Table.Cell fontWeight='medium'>{user.name}</Table.Cell>
+                  <Table.Cell fontWeight={'medium'}>{user.name}</Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
                   <Table.Cell>
                     {user.userRoles?.map((ur) => (
-                      <Badge key={ur.role.id} mr='1' size='sm'>
+                      <Badge key={ur.role.id} mr={'1'} size={'sm'}>
                         {ur.role.name}
                       </Badge>
                     )) ?? '-'}
                   </Table.Cell>
-                  <Table.Cell color='fg.muted'>
+                  <Table.Cell color={'fg.muted'}>
                     {formatDate(user.createdAt)}
                   </Table.Cell>
                 </Table.Row>

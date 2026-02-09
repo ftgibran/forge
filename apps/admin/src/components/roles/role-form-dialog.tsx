@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+
 import {
-  DialogRoot,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogBody,
-  DialogFooter,
   DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
@@ -48,6 +49,7 @@ export function RoleFormDialog({
     setLoading(true)
     try {
       const data = { name, description: description || undefined }
+
       if (role) {
         await rolesApi.update(role.id, data)
         toaster.success({ title: 'Role updated' })
@@ -55,6 +57,7 @@ export function RoleFormDialog({
         await rolesApi.create(data)
         toaster.success({ title: 'Role created' })
       }
+
       onOpenChange(false)
       onSaved()
     } catch {
@@ -72,15 +75,15 @@ export function RoleFormDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <Stack gap='4'>
-              <Field label='Name'>
+            <Stack gap={'4'}>
+              <Field label={'Name'}>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label='Description'>
+              <Field label={'Description'}>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -89,10 +92,10 @@ export function RoleFormDialog({
             </Stack>
           </DialogBody>
           <DialogFooter>
-            <Button variant='outline' onClick={() => onOpenChange(false)}>
+            <Button variant={'outline'} onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type='submit' colorPalette='blue' loading={loading}>
+            <Button type={'submit'} colorPalette={'blue'} loading={loading}>
               {role ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
