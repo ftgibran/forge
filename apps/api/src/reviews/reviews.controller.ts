@@ -8,10 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { ReviewsService } from './reviews.service'
-import { CreateReviewDto, UpdateReviewDto } from './dto'
-import { PaginationQueryDto } from '@/common'
+
 import { CurrentUser, Public, RequirePermissions } from '@/auth/decorators'
+import { PaginationQueryDto } from '@/common'
+
+import { CreateReviewDto, UpdateReviewDto } from './dto'
+import { ReviewsService } from './reviews.service'
 
 @Controller('reviews')
 export class ReviewsController {

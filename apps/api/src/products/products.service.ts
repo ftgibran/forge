@@ -3,15 +3,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from '@/prisma'
+
 import { Prisma } from '@/generated/prisma/client'
+import { PrismaService } from '@/prisma'
+
 import {
   CreateProductDto,
-  UpdateProductDto,
-  ProductQueryDto,
-  CreateProductVariantDto,
-  UpdateProductVariantDto,
   CreateProductImageDto,
+  CreateProductVariantDto,
+  ProductQueryDto,
+  UpdateProductDto,
+  UpdateProductVariantDto,
 } from './dto'
 
 @Injectable()
@@ -22,9 +24,11 @@ export class ProductsService {
     const existing = await this.prisma.product.findUnique({
       where: { slug: dto.slug },
     })
+
     if (existing) {
       throw new ConflictException('Product slug already in use')
     }
+
     return this.prisma.product.create({
       data: dto,
       include: {
@@ -45,14 +49,21 @@ export class ProductsService {
         { description: { contains: query.search, mode: 'insensitive' } },
       ]
     }
+
     if (query.categoryId) where.categoryId = query.categoryId
+
     if (query.vendorId) where.vendorId = query.vendorId
+
     if (query.status) where.status = query.status
+
     if (query.filamentType) where.filamentType = query.filamentType
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' }
+
     if (query.sortBy === 'name') orderBy = { name: 'asc' }
+
     if (query.sortBy === 'newest') orderBy = { createdAt: 'desc' }
+
     if (query.sortBy === 'oldest') orderBy = { createdAt: 'asc' }
 
     const [products, total] = await Promise.all([
@@ -99,6 +110,7 @@ export class ProductsService {
         _count: { select: { reviews: true } },
       },
     })
+
     if (!product) {
       throw new NotFoundException('Product not found')
     }
@@ -113,14 +125,17 @@ export class ProductsService {
 
   async update(id: string, dto: UpdateProductDto) {
     await this.findOne(id)
+
     if (dto.slug) {
       const existing = await this.prisma.product.findUnique({
         where: { slug: dto.slug },
       })
+
       if (existing && existing.id !== id) {
         throw new ConflictException('Product slug already in use')
       }
     }
+
     return this.prisma.product.update({
       where: { id },
       data: dto,
@@ -135,6 +150,7 @@ export class ProductsService {
 
   async remove(id: string) {
     await this.findOne(id)
+
     return this.prisma.product.delete({ where: { id } })
   }
 
@@ -144,9 +160,11 @@ export class ProductsService {
     const existing = await this.prisma.productVariant.findUnique({
       where: { sku: dto.sku },
     })
+
     if (existing) {
       throw new ConflictException('Variant SKU already in use')
     }
+
     return this.prisma.productVariant.create({
       data: { ...dto, productId },
     })
@@ -160,17 +178,21 @@ export class ProductsService {
     const variant = await this.prisma.productVariant.findFirst({
       where: { id: variantId, productId },
     })
+
     if (!variant) {
       throw new NotFoundException('Variant not found')
     }
+
     if (dto.sku) {
       const existing = await this.prisma.productVariant.findUnique({
         where: { sku: dto.sku },
       })
+
       if (existing && existing.id !== variantId) {
         throw new ConflictException('Variant SKU already in use')
       }
     }
+
     return this.prisma.productVariant.update({
       where: { id: variantId },
       data: dto,
@@ -181,15 +203,18 @@ export class ProductsService {
     const variant = await this.prisma.productVariant.findFirst({
       where: { id: variantId, productId },
     })
+
     if (!variant) {
       throw new NotFoundException('Variant not found')
     }
+
     return this.prisma.productVariant.delete({ where: { id: variantId } })
   }
 
   // Images
   async addImage(productId: string, dto: CreateProductImageDto) {
     await this.findOne(productId)
+
     return this.prisma.productImage.create({
       data: { ...dto, productId },
     })
@@ -203,9 +228,11 @@ export class ProductsService {
     const image = await this.prisma.productImage.findFirst({
       where: { id: imageId, productId },
     })
+
     if (!image) {
       throw new NotFoundException('Image not found')
     }
+
     return this.prisma.productImage.update({
       where: { id: imageId },
       data: dto,
@@ -216,9 +243,11 @@ export class ProductsService {
     const image = await this.prisma.productImage.findFirst({
       where: { id: imageId, productId },
     })
+
     if (!image) {
       throw new NotFoundException('Image not found')
     }
+
     return this.prisma.productImage.delete({ where: { id: imageId } })
   }
 }

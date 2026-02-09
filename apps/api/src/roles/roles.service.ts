@@ -3,9 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from '@/prisma'
-import { CreateRoleDto, UpdateRoleDto } from './dto'
+
 import { PaginationQueryDto } from '@/common'
+import { PrismaService } from '@/prisma'
+
+import { CreateRoleDto, UpdateRoleDto } from './dto'
 
 @Injectable()
 export class RolesService {
@@ -63,16 +65,19 @@ export class RolesService {
 
   async update(id: string, dto: UpdateRoleDto) {
     await this.findOne(id)
+
     return this.prisma.role.update({ where: { id }, data: dto })
   }
 
   async remove(id: string) {
     await this.findOne(id)
+
     return this.prisma.role.delete({ where: { id } })
   }
 
   async assignPermission(roleId: string, permissionId: string) {
     await this.findOne(roleId)
+
     return this.prisma.rolePermission.create({
       data: { roleId, permissionId },
       include: { permission: true },

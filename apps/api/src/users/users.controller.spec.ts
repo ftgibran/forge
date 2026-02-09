@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 const mockUsersService = {
   create: vi.fn(),
@@ -37,9 +38,11 @@ describe('UsersController', () => {
         name: 'Test',
       }
       const expected = { id: '1', email: 'test@example.com', name: 'Test' }
+
       mockUsersService.create.mockResolvedValue(expected)
 
       const result = await controller.create(dto)
+
       expect(result).toEqual(expected)
       expect(mockUsersService.create).toHaveBeenCalledWith(dto)
     })
@@ -54,6 +57,7 @@ describe('UsersController', () => {
         limit: 10,
         totalPages: 0,
       }
+
       mockUsersService.findAll.mockResolvedValue(expected)
 
       const result = await controller.findAll({
@@ -63,6 +67,7 @@ describe('UsersController', () => {
           return 0
         },
       })
+
       expect(result).toEqual(expected)
     })
   })
@@ -70,9 +75,11 @@ describe('UsersController', () => {
   describe('findOne', () => {
     it('should return a user by id', async () => {
       const expected = { id: '1', email: 'test@example.com', name: 'Test' }
+
       mockUsersService.findOne.mockResolvedValue(expected)
 
       const result = await controller.findOne('1')
+
       expect(result).toEqual(expected)
     })
   })
@@ -81,9 +88,11 @@ describe('UsersController', () => {
     it('should update a user', async () => {
       const dto = { name: 'Updated' }
       const expected = { id: '1', email: 'test@example.com', name: 'Updated' }
+
       mockUsersService.update.mockResolvedValue(expected)
 
       const result = await controller.update('1', dto)
+
       expect(result).toEqual(expected)
     })
   })
@@ -91,9 +100,11 @@ describe('UsersController', () => {
   describe('remove', () => {
     it('should delete a user', async () => {
       const expected = { id: '1', email: 'test@example.com', name: 'Test' }
+
       mockUsersService.remove.mockResolvedValue(expected)
 
       const result = await controller.remove('1')
+
       expect(result).toEqual(expected)
     })
   })
@@ -101,9 +112,11 @@ describe('UsersController', () => {
   describe('assignRole', () => {
     it('should assign a role to a user', async () => {
       const expected = { userId: '1', roleId: 'role-1' }
+
       mockUsersService.assignRole.mockResolvedValue(expected)
 
       const result = await controller.assignRole('1', { roleId: 'role-1' })
+
       expect(result).toEqual(expected)
     })
   })

@@ -1,5 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
+
 import { AppModule } from '@/app.module'
 import { HttpExceptionFilter, TransformInterceptor } from '@/common'
 
@@ -9,6 +10,7 @@ export async function createTestApp(): Promise<INestApplication> {
   }).compile()
 
   const app = moduleFixture.createNestApplication()
+
   app.setGlobalPrefix('api')
   app.useGlobalPipes(
     new ValidationPipe({

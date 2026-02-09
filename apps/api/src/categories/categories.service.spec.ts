@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException, NotFoundException } from '@nestjs/common'
-import { CategoriesService } from './categories.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { CategoriesService } from './categories.service'
 
 const mockPrismaService = {
   category: {
@@ -45,6 +47,7 @@ describe('CategoriesService', () => {
         name: 'Filaments',
         slug: 'filaments',
       })
+
       expect(result.name).toBe('Filaments')
     })
 
@@ -69,6 +72,7 @@ describe('CategoriesService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.id).toBe('1')
     })
 
@@ -95,6 +99,7 @@ describe('CategoriesService', () => {
       })
 
       const result = await service.remove('1')
+
       expect(result.id).toBe('1')
     })
   })

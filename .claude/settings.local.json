@@ -43,7 +43,8 @@
       "Bash(npx eslint:*)",
       "Bash(npx prettier:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npm ls:*)"
+      "Bash(npm ls:*)",
+      "Bash(openssl rand:*)"
     ]
   }
 }

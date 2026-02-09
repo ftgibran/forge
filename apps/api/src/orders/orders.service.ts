@@ -3,9 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from '@/prisma'
-import { CreateOrderDto, UpdateOrderStatusDto } from './dto'
+
 import { PaginationQueryDto } from '@/common'
+import { PrismaService } from '@/prisma'
+
+import { CreateOrderDto, UpdateOrderStatusDto } from './dto'
 
 @Injectable()
 export class OrdersService {
@@ -33,11 +35,14 @@ export class OrdersService {
 
     // Group items by vendor
     const itemsByVendor = new Map<string, typeof cart.items>()
+
     for (const item of cart.items) {
       const vendorId = item.variant.product.vendorId
+
       if (!itemsByVendor.has(vendorId)) {
         itemsByVendor.set(vendorId, [])
       }
+
       itemsByVendor.get(vendorId)!.push(item)
     }
 
@@ -174,14 +179,17 @@ export class OrdersService {
         },
       },
     })
+
     if (!order) {
       throw new NotFoundException('Order not found')
     }
+
     return order
   }
 
   async updateStatus(id: string, dto: UpdateOrderStatusDto) {
     await this.findOne(id)
+
     return this.prisma.order.update({
       where: { id },
       data: { status: dto.status },

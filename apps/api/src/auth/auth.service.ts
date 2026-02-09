@@ -5,8 +5,10 @@ import {
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
+
 import { PrismaService } from '@/prisma'
-import { RegisterDto, LoginDto } from './dto'
+
+import { LoginDto, RegisterDto } from './dto'
 
 @Injectable()
 export class AuthService {
@@ -80,8 +82,8 @@ export class AuthService {
       },
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user
+
     return result
   }
 

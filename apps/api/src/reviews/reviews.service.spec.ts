@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { ReviewsService } from './reviews.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { ReviewsService } from './reviews.service'
 
 const mockPrismaService = {
   review: {
@@ -72,6 +74,7 @@ describe('ReviewsService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.id).toBe('1')
     })
 

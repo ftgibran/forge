@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException, NotFoundException } from '@nestjs/common'
-import { PermissionsService } from './permissions.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { PermissionsService } from './permissions.service'
 
 const mockPrismaService = {
   permission: {
@@ -78,6 +80,7 @@ describe('PermissionsService', () => {
           return 0
         },
       })
+
       expect(result.items).toHaveLength(1)
       expect(result.total).toBe(1)
     })
@@ -92,6 +95,7 @@ describe('PermissionsService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.action).toBe('read')
     })
 
@@ -116,6 +120,7 @@ describe('PermissionsService', () => {
       })
 
       const result = await service.remove('1')
+
       expect(result.id).toBe('1')
     })
   })

@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException, NotFoundException } from '@nestjs/common'
-import { UsersService } from './users.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { UsersService } from './users.service'
 
 const mockPrismaService = {
   user: {
@@ -111,6 +113,7 @@ describe('UsersService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.id).toBe('1')
     })
 
@@ -137,6 +140,7 @@ describe('UsersService', () => {
       })
 
       const result = await service.remove('1')
+
       expect(result.id).toBe('1')
     })
   })
@@ -157,6 +161,7 @@ describe('UsersService', () => {
       })
 
       const result = await service.assignRole('1', 'role-1')
+
       expect(result.roleId).toBe('role-1')
     })
   })

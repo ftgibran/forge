@@ -7,9 +7,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common'
+
+import { Public, RequirePermissions } from '@/auth/decorators'
+
 import { CategoriesService } from './categories.service'
 import { CreateCategoryDto, UpdateCategoryDto } from './dto'
-import { Public, RequirePermissions } from '@/auth/decorators'
 
 @Controller('categories')
 export class CategoriesController {

@@ -8,15 +8,17 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { UsersService } from './users.service'
+
+import { RequirePermissions } from '@/auth/decorators'
+import { PaginationQueryDto } from '@/common'
+
 import {
+  AssignPermissionDto,
+  AssignRoleDto,
   CreateUserDto,
   UpdateUserDto,
-  AssignRoleDto,
-  AssignPermissionDto,
 } from './dto'
-import { PaginationQueryDto } from '@/common'
-import { RequirePermissions } from '@/auth/decorators'
+import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {

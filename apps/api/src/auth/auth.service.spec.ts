@@ -1,10 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { JwtService } from '@nestjs/jwt'
 import { ConflictException, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
 import * as bcrypt from 'bcrypt'
-import { AuthService } from './auth.service'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { AuthService } from './auth.service'
 
 const mockPrismaService = {
   user: {
@@ -74,6 +76,7 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should login and return token for valid credentials', async () => {
       const hashedPassword = await bcrypt.hash('password123', 10)
+
       mockPrismaService.user.findUnique.mockResolvedValue({
         id: '1',
         email: 'test@example.com',
@@ -92,6 +95,7 @@ describe('AuthService', () => {
 
     it('should throw UnauthorizedException for invalid password', async () => {
       const hashedPassword = await bcrypt.hash('password123', 10)
+
       mockPrismaService.user.findUnique.mockResolvedValue({
         id: '1',
         email: 'test@example.com',

@@ -1,7 +1,9 @@
 import { INestApplication } from '@nestjs/common'
 import request from 'supertest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+
 import { createTestApp } from './setup-app'
 
 let app: INestApplication

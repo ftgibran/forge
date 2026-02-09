@@ -8,10 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { PermissionsService } from './permissions.service'
-import { CreatePermissionDto, UpdatePermissionDto } from './dto'
-import { PaginationQueryDto } from '@/common'
+
 import { RequirePermissions } from '@/auth/decorators'
+import { PaginationQueryDto } from '@/common'
+
+import { CreatePermissionDto, UpdatePermissionDto } from './dto'
+import { PermissionsService } from './permissions.service'
 
 @Controller('permissions')
 export class PermissionsController {

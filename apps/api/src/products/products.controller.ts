@@ -8,16 +8,18 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { ProductsService } from './products.service'
+
+import { Public, RequirePermissions } from '@/auth/decorators'
+
 import {
   CreateProductDto,
-  UpdateProductDto,
-  ProductQueryDto,
-  CreateProductVariantDto,
-  UpdateProductVariantDto,
   CreateProductImageDto,
+  CreateProductVariantDto,
+  ProductQueryDto,
+  UpdateProductDto,
+  UpdateProductVariantDto,
 } from './dto'
-import { Public, RequirePermissions } from '@/auth/decorators'
+import { ProductsService } from './products.service'
 
 @Controller('products')
 export class ProductsController {

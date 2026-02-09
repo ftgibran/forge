@@ -4,9 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-import { PrismaService } from '@/prisma'
-import { CreateUserDto, UpdateUserDto } from './dto'
+
 import { PaginationQueryDto } from '@/common'
+import { PrismaService } from '@/prisma'
+
+import { CreateUserDto, UpdateUserDto } from './dto'
 
 const userSelect = {
   id: true,
@@ -78,6 +80,7 @@ export class UsersService {
     await this.findOne(id)
 
     const data: Record<string, unknown> = { ...dto }
+
     if (dto.password) {
       data.password = await bcrypt.hash(dto.password, 10)
     }
@@ -91,11 +94,13 @@ export class UsersService {
 
   async remove(id: string) {
     await this.findOne(id)
+
     return this.prisma.user.delete({ where: { id }, select: userSelect })
   }
 
   async assignRole(userId: string, roleId: string) {
     await this.findOne(userId)
+
     return this.prisma.userRole.create({
       data: { userId, roleId },
       include: { role: true },
@@ -110,6 +115,7 @@ export class UsersService {
 
   async assignPermission(userId: string, permissionId: string) {
     await this.findOne(userId)
+
     return this.prisma.userPermission.create({
       data: { userId, permissionId },
       include: { permission: true },

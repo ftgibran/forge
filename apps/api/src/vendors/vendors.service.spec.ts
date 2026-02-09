@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException, NotFoundException } from '@nestjs/common'
-import { VendorsService } from './vendors.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { VendorsService } from './vendors.service'
 
 const mockPrismaService = {
   vendor: {
@@ -54,6 +56,7 @@ describe('VendorsService', () => {
         { name: 'Test Vendor', slug: 'test-vendor' },
         'user-1',
       )
+
       expect(result.name).toBe('Test Vendor')
       expect(result.status).toBe('PENDING')
     })
@@ -79,6 +82,7 @@ describe('VendorsService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.id).toBe('1')
     })
 

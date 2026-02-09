@@ -8,10 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { RolesService } from './roles.service'
-import { CreateRoleDto, UpdateRoleDto, AssignPermissionDto } from './dto'
-import { PaginationQueryDto } from '@/common'
+
 import { RequirePermissions } from '@/auth/decorators'
+import { PaginationQueryDto } from '@/common'
+
+import { AssignPermissionDto, CreateRoleDto, UpdateRoleDto } from './dto'
+import { RolesService } from './roles.service'
 
 @Controller('roles')
 export class RolesController {

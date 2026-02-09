@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException, NotFoundException } from '@nestjs/common'
-import { ProductsService } from './products.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { ProductsService } from './products.service'
 
 const mockPrismaService = {
   product: {
@@ -67,6 +69,7 @@ describe('ProductsService', () => {
         slug: 'pla-filament',
         vendorId: 'v1',
       })
+
       expect(result.name).toBe('PLA Filament')
     })
 
@@ -101,6 +104,7 @@ describe('ProductsService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.id).toBe('1')
       expect(result.averageRating).toBe(0)
     })
@@ -142,6 +146,7 @@ describe('ProductsService', () => {
         price: 24.99,
         stock: 100,
       })
+
       expect(result.sku).toBe('PLA-WHT')
     })
   })

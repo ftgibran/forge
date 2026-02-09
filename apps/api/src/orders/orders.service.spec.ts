@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { OrdersService } from './orders.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { OrdersService } from './orders.service'
 
 const mockPrismaService = {
   cart: {
@@ -75,6 +77,7 @@ describe('OrdersService', () => {
       })
 
       const result = await service.findOne('1')
+
       expect(result.id).toBe('1')
     })
 

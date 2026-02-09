@@ -8,15 +8,17 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { VendorsService } from './vendors.service'
-import {
-  CreateVendorDto,
-  UpdateVendorDto,
-  CreateVendorApplicationDto,
-  ReviewVendorApplicationDto,
-} from './dto'
-import { PaginationQueryDto } from '@/common'
+
 import { CurrentUser, Public, RequirePermissions } from '@/auth/decorators'
+import { PaginationQueryDto } from '@/common'
+
+import {
+  CreateVendorApplicationDto,
+  CreateVendorDto,
+  ReviewVendorApplicationDto,
+  UpdateVendorDto,
+} from './dto'
+import { VendorsService } from './vendors.service'
 
 @Controller()
 export class VendorsController {

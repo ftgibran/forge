@@ -7,10 +7,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { OrdersService } from './orders.service'
-import { CreateOrderDto, UpdateOrderStatusDto } from './dto'
-import { PaginationQueryDto } from '@/common'
+
 import { CurrentUser, RequirePermissions } from '@/auth/decorators'
+import { PaginationQueryDto } from '@/common'
+
+import { CreateOrderDto, UpdateOrderStatusDto } from './dto'
+import { OrdersService } from './orders.service'
 
 @Controller('orders')
 export class OrdersController {

@@ -1,8 +1,10 @@
 import { INestApplication } from '@nestjs/common'
-import request from 'supertest'
-import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as bcrypt from 'bcrypt'
+import request from 'supertest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { PrismaService } from '@/prisma'
+
 import { createTestApp } from './setup-app'
 
 let app: INestApplication
@@ -42,6 +44,7 @@ describe('Roles (e2e)', () => {
     const extraPerm = await prisma.permission.create({
       data: { action: 'read', resource: 'dashboard' },
     })
+
     permissionId = extraPerm.id
 
     // Create admin role
@@ -64,6 +67,7 @@ describe('Roles (e2e)', () => {
         name: 'Admin',
       },
     })
+
     await prisma.userRole.create({
       data: { userId: adminUser.id, roleId: adminRole.id },
     })

@@ -1,8 +1,10 @@
 import { INestApplication } from '@nestjs/common'
-import request from 'supertest'
-import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as bcrypt from 'bcrypt'
+import request from 'supertest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { PrismaService } from '@/prisma'
+
 import { createTestApp } from './setup-app'
 
 let app: INestApplication
@@ -33,6 +35,7 @@ describe('Users (e2e)', () => {
         description: 'Can create user',
       },
     })
+
     permissionId = perm.id
 
     await prisma.permission.createMany({
@@ -49,6 +52,7 @@ describe('Users (e2e)', () => {
     const role = await prisma.role.create({
       data: { name: 'admin', description: 'Admin' },
     })
+
     roleId = role.id
 
     for (const p of allPerms) {
@@ -66,6 +70,7 @@ describe('Users (e2e)', () => {
         name: 'Admin',
       },
     })
+
     await prisma.userRole.create({
       data: { userId: adminUser.id, roleId: role.id },
     })

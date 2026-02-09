@@ -9,6 +9,7 @@ import {
   Max,
   Min,
 } from 'class-validator'
+
 import { ProductStatus } from '@/generated/prisma/client'
 
 export class UpdateProductDto {

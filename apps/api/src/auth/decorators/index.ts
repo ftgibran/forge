@@ -1,6 +1,6 @@
-export { Public, IS_PUBLIC_KEY } from './public.decorator'
 export { CurrentUser } from './current-user.decorator'
+export { IS_PUBLIC_KEY, Public } from './public.decorator'
 export {
-  RequirePermissions,
   PERMISSIONS_KEY,
+  RequirePermissions,
 } from './require-permissions.decorator'

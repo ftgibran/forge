@@ -4,14 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from '@/prisma'
-import {
-  CreateVendorDto,
-  UpdateVendorDto,
-  CreateVendorApplicationDto,
-  ReviewVendorApplicationDto,
-} from './dto'
+
 import { PaginationQueryDto } from '@/common'
+import { PrismaService } from '@/prisma'
+
+import {
+  CreateVendorApplicationDto,
+  CreateVendorDto,
+  ReviewVendorApplicationDto,
+  UpdateVendorDto,
+} from './dto'
 
 const ownerSelect = { id: true, email: true, name: true } as const
 
@@ -23,6 +25,7 @@ export class VendorsService {
     const existingOwner = await this.prisma.vendor.findUnique({
       where: { ownerId: userId },
     })
+
     if (existingOwner) {
       throw new ConflictException('User already has a vendor profile')
     }
@@ -30,6 +33,7 @@ export class VendorsService {
     const existingSlug = await this.prisma.vendor.findUnique({
       where: { slug: dto.slug },
     })
+
     if (existingSlug) {
       throw new ConflictException('Vendor slug already in use')
     }
@@ -72,9 +76,11 @@ export class VendorsService {
         _count: { select: { products: true, orders: true } },
       },
     })
+
     if (!vendor) {
       throw new NotFoundException('You do not have a vendor profile')
     }
+
     return vendor
   }
 
@@ -86,25 +92,31 @@ export class VendorsService {
         _count: { select: { products: true } },
       },
     })
+
     if (!vendor) {
       throw new NotFoundException('Vendor not found')
     }
+
     return vendor
   }
 
   async update(id: string, dto: UpdateVendorDto, userId?: string) {
     const vendor = await this.findOne(id)
+
     if (userId && vendor.ownerId !== userId) {
       throw new ForbiddenException('You can only update your own vendor')
     }
+
     if (dto.slug) {
       const existing = await this.prisma.vendor.findUnique({
         where: { slug: dto.slug },
       })
+
       if (existing && existing.id !== id) {
         throw new ConflictException('Vendor slug already in use')
       }
     }
+
     return this.prisma.vendor.update({
       where: { id },
       data: dto,
@@ -114,6 +126,7 @@ export class VendorsService {
 
   async remove(id: string) {
     await this.findOne(id)
+
     return this.prisma.vendor.delete({ where: { id } })
   }
 
@@ -123,11 +136,13 @@ export class VendorsService {
     userId: string,
   ) {
     const vendor = await this.findOne(vendorId)
+
     if (vendor.ownerId !== userId) {
       throw new ForbiddenException(
         'You can only submit applications for your own vendor',
       )
     }
+
     return this.prisma.vendorApplication.create({
       data: { vendorId, message: dto.message },
       include: { vendor: true },
@@ -168,6 +183,7 @@ export class VendorsService {
       where: { id: applicationId },
       include: { vendor: true },
     })
+
     if (!application) {
       throw new NotFoundException('Application not found')
     }

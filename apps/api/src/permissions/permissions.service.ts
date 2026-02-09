@@ -3,9 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from '@/prisma'
-import { CreatePermissionDto, UpdatePermissionDto } from './dto'
+
 import { PaginationQueryDto } from '@/common'
+import { PrismaService } from '@/prisma'
+
+import { CreatePermissionDto, UpdatePermissionDto } from './dto'
 
 @Injectable()
 export class PermissionsService {
@@ -58,11 +60,13 @@ export class PermissionsService {
 
   async update(id: string, dto: UpdatePermissionDto) {
     await this.findOne(id)
+
     return this.prisma.permission.update({ where: { id }, data: dto })
   }
 
   async remove(id: string) {
     await this.findOne(id)
+
     return this.prisma.permission.delete({ where: { id } })
   }
 }

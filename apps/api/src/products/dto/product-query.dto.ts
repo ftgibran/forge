@@ -1,4 +1,5 @@
 import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator'
+
 import { PaginationQueryDto } from '@/common'
 import { ProductStatus } from '@/generated/prisma/client'
 

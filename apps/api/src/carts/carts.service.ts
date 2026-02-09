@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+
 import { PrismaService } from '@/prisma'
+
 import { AddCartItemDto, UpdateCartItemDto } from './dto'
 
 @Injectable()
@@ -10,11 +12,13 @@ export class CartsService {
     let cart = await this.prisma.cart.findUnique({
       where: { userId },
     })
+
     if (!cart) {
       cart = await this.prisma.cart.create({
         data: { userId },
       })
     }
+
     return cart
   }
 
@@ -56,6 +60,7 @@ export class CartsService {
     const variant = await this.prisma.productVariant.findUnique({
       where: { id: dto.variantId },
     })
+
     if (!variant) {
       throw new NotFoundException('Product variant not found')
     }
@@ -86,6 +91,7 @@ export class CartsService {
 
   async updateItem(userId: string, itemId: string, dto: UpdateCartItemDto) {
     const cart = await this.prisma.cart.findUnique({ where: { userId } })
+
     if (!cart) {
       throw new NotFoundException('Cart not found')
     }
@@ -93,6 +99,7 @@ export class CartsService {
     const item = await this.prisma.cartItem.findFirst({
       where: { id: itemId, cartId: cart.id },
     })
+
     if (!item) {
       throw new NotFoundException('Cart item not found')
     }
@@ -106,6 +113,7 @@ export class CartsService {
 
   async removeItem(userId: string, itemId: string) {
     const cart = await this.prisma.cart.findUnique({ where: { userId } })
+
     if (!cart) {
       throw new NotFoundException('Cart not found')
     }
@@ -113,6 +121,7 @@ export class CartsService {
     const item = await this.prisma.cartItem.findFirst({
       where: { id: itemId, cartId: cart.id },
     })
+
     if (!item) {
       throw new NotFoundException('Cart item not found')
     }
@@ -122,6 +131,7 @@ export class CartsService {
 
   async clearCart(userId: string) {
     const cart = await this.prisma.cart.findUnique({ where: { userId } })
+
     if (!cart) {
       return { count: 0 }
     }

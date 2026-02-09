@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
-import { CartsService } from './carts.service'
+import { Test, TestingModule } from '@nestjs/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PrismaService } from '@/prisma'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+import { CartsService } from './carts.service'
 
 const mockPrismaService = {
   cart: {
@@ -42,6 +44,7 @@ describe('CartsService', () => {
     it('should return empty items if no cart', async () => {
       mockPrismaService.cart.findUnique.mockResolvedValue(null)
       const result = await service.getCart('user-1')
+
       expect(result.items).toEqual([])
     })
 
@@ -59,6 +62,7 @@ describe('CartsService', () => {
       })
 
       const result = await service.getCart('user-1')
+
       expect(result.items).toHaveLength(1)
     })
   })
