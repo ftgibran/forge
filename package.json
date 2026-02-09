@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @app/api run start:dev & pnpm --filter @app/admin run dev",
+    "dev": "./scripts/dev.sh",
     "dev:api": "pnpm --filter @app/api run start:dev",
     "dev:admin": "pnpm --filter @app/admin run dev",
     "build": "pnpm --filter @app/api run build",
