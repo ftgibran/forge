@@ -5,6 +5,12 @@ import { AuthModule } from '@/auth'
 import { UsersModule } from '@/users'
 import { RolesModule } from '@/roles'
 import { PermissionsModule } from '@/permissions'
+import { CategoriesModule } from '@/categories'
+import { VendorsModule } from '@/vendors'
+import { ProductsModule } from '@/products'
+import { CartsModule } from '@/carts'
+import { OrdersModule } from '@/orders'
+import { ReviewsModule } from '@/reviews'
 
 @Module({
   imports: [
@@ -14,6 +20,12 @@ import { PermissionsModule } from '@/permissions'
     UsersModule,
     RolesModule,
     PermissionsModule,
+    CategoriesModule,
+    VendorsModule,
+    ProductsModule,
+    CartsModule,
+    OrdersModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}

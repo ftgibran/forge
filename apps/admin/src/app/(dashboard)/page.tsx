@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { SimpleGrid, Table, Badge, Box, Text } from '@chakra-ui/react'
-import { LuUsers, LuShield, LuKey } from 'react-icons/lu'
+import {
+  LuUsers,
+  LuShield,
+  LuKey,
+  LuStore,
+  LuBox,
+  LuShoppingCart,
+} from 'react-icons/lu'
 import { formatDate } from '@app/utils'
 import { PageHeader } from '@/components/page-header'
 import { StatCard } from '@/components/stat-card'
@@ -10,11 +17,21 @@ import { TableSkeleton } from '@/components/table-skeleton'
 import { usersApi } from '@/lib/api/users'
 import { rolesApi } from '@/lib/api/roles'
 import { permissionsApi } from '@/lib/api/permissions'
+import { vendorsApi } from '@/lib/api/vendors'
+import { productsApi } from '@/lib/api/products'
+import { ordersApi } from '@/lib/api/orders'
 import type { User } from '@/types'
 
 export default function DashboardPage() {
   const [users, setUsers] = useState<User[]>([])
-  const [counts, setCounts] = useState({ users: 0, roles: 0, permissions: 0 })
+  const [counts, setCounts] = useState({
+    users: 0,
+    roles: 0,
+    permissions: 0,
+    vendors: 0,
+    products: 0,
+    orders: 0,
+  })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -22,13 +39,19 @@ export default function DashboardPage() {
       usersApi.list(1, 5),
       rolesApi.list(1, 1),
       permissionsApi.list(1, 1),
+      vendorsApi.list(1, 1),
+      productsApi.list({ page: 1, limit: 1 }),
+      ordersApi.list(1, 1),
     ])
-      .then(([userRes, roleRes, permRes]) => {
+      .then(([userRes, roleRes, permRes, vendorRes, productRes, orderRes]) => {
         setUsers(userRes.items)
         setCounts({
           users: userRes.total,
           roles: roleRes.total,
           permissions: permRes.total,
+          vendors: vendorRes.total,
+          products: productRes.total,
+          orders: orderRes.total,
         })
       })
       .finally(() => setLoading(false))
@@ -38,10 +61,13 @@ export default function DashboardPage() {
     <>
       <PageHeader title='Dashboard' />
 
-      <SimpleGrid columns={{ base: 1, md: 3 }} gap='6' mb='8'>
+      <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} gap='6' mb='8'>
         <StatCard label='Users' value={counts.users} icon={LuUsers} />
         <StatCard label='Roles' value={counts.roles} icon={LuShield} />
         <StatCard label='Permissions' value={counts.permissions} icon={LuKey} />
+        <StatCard label='Vendors' value={counts.vendors} icon={LuStore} />
+        <StatCard label='Products' value={counts.products} icon={LuBox} />
+        <StatCard label='Orders' value={counts.orders} icon={LuShoppingCart} />
       </SimpleGrid>
 
       <Box>

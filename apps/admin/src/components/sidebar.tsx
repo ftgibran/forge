@@ -9,6 +9,11 @@ import {
   LuShield,
   LuKey,
   LuUser,
+  LuStore,
+  LuFolderTree,
+  LuBox,
+  LuShoppingCart,
+  LuStar,
 } from 'react-icons/lu'
 
 const navItems = [
@@ -16,6 +21,11 @@ const navItems = [
   { href: '/users', label: 'Users', icon: LuUsers },
   { href: '/roles', label: 'Roles', icon: LuShield },
   { href: '/permissions', label: 'Permissions', icon: LuKey },
+  { href: '/vendors', label: 'Vendors', icon: LuStore },
+  { href: '/categories', label: 'Categories', icon: LuFolderTree },
+  { href: '/products', label: 'Products', icon: LuBox },
+  { href: '/orders', label: 'Orders', icon: LuShoppingCart },
+  { href: '/reviews', label: 'Reviews', icon: LuStar },
   { href: '/profile', label: 'Profile', icon: LuUser },
 ]
 
