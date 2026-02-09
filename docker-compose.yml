@@ -11,6 +11,49 @@ services:
       POSTGRES_DB: nestjs_app
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: nestjs-app-api
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/nestjs_app?schema=public
+      JWT_SECRET: super-secret-jwt-key-change-in-production
+      JWT_EXPIRES_IN: 1d
+      PORT: 8080
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'node -e "fetch(\"http://localhost:8080/api\").then(() => process.exit(0)).catch(() => process.exit(1))"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080/api
+    container_name: nestjs-app-admin
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    depends_on:
+      api:
+        condition: service_healthy
 
 volumes:
   pgdata:
