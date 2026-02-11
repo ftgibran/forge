@@ -37,7 +37,7 @@ export default function CheckoutPage() {
 
   const subtotal =
     cart?.items?.reduce((sum, item) => {
-      const price = item.variant?.price ?? 0
+      const price = Number(item.variant?.price ?? 0)
 
       return sum + price * item.quantity
     }, 0) ?? 0
@@ -154,9 +154,9 @@ export default function CheckoutPage() {
                         </Text>
                         <Text fontSize={'sm'} fontWeight={'medium'}>
                           $
-                          {((item.variant?.price ?? 0) * item.quantity).toFixed(
-                            2,
-                          )}
+                          {(
+                            Number(item.variant?.price ?? 0) * item.quantity
+                          ).toFixed(2)}
                         </Text>
                       </HStack>
                     ))}

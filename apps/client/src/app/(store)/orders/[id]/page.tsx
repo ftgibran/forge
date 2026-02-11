@@ -131,10 +131,10 @@ export default function OrderDetailPage() {
                         {item.quantity}
                       </Table.Cell>
                       <Table.Cell textAlign={'right'}>
-                        ${item.unitPrice.toFixed(2)}
+                        ${Number(item.unitPrice).toFixed(2)}
                       </Table.Cell>
                       <Table.Cell textAlign={'right'}>
-                        ${(item.unitPrice * item.quantity).toFixed(2)}
+                        ${(Number(item.unitPrice) * item.quantity).toFixed(2)}
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -144,7 +144,7 @@ export default function OrderDetailPage() {
             <Card.Footer>
               <HStack justify={'flex-end'} w={'full'}>
                 <Text fontWeight={'bold'} fontSize={'lg'}>
-                  Total: ${order.totalAmount.toFixed(2)}
+                  Total: ${Number(order.totalAmount).toFixed(2)}
                 </Text>
               </HStack>
             </Card.Footer>

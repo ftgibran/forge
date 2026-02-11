@@ -154,7 +154,7 @@ export default function ProductDetailPage() {
                 >
                   {product.variants.map((variant) => (
                     <option key={variant.id} value={variant.id}>
-                      {variant.name} — ${variant.price.toFixed(2)}
+                      {variant.name} — ${Number(variant.price).toFixed(2)}
                       {variant.stock <= 0 ? ' (Out of stock)' : ''}
                     </option>
                   ))}

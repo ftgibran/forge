@@ -36,7 +36,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           </Text>
         )}
         <Text fontWeight={'bold'}>
-          ${variant ? variant.price.toFixed(2) : '0.00'}
+          ${variant ? Number(variant.price).toFixed(2) : '0.00'}
         </Text>
       </VStack>
       <HStack gap={'2'}>

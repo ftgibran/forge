@@ -65,7 +65,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                     size={14}
                   />
                   <Text fontSize={'sm'}>
-                    {product.averageRating.toFixed(1)}
+                    {Number(product.averageRating).toFixed(1)}
                   </Text>
                   {product._count?.reviews !== undefined && (
                     <Text fontSize={'xs'} color={'fg.muted'}>

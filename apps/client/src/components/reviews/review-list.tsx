@@ -47,7 +47,9 @@ export function ReviewList({
               color={'var(--chakra-colors-yellow-400)'}
               size={16}
             />
-            <Text fontWeight={'medium'}>{averageRating.toFixed(1)}</Text>
+            <Text fontWeight={'medium'}>
+              {Number(averageRating).toFixed(1)}
+            </Text>
             {reviewCount !== undefined && (
               <Text color={'fg.muted'} fontSize={'sm'}>
                 ({reviewCount} reviews)

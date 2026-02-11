@@ -97,7 +97,7 @@ export default function OrdersPage() {
                           {order.status}
                         </Badge>
                         <Text fontWeight={'bold'}>
-                          ${order.totalAmount.toFixed(2)}
+                          ${Number(order.totalAmount).toFixed(2)}
                         </Text>
                         {order._count && (
                           <Text fontSize={'sm'} color={'fg.muted'}>

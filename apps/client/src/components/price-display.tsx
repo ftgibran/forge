@@ -18,7 +18,7 @@ export function PriceDisplay({
   return (
     <HStack gap={'2'}>
       <Text fontWeight={'bold'} fontSize={fontSize}>
-        ${price.toFixed(2)}
+        ${Number(price).toFixed(2)}
       </Text>
       {compareAtPrice && compareAtPrice > price && (
         <Text
@@ -26,7 +26,7 @@ export function PriceDisplay({
           color={'fg.muted'}
           textDecoration={'line-through'}
         >
-          ${compareAtPrice.toFixed(2)}
+          ${Number(compareAtPrice).toFixed(2)}
         </Text>
       )}
     </HStack>

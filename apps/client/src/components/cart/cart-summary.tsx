@@ -11,7 +11,7 @@ interface CartSummaryProps {
 
 export function CartSummary({ items }: CartSummaryProps) {
   const subtotal = items.reduce((sum, item) => {
-    const price = item.variant?.price ?? 0
+    const price = Number(item.variant?.price ?? 0)
 
     return sum + price * item.quantity
   }, 0)
