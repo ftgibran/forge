@@ -84,14 +84,26 @@ export class VendorsService {
     return vendor
   }
 
-  async findOne(id: string) {
-    const vendor = await this.prisma.vendor.findUnique({
-      where: { id },
-      include: {
-        owner: { select: ownerSelect },
-        _count: { select: { products: true } },
-      },
-    })
+  async findOne(idOrSlug: string) {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      )
+
+    const include = {
+      owner: { select: ownerSelect },
+      _count: { select: { products: true } },
+    }
+
+    const vendor = isUuid
+      ? await this.prisma.vendor.findUnique({
+          where: { id: idOrSlug },
+          include,
+        })
+      : await this.prisma.vendor.findUnique({
+          where: { slug: idOrSlug },
+          include,
+        })
 
     if (!vendor) {
       throw new NotFoundException('Vendor not found')

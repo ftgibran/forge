@@ -24,4 +24,5 @@ fi
 # Start dev servers concurrently
 pnpm --filter @app/api run start:dev &
 pnpm --filter @app/admin run dev &
+pnpm --filter @app/client run dev &
 wait

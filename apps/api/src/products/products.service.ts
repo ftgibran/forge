@@ -92,31 +92,43 @@ export class ProductsService {
     }
   }
 
-  async findOne(id: string) {
-    const product = await this.prisma.product.findUnique({
-      where: { id },
-      include: {
-        vendor: { select: { id: true, name: true, slug: true } },
-        category: true,
-        variants: { orderBy: { createdAt: 'asc' } },
-        images: { orderBy: { position: 'asc' } },
-        reviews: {
-          include: {
-            user: { select: { id: true, name: true } },
-          },
-          orderBy: { createdAt: 'desc' },
-          take: 10,
+  async findOne(idOrSlug: string) {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      )
+
+    const include = {
+      vendor: { select: { id: true, name: true, slug: true } },
+      category: true,
+      variants: { orderBy: { createdAt: 'asc' } as const },
+      images: { orderBy: { position: 'asc' } as const },
+      reviews: {
+        include: {
+          user: { select: { id: true, name: true } },
         },
-        _count: { select: { reviews: true } },
+        orderBy: { createdAt: 'desc' } as const,
+        take: 10,
       },
-    })
+      _count: { select: { reviews: true } },
+    }
+
+    const product = isUuid
+      ? await this.prisma.product.findUnique({
+          where: { id: idOrSlug },
+          include,
+        })
+      : await this.prisma.product.findUnique({
+          where: { slug: idOrSlug },
+          include,
+        })
 
     if (!product) {
       throw new NotFoundException('Product not found')
     }
 
     const avgRating = await this.prisma.review.aggregate({
-      where: { productId: id },
+      where: { productId: product.id },
       _avg: { rating: true },
     })
 

@@ -6,8 +6,10 @@
     "dev": "./scripts/dev.sh",
     "dev:api": "pnpm --filter @app/api run start:dev",
     "dev:admin": "pnpm --filter @app/admin run dev",
+    "dev:client": "pnpm --filter @app/client run dev",
     "build": "pnpm --filter @app/api run build",
     "build:admin": "pnpm --filter @app/admin run build",
+    "build:client": "pnpm --filter @app/client run build",
     "test": "pnpm --filter @app/api run test",
     "test:e2e": "pnpm --filter @app/api run test:e2e",
     "lint": "pnpm -r run lint",
@@ -20,6 +22,10 @@
       "prettier --write"
     ],
     "apps/admin/**/*.{ts,tsx}": [
+      "eslint --flag unstable_config_lookup_from_file --fix",
+      "prettier --write"
+    ],
+    "apps/client/**/*.{ts,tsx}": [
       "eslint --flag unstable_config_lookup_from_file --fix",
       "prettier --write"
     ],

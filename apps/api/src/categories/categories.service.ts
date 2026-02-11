@@ -37,17 +37,29 @@ export class CategoriesService {
     })
   }
 
-  async findOne(id: string) {
-    const category = await this.prisma.category.findUnique({
-      where: { id },
-      include: {
-        children: {
-          include: { _count: { select: { products: true } } },
-        },
-        parent: true,
-        _count: { select: { products: true } },
+  async findOne(idOrSlug: string) {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      )
+
+    const include = {
+      children: {
+        include: { _count: { select: { products: true } } },
       },
-    })
+      parent: true,
+      _count: { select: { products: true } },
+    }
+
+    const category = isUuid
+      ? await this.prisma.category.findUnique({
+          where: { id: idOrSlug },
+          include,
+        })
+      : await this.prisma.category.findUnique({
+          where: { slug: idOrSlug },
+          include,
+        })
 
     if (!category) {
       throw new NotFoundException('Category not found')
