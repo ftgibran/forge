@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: app-sandbox-db
+    container_name: forge-db
     restart: unless-stopped
     ports:
       - '5432:5432'
@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    container_name: app-sandbox-api
+    container_name: forge-api
     restart: unless-stopped
     ports:
       - '8080:8080'
@@ -47,7 +47,7 @@ services:
       dockerfile: apps/admin/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: http://localhost:8080/api
-    container_name: app-sandbox-admin
+    container_name: forge-admin
     restart: unless-stopped
     ports:
       - '3000:3000'
@@ -61,7 +61,7 @@ services:
       dockerfile: apps/client/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: http://localhost:8080/api
-    container_name: app-sandbox-client
+    container_name: forge-client
     restart: unless-stopped
     ports:
       - '4000:4000'

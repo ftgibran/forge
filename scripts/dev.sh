@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-CONTAINER_NAME="app-sandbox-db"
+CONTAINER_NAME="forge-db"
 
 # Check if postgres container already exists (fresh setup needs seeding)
 NEEDS_SEED=false
