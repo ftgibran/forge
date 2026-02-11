@@ -30,7 +30,7 @@ services:
       JWT_SECRET: Y8QSgL0nismnATnkG6pw+aZeAgXxlcbIkUXMv3xuNenSbTxs0gQe7YgglsX/paa2
       JWT_EXPIRES_IN: 1d
       PORT: 8080
-      CORS_ORIGIN: http://localhost:3000,http://localhost:3001
+      CORS_ORIGIN: http://localhost:3000,http://localhost:4000
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,7 +64,7 @@ services:
     container_name: app-sandbox-client
     restart: unless-stopped
     ports:
-      - '3001:3001'
+      - '4000:4000'
     depends_on:
       api:
         condition: service_healthy

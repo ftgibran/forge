@@ -6,9 +6,9 @@ Next.js 15 (App Router) consumer-facing marketplace storefront. Uses Chakra UI v
 ## Commands
 
 ```bash
-pnpm --filter @app/client run dev        # Dev server on :3001
+pnpm --filter @app/client run dev        # Dev server on :4000
 pnpm --filter @app/client run build      # Production build (standalone output)
-pnpm --filter @app/client run start      # Production server on :3001
+pnpm --filter @app/client run start      # Production server on :4000
 pnpm --filter @app/client run lint       # ESLint
 ```
 

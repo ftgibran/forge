@@ -40,12 +40,12 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
-ENV PORT=3001
+ENV PORT=4000
 
 COPY --from=build /app/apps/client/.next/standalone ./
 COPY --from=build /app/apps/client/.next/static ./apps/client/.next/static
 COPY --from=build /app/apps/client/public ./apps/client/public
 
-EXPOSE 3001
+EXPOSE 4000
 
 CMD ["node", "apps/client/server.js"]

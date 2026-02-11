@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 4000",
     "lint": "eslint 'src/**/*.{ts,tsx}' --fix && prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
