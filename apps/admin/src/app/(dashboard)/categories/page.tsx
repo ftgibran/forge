@@ -3,6 +3,7 @@
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { Box, Table } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
@@ -15,6 +16,8 @@ import { categoriesApi } from '@/lib/api/categories'
 import type { Category } from '@/types'
 
 export default function CategoriesPage() {
+  const t = useTranslations('categories')
+  const tc = useTranslations('common')
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -32,11 +35,11 @@ export default function CategoriesPage() {
 
       setCategories(res)
     } catch {
-      toaster.error({ title: 'Failed to load categories' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     fetchCategories()
@@ -48,11 +51,11 @@ export default function CategoriesPage() {
     setDeleting(true)
     try {
       await categoriesApi.delete(deleteTarget.id)
-      toaster.success({ title: 'Category deleted' })
+      toaster.success({ title: t('categoryDeleted') })
       setDeleteOpen(false)
       fetchCategories()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -72,7 +75,7 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <PageHeader title={'Categories'}>
+      <PageHeader title={t('title')}>
         <Button
           colorPalette={'blue'}
           size={'sm'}
@@ -82,7 +85,7 @@ export default function CategoriesPage() {
           }}
         >
           <LuPlus />
-          Create Category
+          {t('createCategory')}
         </Button>
       </PageHeader>
 
@@ -93,11 +96,11 @@ export default function CategoriesPage() {
           <Table.Root size={'sm'} variant={'outline'} interactive>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>Name</Table.ColumnHeader>
-                <Table.ColumnHeader>Slug</Table.ColumnHeader>
-                <Table.ColumnHeader>Products</Table.ColumnHeader>
-                <Table.ColumnHeader>Created</Table.ColumnHeader>
-                <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('name')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('slug')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('products')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('created')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('actions')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -120,7 +123,7 @@ export default function CategoriesPage() {
                   <Table.Cell>
                     <HStack gap={'1'}>
                       <IconButton
-                        aria-label={'Edit'}
+                        aria-label={tc('edit')}
                         size={'xs'}
                         variant={'ghost'}
                         onClick={() => {
@@ -131,7 +134,7 @@ export default function CategoriesPage() {
                         <LuPencil />
                       </IconButton>
                       <IconButton
-                        aria-label={'Delete'}
+                        aria-label={tc('delete')}
                         size={'xs'}
                         variant={'ghost'}
                         colorPalette={'red'}
@@ -162,8 +165,8 @@ export default function CategoriesPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={'Delete Category'}
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        title={t('deleteCategory')}
+        description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
         loading={deleting}
       />

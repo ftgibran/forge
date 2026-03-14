@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -30,6 +31,8 @@ export function VendorFormDialog({
   vendor,
   onSaved,
 }: VendorFormDialogProps) {
+  const t = useTranslations('vendors')
+  const tc = useTranslations('common')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
@@ -63,16 +66,18 @@ export function VendorFormDialog({
 
       if (vendor) {
         await vendorsApi.update(vendor.id, data)
-        toaster.success({ title: 'Vendor updated' })
+        toaster.success({ title: t('vendorUpdated') })
       } else {
         await vendorsApi.create(data)
-        toaster.success({ title: 'Vendor created' })
+        toaster.success({ title: t('vendorCreated') })
       }
 
       onOpenChange(false)
       onSaved()
     } catch {
-      toaster.error({ title: vendor ? 'Update failed' : 'Create failed' })
+      toaster.error({
+        title: vendor ? tc('updateFailed') : tc('createFailed'),
+      })
     } finally {
       setLoading(false)
     }
@@ -82,32 +87,34 @@ export function VendorFormDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{vendor ? 'Edit Vendor' : 'Create Vendor'}</DialogTitle>
+          <DialogTitle>
+            {vendor ? t('editVendor') : t('createVendor')}
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
             <Stack gap={'4'}>
-              <Field label={'Name'}>
+              <Field label={tc('name')}>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Slug'}>
+              <Field label={tc('slug')}>
                 <Input
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Description'}>
+              <Field label={tc('description')}>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Field>
-              <Field label={'Logo URL'}>
+              <Field label={t('logoUrl')}>
                 <Input
                   value={logoUrl}
                   onChange={(e) => setLogoUrl(e.target.value)}
@@ -117,10 +124,10 @@ export function VendorFormDialog({
           </DialogBody>
           <DialogFooter>
             <Button variant={'outline'} onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc('cancel')}
             </Button>
             <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-              {vendor ? 'Update' : 'Create'}
+              {vendor ? tc('update') : tc('create')}
             </Button>
           </DialogFooter>
         </form>

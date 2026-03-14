@@ -2,6 +2,7 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Box, SimpleGrid, Table, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import {
   LuBox,
@@ -24,6 +25,9 @@ import { vendorsApi } from '@/lib/api/vendors'
 import type { User } from '@/types'
 
 export default function DashboardPage() {
+  const t = useTranslations('dashboard')
+  const tn = useTranslations('nav')
+  const tc = useTranslations('common')
   const [users, setUsers] = useState<User[]>([])
   const [counts, setCounts] = useState({
     users: 0,
@@ -60,20 +64,20 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader title={'Dashboard'} />
+      <PageHeader title={t('title')} />
 
       <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} gap={'6'} mb={'8'}>
-        <StatCard label={'Users'} value={counts.users} icon={LuUsers} />
-        <StatCard label={'Roles'} value={counts.roles} icon={LuShield} />
+        <StatCard label={tn('users')} value={counts.users} icon={LuUsers} />
+        <StatCard label={tn('roles')} value={counts.roles} icon={LuShield} />
         <StatCard
-          label={'Permissions'}
+          label={tn('permissions')}
           value={counts.permissions}
           icon={LuKey}
         />
-        <StatCard label={'Vendors'} value={counts.vendors} icon={LuStore} />
-        <StatCard label={'Products'} value={counts.products} icon={LuBox} />
+        <StatCard label={tn('vendors')} value={counts.vendors} icon={LuStore} />
+        <StatCard label={tn('products')} value={counts.products} icon={LuBox} />
         <StatCard
-          label={'Orders'}
+          label={tn('orders')}
           value={counts.orders}
           icon={LuShoppingCart}
         />
@@ -81,7 +85,7 @@ export default function DashboardPage() {
 
       <Box>
         <Text fontWeight={'medium'} mb={'4'} fontSize={'lg'}>
-          Recent Users
+          {t('recentUsers')}
         </Text>
         {loading ? (
           <TableSkeleton rows={5} />
@@ -89,10 +93,10 @@ export default function DashboardPage() {
           <Table.Root size={'sm'} variant={'outline'}>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>Name</Table.ColumnHeader>
-                <Table.ColumnHeader>Email</Table.ColumnHeader>
-                <Table.ColumnHeader>Roles</Table.ColumnHeader>
-                <Table.ColumnHeader>Created</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('name')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('email')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tn('roles')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('created')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>

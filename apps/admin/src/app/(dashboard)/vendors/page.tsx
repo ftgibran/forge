@@ -2,6 +2,7 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuClipboardList, LuPencil, LuTrash2 } from 'react-icons/lu'
 
@@ -22,6 +23,9 @@ const statusColor: Record<string, string> = {
 }
 
 export default function VendorsPage() {
+  const t = useTranslations('vendors')
+  const tc = useTranslations('common')
+  const tn = useTranslations('nav')
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -46,11 +50,11 @@ export default function VendorsPage() {
       setVendors(res.items)
       setTotal(res.total)
     } catch {
-      toaster.error({ title: 'Failed to load vendors' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [page])
+  }, [page, t])
 
   useEffect(() => {
     fetchVendors()
@@ -62,24 +66,24 @@ export default function VendorsPage() {
     setDeleting(true)
     try {
       await vendorsApi.delete(deleteTarget.id)
-      toaster.success({ title: 'Vendor deleted' })
+      toaster.success({ title: t('vendorDeleted') })
       setDeleteOpen(false)
       fetchVendors()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     } finally {
       setDeleting(false)
     }
   }
 
   const columns = [
-    { header: 'Name', accessor: (v: Vendor) => v.name },
+    { header: tc('name'), accessor: (v: Vendor) => v.name },
     {
-      header: 'Owner',
+      header: t('owner'),
       accessor: (v: Vendor) => v.owner?.name ?? '-',
     },
     {
-      header: 'Status',
+      header: tc('status'),
       accessor: (v: Vendor) => (
         <Badge colorPalette={statusColor[v.status]} size={'sm'}>
           {v.status}
@@ -87,19 +91,19 @@ export default function VendorsPage() {
       ),
     },
     {
-      header: 'Products',
+      header: tn('products'),
       accessor: (v: Vendor) => v._count?.products ?? 0,
     },
     {
-      header: 'Created',
+      header: tc('created'),
       accessor: (v: Vendor) => formatDate(v.createdAt),
     },
     {
-      header: 'Actions',
+      header: tc('actions'),
       accessor: (v: Vendor) => (
         <HStack gap={'1'}>
           <IconButton
-            aria-label={'Edit'}
+            aria-label={tc('edit')}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -110,7 +114,7 @@ export default function VendorsPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label={'Delete'}
+            aria-label={tc('delete')}
             size={'xs'}
             variant={'ghost'}
             colorPalette={'red'}
@@ -128,14 +132,14 @@ export default function VendorsPage() {
 
   return (
     <>
-      <PageHeader title={'Vendors'}>
+      <PageHeader title={t('title')}>
         <Button
           size={'sm'}
           variant={'outline'}
           onClick={() => setAppsOpen(true)}
         >
           <LuClipboardList />
-          Applications
+          {t('applications')}
         </Button>
       </PageHeader>
 
@@ -162,8 +166,8 @@ export default function VendorsPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={'Delete Vendor'}
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        title={t('deleteVendor')}
+        description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
         loading={deleting}
       />

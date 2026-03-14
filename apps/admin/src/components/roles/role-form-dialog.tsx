@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -30,6 +31,8 @@ export function RoleFormDialog({
   role,
   onSaved,
 }: RoleFormDialogProps) {
+  const t = useTranslations('roles')
+  const tc = useTranslations('common')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
@@ -52,16 +55,18 @@ export function RoleFormDialog({
 
       if (role) {
         await rolesApi.update(role.id, data)
-        toaster.success({ title: 'Role updated' })
+        toaster.success({ title: t('roleUpdated') })
       } else {
         await rolesApi.create(data)
-        toaster.success({ title: 'Role created' })
+        toaster.success({ title: t('roleCreated') })
       }
 
       onOpenChange(false)
       onSaved()
     } catch {
-      toaster.error({ title: role ? 'Update failed' : 'Create failed' })
+      toaster.error({
+        title: role ? tc('updateFailed') : tc('createFailed'),
+      })
     } finally {
       setLoading(false)
     }
@@ -71,19 +76,19 @@ export function RoleFormDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{role ? 'Edit Role' : 'Create Role'}</DialogTitle>
+          <DialogTitle>{role ? t('editRole') : t('createRole')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
             <Stack gap={'4'}>
-              <Field label={'Name'}>
+              <Field label={tc('name')}>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Description'}>
+              <Field label={tc('description')}>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -93,10 +98,10 @@ export function RoleFormDialog({
           </DialogBody>
           <DialogFooter>
             <Button variant={'outline'} onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc('cancel')}
             </Button>
             <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-              {role ? 'Update' : 'Create'}
+              {role ? tc('update') : tc('create')}
             </Button>
           </DialogFooter>
         </form>

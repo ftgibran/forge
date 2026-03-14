@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Input, SimpleGrid, Stack, Textarea } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -38,6 +39,8 @@ export function ProductFormDialog({
   vendors,
   onSaved,
 }: ProductFormDialogProps) {
+  const t = useTranslations('products')
+  const tc = useTranslations('common')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
@@ -118,17 +121,17 @@ export function ProductFormDialog({
       if (product) {
         delete data.vendorId
         await productsApi.update(product.id, data)
-        toaster.success({ title: 'Product updated' })
+        toaster.success({ title: t('productUpdated') })
       } else {
         await productsApi.create(data)
-        toaster.success({ title: 'Product created' })
+        toaster.success({ title: t('productCreated') })
       }
 
       onOpenChange(false)
       onSaved()
     } catch {
       toaster.error({
-        title: product ? 'Update failed' : 'Create failed',
+        title: product ? tc('updateFailed') : tc('createFailed'),
       })
     } finally {
       setLoading(false)
@@ -152,21 +155,21 @@ export function ProductFormDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {product ? 'Edit Product' : 'Create Product'}
+            {product ? t('editProduct') : t('createProduct')}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
             <Stack gap={'4'}>
               <SimpleGrid columns={2} gap={'4'}>
-                <Field label={'Name'}>
+                <Field label={tc('name')}>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </Field>
-                <Field label={'Slug'}>
+                <Field label={tc('slug')}>
                   <Input
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
@@ -174,7 +177,7 @@ export function ProductFormDialog({
                   />
                 </Field>
               </SimpleGrid>
-              <Field label={'Description'}>
+              <Field label={tc('description')}>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -182,13 +185,13 @@ export function ProductFormDialog({
               </Field>
               <SimpleGrid columns={3} gap={'4'}>
                 {!product && (
-                  <Field label={'Vendor'}>
+                  <Field label={t('vendor')}>
                     <NativeSelectRoot>
                       <NativeSelectField
                         value={vendorId}
                         onChange={(e) => setVendorId(e.target.value)}
                       >
-                        <option value={''}>Select vendor</option>
+                        <option value={''}>{t('selectVendor')}</option>
                         {vendors.map((v) => (
                           <option key={v.id} value={v.id}>
                             {v.name}
@@ -198,13 +201,13 @@ export function ProductFormDialog({
                     </NativeSelectRoot>
                   </Field>
                 )}
-                <Field label={'Category'}>
+                <Field label={t('category')}>
                   <NativeSelectRoot>
                     <NativeSelectField
                       value={categoryId}
                       onChange={(e) => setCategoryId(e.target.value)}
                     >
-                      <option value={''}>None</option>
+                      <option value={''}>{t('none')}</option>
                       {flatCategories.map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.name}
@@ -213,29 +216,29 @@ export function ProductFormDialog({
                     </NativeSelectField>
                   </NativeSelectRoot>
                 </Field>
-                <Field label={'Status'}>
+                <Field label={tc('status')}>
                   <NativeSelectRoot>
                     <NativeSelectField
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value={'DRAFT'}>Draft</option>
-                      <option value={'ACTIVE'}>Active</option>
-                      <option value={'ARCHIVED'}>Archived</option>
+                      <option value={'DRAFT'}>{t('draft')}</option>
+                      <option value={'ACTIVE'}>{t('active')}</option>
+                      <option value={'ARCHIVED'}>{t('archived')}</option>
                     </NativeSelectField>
                   </NativeSelectRoot>
                 </Field>
               </SimpleGrid>
 
               <SimpleGrid columns={3} gap={'4'}>
-                <Field label={'Filament Type'}>
+                <Field label={t('filamentType')}>
                   <Input
                     value={filamentType}
                     onChange={(e) => setFilamentType(e.target.value)}
-                    placeholder={'PLA, ABS, PETG...'}
+                    placeholder={t('filamentPlaceholder')}
                   />
                 </Field>
-                <Field label={'Print Time (hours)'}>
+                <Field label={t('printTimeHours')}>
                   <Input
                     type={'number'}
                     step={'0.1'}
@@ -243,16 +246,16 @@ export function ProductFormDialog({
                     onChange={(e) => setPrintTimeHours(e.target.value)}
                   />
                 </Field>
-                <Field label={'File Format'}>
+                <Field label={t('fileFormat')}>
                   <Input
                     value={fileFormat}
                     onChange={(e) => setFileFormat(e.target.value)}
-                    placeholder={'STL, OBJ...'}
+                    placeholder={t('fileFormatPlaceholder')}
                   />
                 </Field>
               </SimpleGrid>
               <SimpleGrid columns={3} gap={'4'}>
-                <Field label={'Dimension X (mm)'}>
+                <Field label={t('dimensionX')}>
                   <Input
                     type={'number'}
                     step={'0.1'}
@@ -260,7 +263,7 @@ export function ProductFormDialog({
                     onChange={(e) => setDimensionX(e.target.value)}
                   />
                 </Field>
-                <Field label={'Dimension Y (mm)'}>
+                <Field label={t('dimensionY')}>
                   <Input
                     type={'number'}
                     step={'0.1'}
@@ -268,7 +271,7 @@ export function ProductFormDialog({
                     onChange={(e) => setDimensionY(e.target.value)}
                   />
                 </Field>
-                <Field label={'Dimension Z (mm)'}>
+                <Field label={t('dimensionZ')}>
                   <Input
                     type={'number'}
                     step={'0.1'}
@@ -278,7 +281,7 @@ export function ProductFormDialog({
                 </Field>
               </SimpleGrid>
               <SimpleGrid columns={3} gap={'4'}>
-                <Field label={'Nozzle Size (mm)'}>
+                <Field label={t('nozzleSize')}>
                   <Input
                     type={'number'}
                     step={'0.01'}
@@ -286,7 +289,7 @@ export function ProductFormDialog({
                     onChange={(e) => setNozzleSize(e.target.value)}
                   />
                 </Field>
-                <Field label={'Infill %'}>
+                <Field label={t('infillPercentage')}>
                   <Input
                     type={'number'}
                     min={'0'}
@@ -295,14 +298,14 @@ export function ProductFormDialog({
                     onChange={(e) => setInfillPercentage(e.target.value)}
                   />
                 </Field>
-                <Field label={'Supports Required'}>
+                <Field label={t('supportsRequired')}>
                   <NativeSelectRoot>
                     <NativeSelectField
                       value={supportsRequired}
                       onChange={(e) => setSupportsRequired(e.target.value)}
                     >
-                      <option value={'false'}>No</option>
-                      <option value={'true'}>Yes</option>
+                      <option value={'false'}>{tc('no')}</option>
+                      <option value={'true'}>{tc('yes')}</option>
                     </NativeSelectField>
                   </NativeSelectRoot>
                 </Field>
@@ -311,10 +314,10 @@ export function ProductFormDialog({
           </DialogBody>
           <DialogFooter>
             <Button variant={'outline'} onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc('cancel')}
             </Button>
             <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-              {product ? 'Update' : 'Create'}
+              {product ? tc('update') : tc('create')}
             </Button>
           </DialogFooter>
         </form>

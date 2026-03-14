@@ -2,6 +2,7 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
@@ -16,6 +17,9 @@ import { rolesApi } from '@/lib/api/roles'
 import type { Role } from '@/types'
 
 export default function RolesPage() {
+  const t = useTranslations('roles')
+  const tc = useTranslations('common')
+  const tn = useTranslations('nav')
   const [roles, setRoles] = useState<Role[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -41,11 +45,11 @@ export default function RolesPage() {
       setRoles(res.items)
       setTotal(res.total)
     } catch {
-      toaster.error({ title: 'Failed to load roles' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [page])
+  }, [page, t])
 
   useEffect(() => {
     fetchRoles()
@@ -57,41 +61,43 @@ export default function RolesPage() {
     setDeleting(true)
     try {
       await rolesApi.delete(deleteTarget.id)
-      toaster.success({ title: 'Role deleted' })
+      toaster.success({ title: t('roleDeleted') })
       setDeleteOpen(false)
       fetchRoles()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     } finally {
       setDeleting(false)
     }
   }
 
   const columns = [
-    { header: 'Name', accessor: (r: Role) => r.name },
+    { header: tc('name'), accessor: (r: Role) => r.name },
     {
-      header: 'Description',
+      header: tc('description'),
       accessor: (r: Role) => r.description ?? '-',
     },
     {
-      header: 'Permissions',
+      header: tn('permissions'),
       accessor: (r: Role) =>
         r.rolePermissions?.length ? (
-          <Badge size={'sm'}>{r.rolePermissions.length} permissions</Badge>
+          <Badge size={'sm'}>
+            {t('permissionCount', { count: r.rolePermissions.length })}
+          </Badge>
         ) : (
           '-'
         ),
     },
     {
-      header: 'Created',
+      header: tc('created'),
       accessor: (r: Role) => formatDate(r.createdAt),
     },
     {
-      header: 'Actions',
+      header: tc('actions'),
       accessor: (r: Role) => (
         <HStack gap={'1'}>
           <IconButton
-            aria-label={'Edit'}
+            aria-label={tc('edit')}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -102,7 +108,7 @@ export default function RolesPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label={'Manage permissions'}
+            aria-label={t('permissionsFor', { name: r.name })}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -113,7 +119,7 @@ export default function RolesPage() {
             <LuKey />
           </IconButton>
           <IconButton
-            aria-label={'Delete'}
+            aria-label={tc('delete')}
             size={'xs'}
             variant={'ghost'}
             colorPalette={'red'}
@@ -131,7 +137,7 @@ export default function RolesPage() {
 
   return (
     <>
-      <PageHeader title={'Roles'}>
+      <PageHeader title={t('title')}>
         <Button
           colorPalette={'blue'}
           size={'sm'}
@@ -141,7 +147,7 @@ export default function RolesPage() {
           }}
         >
           <LuPlus />
-          Create Role
+          {t('createRole')}
         </Button>
       </PageHeader>
 
@@ -168,8 +174,8 @@ export default function RolesPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={'Delete Role'}
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        title={t('deleteRole')}
+        description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
         loading={deleting}
       />

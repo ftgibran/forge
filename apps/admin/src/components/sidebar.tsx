@@ -3,6 +3,7 @@
 import { Box, Button, Heading, Icon, Stack } from '@chakra-ui/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import {
   LuBox,
   LuFolderTree,
@@ -17,20 +18,21 @@ import {
 } from 'react-icons/lu'
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LuLayoutDashboard },
-  { href: '/users', label: 'Users', icon: LuUsers },
-  { href: '/roles', label: 'Roles', icon: LuShield },
-  { href: '/permissions', label: 'Permissions', icon: LuKey },
-  { href: '/vendors', label: 'Vendors', icon: LuStore },
-  { href: '/categories', label: 'Categories', icon: LuFolderTree },
-  { href: '/products', label: 'Products', icon: LuBox },
-  { href: '/orders', label: 'Orders', icon: LuShoppingCart },
-  { href: '/reviews', label: 'Reviews', icon: LuStar },
-  { href: '/profile', label: 'Profile', icon: LuUser },
-]
+  { href: '/', labelKey: 'dashboard', icon: LuLayoutDashboard },
+  { href: '/users', labelKey: 'users', icon: LuUsers },
+  { href: '/roles', labelKey: 'roles', icon: LuShield },
+  { href: '/permissions', labelKey: 'permissions', icon: LuKey },
+  { href: '/vendors', labelKey: 'vendors', icon: LuStore },
+  { href: '/categories', labelKey: 'categories', icon: LuFolderTree },
+  { href: '/products', labelKey: 'products', icon: LuBox },
+  { href: '/orders', labelKey: 'orders', icon: LuShoppingCart },
+  { href: '/reviews', labelKey: 'reviews', icon: LuStar },
+  { href: '/profile', labelKey: 'profile', icon: LuUser },
+] as const
 
 export function Sidebar() {
   const pathname = usePathname()
+  const t = useTranslations('nav')
 
   return (
     <Box
@@ -46,7 +48,7 @@ export function Sidebar() {
       px={'3'}
     >
       <Heading size={'md'} px={'3'} mb={'6'}>
-        Admin
+        {t('admin')}
       </Heading>
       <Stack gap={'1'}>
         {navItems.map((item) => {
@@ -67,7 +69,7 @@ export function Sidebar() {
                 <Icon>
                   <item.icon />
                 </Icon>
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             </Button>
           )

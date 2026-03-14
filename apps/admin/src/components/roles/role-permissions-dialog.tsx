@@ -2,6 +2,7 @@
 
 import { formatPermission } from '@app/utils'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -30,6 +31,8 @@ export function RolePermissionsDialog({
   role,
   onSaved,
 }: RolePermissionsDialogProps) {
+  const t = useTranslations('roles')
+  const tc = useTranslations('common')
   const [allPermissions, setAllPermissions] = useState<Permission[]>([])
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
@@ -65,16 +68,16 @@ export function RolePermissionsDialog({
 
           return next
         })
-        toaster.success({ title: 'Permission removed' })
+        toaster.success({ title: t('permissionRemoved') })
       } else {
         await rolesApi.assignPermission(role.id, permissionId)
         setAssignedIds((prev) => new Set(prev).add(permissionId))
-        toaster.success({ title: 'Permission assigned' })
+        toaster.success({ title: t('permissionAssigned') })
       }
 
       onSaved()
     } catch {
-      toaster.error({ title: 'Operation failed' })
+      toaster.error({ title: tc('operationFailed') })
     } finally {
       setActionLoading(null)
     }
@@ -84,7 +87,9 @@ export function RolePermissionsDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Permissions for {role?.name}</DialogTitle>
+          <DialogTitle>
+            {t('permissionsFor', { name: role?.name ?? '' })}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           {loading ? (
@@ -101,7 +106,7 @@ export function RolePermissionsDialog({
                     </Text>
                     {assignedIds.has(perm.id) && (
                       <Badge colorPalette={'green'} size={'sm'}>
-                        Assigned
+                        {tc('assigned')}
                       </Badge>
                     )}
                   </Flex>
@@ -112,7 +117,7 @@ export function RolePermissionsDialog({
                     onClick={() => toggle(perm.id)}
                     loading={actionLoading === perm.id}
                   >
-                    {assignedIds.has(perm.id) ? 'Remove' : 'Assign'}
+                    {assignedIds.has(perm.id) ? tc('remove') : tc('assign')}
                   </Button>
                 </Flex>
               ))}

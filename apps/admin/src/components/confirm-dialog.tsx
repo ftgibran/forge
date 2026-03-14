@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 
 import {
   DialogBody,
@@ -29,6 +30,8 @@ export function ConfirmDialog({
   onConfirm,
   loading,
 }: ConfirmDialogProps) {
+  const t = useTranslations('common')
+
   return (
     <DialogRoot
       open={open}
@@ -43,10 +46,10 @@ export function ConfirmDialog({
         <DialogFooter>
           <Stack direction={'row'} gap={'2'}>
             <Button variant={'outline'} onClick={() => onOpenChange(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button colorPalette={'red'} onClick={onConfirm} loading={loading}>
-              Delete
+              {t('delete')}
             </Button>
           </Stack>
         </DialogFooter>

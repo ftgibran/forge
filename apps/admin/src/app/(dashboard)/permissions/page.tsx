@@ -2,6 +2,7 @@
 
 import { formatDate, formatPermission } from '@app/utils'
 import { Button, HStack, IconButton } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
@@ -15,6 +16,8 @@ import { permissionsApi } from '@/lib/api/permissions'
 import type { Permission } from '@/types'
 
 export default function PermissionsPage() {
+  const t = useTranslations('permissions')
+  const tc = useTranslations('common')
   const [permissions, setPermissions] = useState<Permission[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -37,11 +40,11 @@ export default function PermissionsPage() {
       setPermissions(res.items)
       setTotal(res.total)
     } catch {
-      toaster.error({ title: 'Failed to load permissions' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [page])
+  }, [page, t])
 
   useEffect(() => {
     fetchPermissions()
@@ -53,11 +56,11 @@ export default function PermissionsPage() {
     setDeleting(true)
     try {
       await permissionsApi.delete(deleteTarget.id)
-      toaster.success({ title: 'Permission deleted' })
+      toaster.success({ title: t('permissionDeleted') })
       setDeleteOpen(false)
       fetchPermissions()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -65,25 +68,25 @@ export default function PermissionsPage() {
 
   const columns = [
     {
-      header: 'Permission',
+      header: t('permission'),
       accessor: (p: Permission) => formatPermission(p.action, p.resource),
     },
-    { header: 'Action', accessor: 'action' as const },
-    { header: 'Resource', accessor: 'resource' as const },
+    { header: t('action'), accessor: 'action' as const },
+    { header: t('resource'), accessor: 'resource' as const },
     {
-      header: 'Description',
+      header: tc('description'),
       accessor: (p: Permission) => p.description ?? '-',
     },
     {
-      header: 'Created',
+      header: tc('created'),
       accessor: (p: Permission) => formatDate(p.createdAt),
     },
     {
-      header: 'Actions',
+      header: tc('actions'),
       accessor: (p: Permission) => (
         <HStack gap={'1'}>
           <IconButton
-            aria-label={'Edit'}
+            aria-label={tc('edit')}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -94,7 +97,7 @@ export default function PermissionsPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label={'Delete'}
+            aria-label={tc('delete')}
             size={'xs'}
             variant={'ghost'}
             colorPalette={'red'}
@@ -112,7 +115,7 @@ export default function PermissionsPage() {
 
   return (
     <>
-      <PageHeader title={'Permissions'}>
+      <PageHeader title={t('title')}>
         <Button
           colorPalette={'blue'}
           size={'sm'}
@@ -122,7 +125,7 @@ export default function PermissionsPage() {
           }}
         >
           <LuPlus />
-          Create Permission
+          {t('createPermission')}
         </Button>
       </PageHeader>
 
@@ -149,8 +152,12 @@ export default function PermissionsPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={'Delete Permission'}
-        description={`Are you sure you want to delete "${deleteTarget ? `${deleteTarget.action}:${deleteTarget.resource}` : ''}"? This action cannot be undone.`}
+        title={t('deletePermission')}
+        description={tc('deleteConfirm', {
+          name: deleteTarget
+            ? `${deleteTarget.action}:${deleteTarget.resource}`
+            : '',
+        })}
         onConfirm={handleDelete}
         loading={deleting}
       />

@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Input, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -30,6 +31,8 @@ export function UserFormDialog({
   user,
   onSaved,
 }: UserFormDialogProps) {
+  const t = useTranslations('users')
+  const tc = useTranslations('common')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -57,16 +60,18 @@ export function UserFormDialog({
         if (password) data.password = password
 
         await usersApi.update(user.id, data)
-        toaster.success({ title: 'User updated' })
+        toaster.success({ title: t('userUpdated') })
       } else {
         await usersApi.create({ name, email, password })
-        toaster.success({ title: 'User created' })
+        toaster.success({ title: t('userCreated') })
       }
 
       onOpenChange(false)
       onSaved()
     } catch {
-      toaster.error({ title: user ? 'Update failed' : 'Create failed' })
+      toaster.error({
+        title: user ? tc('updateFailed') : tc('createFailed'),
+      })
     } finally {
       setLoading(false)
     }
@@ -76,19 +81,19 @@ export function UserFormDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{user ? 'Edit User' : 'Create User'}</DialogTitle>
+          <DialogTitle>{user ? t('editUser') : t('createUser')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
             <Stack gap={'4'}>
-              <Field label={'Name'}>
+              <Field label={tc('name')}>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Email'}>
+              <Field label={tc('email')}>
                 <Input
                   type={'email'}
                   value={email}
@@ -96,9 +101,7 @@ export function UserFormDialog({
                   required
                 />
               </Field>
-              <Field
-                label={user ? 'Password (leave empty to keep)' : 'Password'}
-              >
+              <Field label={user ? t('passwordKeepEmpty') : tc('password')}>
                 <Input
                   type={'password'}
                   value={password}
@@ -111,10 +114,10 @@ export function UserFormDialog({
           </DialogBody>
           <DialogFooter>
             <Button variant={'outline'} onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc('cancel')}
             </Button>
             <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-              {user ? 'Update' : 'Create'}
+              {user ? tc('update') : tc('create')}
             </Button>
           </DialogFooter>
         </form>

@@ -2,6 +2,7 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuShield, LuTrash2 } from 'react-icons/lu'
 
@@ -17,6 +18,9 @@ import { usersApi } from '@/lib/api/users'
 import type { User } from '@/types'
 
 export default function UsersPage() {
+  const t = useTranslations('users')
+  const tc = useTranslations('common')
+  const tn = useTranslations('nav')
   const [users, setUsers] = useState<User[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -45,11 +49,11 @@ export default function UsersPage() {
       setUsers(res.items)
       setTotal(res.total)
     } catch {
-      toaster.error({ title: 'Failed to load users' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [page])
+  }, [page, t])
 
   useEffect(() => {
     fetchUsers()
@@ -61,21 +65,21 @@ export default function UsersPage() {
     setDeleting(true)
     try {
       await usersApi.delete(deleteTarget.id)
-      toaster.success({ title: 'User deleted' })
+      toaster.success({ title: t('userDeleted') })
       setDeleteOpen(false)
       fetchUsers()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     } finally {
       setDeleting(false)
     }
   }
 
   const columns = [
-    { header: 'Name', accessor: (u: User) => u.name },
-    { header: 'Email', accessor: (u: User) => u.email },
+    { header: tc('name'), accessor: (u: User) => u.name },
+    { header: tc('email'), accessor: (u: User) => u.email },
     {
-      header: 'Roles',
+      header: tn('roles'),
       accessor: (u: User) =>
         u.userRoles?.map((ur) => (
           <Badge key={ur.role.id} mr={'1'} size={'sm'}>
@@ -84,15 +88,15 @@ export default function UsersPage() {
         )) ?? '-',
     },
     {
-      header: 'Created',
+      header: tc('created'),
       accessor: (u: User) => formatDate(u.createdAt),
     },
     {
-      header: 'Actions',
+      header: tc('actions'),
       accessor: (u: User) => (
         <HStack gap={'1'}>
           <IconButton
-            aria-label={'Edit'}
+            aria-label={tc('edit')}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -103,7 +107,7 @@ export default function UsersPage() {
             <LuPencil />
           </IconButton>
           <IconButton
-            aria-label={'Manage roles'}
+            aria-label={t('manageRoles', { name: u.name })}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -114,7 +118,7 @@ export default function UsersPage() {
             <LuShield />
           </IconButton>
           <IconButton
-            aria-label={'Manage permissions'}
+            aria-label={t('directPermissions', { name: u.name })}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -125,7 +129,7 @@ export default function UsersPage() {
             <LuKey />
           </IconButton>
           <IconButton
-            aria-label={'Delete'}
+            aria-label={tc('delete')}
             size={'xs'}
             variant={'ghost'}
             colorPalette={'red'}
@@ -143,7 +147,7 @@ export default function UsersPage() {
 
   return (
     <>
-      <PageHeader title={'Users'}>
+      <PageHeader title={t('title')}>
         <Button
           colorPalette={'blue'}
           size={'sm'}
@@ -153,7 +157,7 @@ export default function UsersPage() {
           }}
         >
           <LuPlus />
-          Create User
+          {t('createUser')}
         </Button>
       </PageHeader>
 
@@ -180,8 +184,8 @@ export default function UsersPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={'Delete User'}
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        title={t('deleteUser')}
+        description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
         loading={deleting}
       />

@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -29,6 +30,8 @@ export function UserRolesDialog({
   user,
   onSaved,
 }: UserRolesDialogProps) {
+  const t = useTranslations('users')
+  const tc = useTranslations('common')
   const [allRoles, setAllRoles] = useState<Role[]>([])
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
@@ -62,16 +65,16 @@ export function UserRolesDialog({
 
           return next
         })
-        toaster.success({ title: 'Role removed' })
+        toaster.success({ title: t('roleRemoved') })
       } else {
         await usersApi.assignRole(user.id, roleId)
         setAssignedIds((prev) => new Set(prev).add(roleId))
-        toaster.success({ title: 'Role assigned' })
+        toaster.success({ title: t('roleAssigned') })
       }
 
       onSaved()
     } catch {
-      toaster.error({ title: 'Operation failed' })
+      toaster.error({ title: tc('operationFailed') })
     } finally {
       setActionLoading(null)
     }
@@ -81,7 +84,9 @@ export function UserRolesDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Manage Roles for {user?.name}</DialogTitle>
+          <DialogTitle>
+            {t('manageRoles', { name: user?.name ?? '' })}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           {loading ? (
@@ -96,7 +101,7 @@ export function UserRolesDialog({
                     <Text fontWeight={'medium'}>{role.name}</Text>
                     {assignedIds.has(role.id) && (
                       <Badge colorPalette={'green'} size={'sm'}>
-                        Assigned
+                        {tc('assigned')}
                       </Badge>
                     )}
                   </Flex>
@@ -107,7 +112,7 @@ export function UserRolesDialog({
                     onClick={() => toggle(role.id)}
                     loading={actionLoading === role.id}
                   >
-                    {assignedIds.has(role.id) ? 'Remove' : 'Assign'}
+                    {assignedIds.has(role.id) ? tc('remove') : tc('assign')}
                   </Button>
                 </Flex>
               ))}

@@ -2,6 +2,7 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, Table, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 
 import {
@@ -33,6 +34,8 @@ export function VendorApplicationsDialog({
   onOpenChange,
   onReviewed,
 }: VendorApplicationsDialogProps) {
+  const t = useTranslations('vendors')
+  const tc = useTranslations('common')
   const [applications, setApplications] = useState<VendorApplication[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -43,11 +46,11 @@ export function VendorApplicationsDialog({
 
       setApplications(res.items)
     } catch {
-      toaster.error({ title: 'Failed to load applications' })
+      toaster.error({ title: t('loadApplicationsFailed') })
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     if (open) fetch()
@@ -60,7 +63,7 @@ export function VendorApplicationsDialog({
       fetch()
       onReviewed()
     } catch {
-      toaster.error({ title: 'Review failed' })
+      toaster.error({ title: t('reviewFailed') })
     }
   }
 
@@ -72,22 +75,22 @@ export function VendorApplicationsDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Vendor Applications</DialogTitle>
+          <DialogTitle>{t('vendorApplications')}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           {loading ? (
-            <Text>Loading...</Text>
+            <Text>{tc('loading')}</Text>
           ) : applications.length === 0 ? (
-            <Text color={'fg.muted'}>No applications found.</Text>
+            <Text color={'fg.muted'}>{t('noApplications')}</Text>
           ) : (
             <Table.Root size={'sm'} variant={'outline'}>
               <Table.Header>
                 <Table.Row>
-                  <Table.ColumnHeader>Vendor</Table.ColumnHeader>
-                  <Table.ColumnHeader>Message</Table.ColumnHeader>
-                  <Table.ColumnHeader>Status</Table.ColumnHeader>
-                  <Table.ColumnHeader>Date</Table.ColumnHeader>
-                  <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('vendor')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('message')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{tc('status')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('date')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{tc('actions')}</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -115,7 +118,7 @@ export function VendorApplicationsDialog({
                             colorPalette={'green'}
                             onClick={() => handleReview(app.id, 'APPROVED')}
                           >
-                            Approve
+                            {t('approve')}
                           </Button>
                           <Button
                             size={'xs'}
@@ -123,7 +126,7 @@ export function VendorApplicationsDialog({
                             variant={'outline'}
                             onClick={() => handleReview(app.id, 'REJECTED')}
                           >
-                            Reject
+                            {t('reject')}
                           </Button>
                         </HStack>
                       )}

@@ -54,3 +54,4 @@ pnpm --filter @app/utils run <script>
 - Each app has its own `CLAUDE.md` with app-specific guidance — refer to those for details.
 - Shared types and utilities go in `packages/utils`.
 - All API responses are wrapped in `{ data: ... }`.
+- **i18n:** The admin app uses `next-intl` with cookie-based locale selection (en + pt-BR). All UI strings must be registered in `apps/admin/messages/{locale}.json` — never hardcode text in components.

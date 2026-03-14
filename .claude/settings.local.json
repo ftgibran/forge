@@ -45,7 +45,8 @@
       "mcp__ide__getDiagnostics",
       "Bash(npm ls:*)",
       "Bash(openssl rand:*)",
-      "Bash(npx @chakra-ui/cli snippet add:*)"
+      "Bash(npx @chakra-ui/cli snippet add:*)",
+      "WebFetch(domain:next-intl.dev)"
     ]
   }
 }

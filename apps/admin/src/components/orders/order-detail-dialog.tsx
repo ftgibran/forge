@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge, Button, HStack, Stack, Table, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 
 import {
@@ -52,6 +53,8 @@ export function OrderDetailDialog({
   orderId,
   onSaved,
 }: OrderDetailDialogProps) {
+  const t = useTranslations('orders')
+  const tc = useTranslations('common')
   const [order, setOrder] = useState<Order | null>(null)
   const [newStatus, setNewStatus] = useState('')
   const [updating, setUpdating] = useState(false)
@@ -65,9 +68,9 @@ export function OrderDetailDialog({
       setOrder(o)
       setNewStatus(o.status)
     } catch {
-      toaster.error({ title: 'Failed to load order' })
+      toaster.error({ title: t('loadOrderFailed') })
     }
-  }, [orderId])
+  }, [orderId, t])
 
   useEffect(() => {
     if (open && orderId) fetch()
@@ -79,11 +82,11 @@ export function OrderDetailDialog({
     setUpdating(true)
     try {
       await ordersApi.updateStatus(orderId, newStatus)
-      toaster.success({ title: 'Status updated' })
+      toaster.success({ title: t('statusUpdated') })
       fetch()
       onSaved()
     } catch {
-      toaster.error({ title: 'Update failed' })
+      toaster.error({ title: tc('updateFailed') })
     } finally {
       setUpdating(false)
     }
@@ -99,26 +102,29 @@ export function OrderDetailDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Order #{order.id.slice(0, 8)}</DialogTitle>
+          <DialogTitle>
+            {t('orderNumber', { id: order.id.slice(0, 8) })}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Stack gap={'4'}>
             <HStack gap={'4'}>
               <Text fontSize={'sm'}>
-                <strong>Customer:</strong> {order.user?.name}
+                <strong>{t('customer')}:</strong> {order.user?.name}
               </Text>
               <Text fontSize={'sm'}>
-                <strong>Vendor:</strong> {order.vendor?.name}
+                <strong>{t('vendor')}:</strong> {order.vendor?.name}
               </Text>
               <Badge colorPalette={statusColor[order.status]} size={'sm'}>
                 {order.status}
               </Badge>
             </HStack>
             <Text fontSize={'sm'}>
-              <strong>Total:</strong> ${Number(order.totalAmount).toFixed(2)}
+              <strong>{t('total')}:</strong> $
+              {Number(order.totalAmount).toFixed(2)}
             </Text>
             <Text fontSize={'sm'}>
-              <strong>Ship to:</strong> {order.shippingAddress?.street},{' '}
+              <strong>{t('shipTo')}</strong> {order.shippingAddress?.street},{' '}
               {order.shippingAddress?.city}, {order.shippingAddress?.state}{' '}
               {order.shippingAddress?.zipCode}, {order.shippingAddress?.country}
             </Text>
@@ -126,11 +132,11 @@ export function OrderDetailDialog({
             <Table.Root size={'sm'} variant={'outline'}>
               <Table.Header>
                 <Table.Row>
-                  <Table.ColumnHeader>Product</Table.ColumnHeader>
-                  <Table.ColumnHeader>Variant</Table.ColumnHeader>
-                  <Table.ColumnHeader>Qty</Table.ColumnHeader>
-                  <Table.ColumnHeader>Unit Price</Table.ColumnHeader>
-                  <Table.ColumnHeader>Subtotal</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('product')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('variant')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('qty')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('unitPrice')}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t('subtotal')}</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -153,7 +159,7 @@ export function OrderDetailDialog({
         </DialogBody>
         <DialogFooter>
           <HStack gap={'2'}>
-            <Field label={'Update Status'}>
+            <Field label={t('updateStatus')}>
               <NativeSelectRoot size={'sm'}>
                 <NativeSelectField
                   value={newStatus}
@@ -174,7 +180,7 @@ export function OrderDetailDialog({
               loading={updating}
               alignSelf={'flex-end'}
             >
-              Update
+              {tc('update')}
             </Button>
           </HStack>
         </DialogFooter>

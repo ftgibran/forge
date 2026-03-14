@@ -8,6 +8,7 @@ import {
   Stack,
   Table,
 } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
@@ -37,6 +38,8 @@ export function ProductImagesDialog({
   product,
   onSaved,
 }: ProductImagesDialogProps) {
+  const t = useTranslations('products')
+  const tc = useTranslations('common')
   const [images, setImages] = useState<ProductImage[]>([])
   const [showForm, setShowForm] = useState(false)
   const [url, setUrl] = useState('')
@@ -52,9 +55,9 @@ export function ProductImagesDialog({
 
       setImages(p.images ?? [])
     } catch {
-      toaster.error({ title: 'Failed to load images' })
+      toaster.error({ title: t('loadImagesFailed') })
     }
-  }, [product])
+  }, [product, t])
 
   useEffect(() => {
     if (open && product) fetch()
@@ -72,7 +75,7 @@ export function ProductImagesDialog({
         altText: altText || undefined,
         position: parseInt(position),
       })
-      toaster.success({ title: 'Image added' })
+      toaster.success({ title: t('imageAdded') })
       setShowForm(false)
       setUrl('')
       setAltText('')
@@ -80,7 +83,7 @@ export function ProductImagesDialog({
       fetch()
       onSaved()
     } catch {
-      toaster.error({ title: 'Failed to add image' })
+      toaster.error({ title: t('addImageFailed') })
     } finally {
       setSaving(false)
     }
@@ -91,11 +94,11 @@ export function ProductImagesDialog({
 
     try {
       await productsApi.deleteImage(product.id, imageId)
-      toaster.success({ title: 'Image deleted' })
+      toaster.success({ title: t('imageDeleted') })
       fetch()
       onSaved()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     }
   }
 
@@ -107,16 +110,18 @@ export function ProductImagesDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Images - {product?.name}</DialogTitle>
+          <DialogTitle>
+            {t('imagesFor', { name: product?.name ?? '' })}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Table.Root size={'sm'} variant={'outline'}>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>URL</Table.ColumnHeader>
-                <Table.ColumnHeader>Alt Text</Table.ColumnHeader>
-                <Table.ColumnHeader>Position</Table.ColumnHeader>
-                <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('url')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('altText')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('position')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('actions')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -129,7 +134,7 @@ export function ProductImagesDialog({
                   <Table.Cell>{img.position}</Table.Cell>
                   <Table.Cell>
                     <IconButton
-                      aria-label={'Delete'}
+                      aria-label={tc('delete')}
                       size={'xs'}
                       variant={'ghost'}
                       colorPalette={'red'}
@@ -146,7 +151,7 @@ export function ProductImagesDialog({
           {showForm ? (
             <form onSubmit={handleAdd}>
               <Stack gap={'3'} mt={'4'}>
-                <Field label={'Image URL'}>
+                <Field label={t('imageUrl')}>
                   <Input
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
@@ -154,13 +159,13 @@ export function ProductImagesDialog({
                   />
                 </Field>
                 <HStack gap={'3'}>
-                  <Field label={'Alt Text'}>
+                  <Field label={t('altText')}>
                     <Input
                       value={altText}
                       onChange={(e) => setAltText(e.target.value)}
                     />
                   </Field>
-                  <Field label={'Position'}>
+                  <Field label={t('position')}>
                     <Input
                       type={'number'}
                       value={position}
@@ -175,14 +180,14 @@ export function ProductImagesDialog({
                     size={'sm'}
                     loading={saving}
                   >
-                    Add Image
+                    {t('addImage')}
                   </Button>
                   <Button
                     variant={'outline'}
                     size={'sm'}
                     onClick={() => setShowForm(false)}
                   >
-                    Cancel
+                    {tc('cancel')}
                   </Button>
                 </HStack>
               </Stack>
@@ -195,7 +200,7 @@ export function ProductImagesDialog({
               onClick={() => setShowForm(true)}
             >
               <LuPlus />
-              Add Image
+              {t('addImage')}
             </Button>
           )}
         </DialogBody>

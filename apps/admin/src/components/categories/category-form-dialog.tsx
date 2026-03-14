@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Input, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -36,6 +37,8 @@ export function CategoryFormDialog({
   categories,
   onSaved,
 }: CategoryFormDialogProps) {
+  const t = useTranslations('categories')
+  const tc = useTranslations('common')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
@@ -69,17 +72,17 @@ export function CategoryFormDialog({
 
       if (category) {
         await categoriesApi.update(category.id, data)
-        toaster.success({ title: 'Category updated' })
+        toaster.success({ title: t('categoryUpdated') })
       } else {
         await categoriesApi.create(data)
-        toaster.success({ title: 'Category created' })
+        toaster.success({ title: t('categoryCreated') })
       }
 
       onOpenChange(false)
       onSaved()
     } catch {
       toaster.error({
-        title: category ? 'Update failed' : 'Create failed',
+        title: category ? tc('updateFailed') : tc('createFailed'),
       })
     } finally {
       setLoading(false)
@@ -102,39 +105,39 @@ export function CategoryFormDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {category ? 'Edit Category' : 'Create Category'}
+            {category ? t('editCategory') : t('createCategory')}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <DialogBody>
             <Stack gap={'4'}>
-              <Field label={'Name'}>
+              <Field label={tc('name')}>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Slug'}>
+              <Field label={tc('slug')}>
                 <Input
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Description'}>
+              <Field label={tc('description')}>
                 <Input
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Field>
-              <Field label={'Parent Category'}>
+              <Field label={t('parentCategory')}>
                 <NativeSelectRoot>
                   <NativeSelectField
                     value={parentId}
                     onChange={(e) => setParentId(e.target.value)}
                   >
-                    <option value={''}>None (Root)</option>
+                    <option value={''}>{t('noneRoot')}</option>
                     {flatCategories.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -147,10 +150,10 @@ export function CategoryFormDialog({
           </DialogBody>
           <DialogFooter>
             <Button variant={'outline'} onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc('cancel')}
             </Button>
             <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-              {category ? 'Update' : 'Create'}
+              {category ? tc('update') : tc('create')}
             </Button>
           </DialogFooter>
         </form>

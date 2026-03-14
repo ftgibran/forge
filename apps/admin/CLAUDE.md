@@ -59,6 +59,23 @@ Every dashboard page follows the same pattern:
 - Prettier: singleQuote, jsxSingleQuote, no semicolons
 - ESLint has relaxed rules for `src/components/ui/**/*.tsx` (auto-generated code)
 
+## Internationalization (i18n)
+
+- **Library:** `next-intl` (cookie-based locale, no URL routing)
+- **Locales:** `en` (default), `pt-BR`
+- **Message files:** `messages/en.json`, `messages/pt-BR.json` — organized by namespace (camelCase keys, 2 levels max)
+- **Server config:** `src/i18n/request.ts` — reads `NEXT_LOCALE` cookie to select locale
+- **Provider:** `NextIntlClientProvider` wraps the app in `src/app/layout.tsx`
+- **Usage in components:** `useTranslations('namespace')` hook — e.g. `const t = useTranslations('users')`
+- **Locale switcher:** `components/locale-switcher.tsx` — globe icon in header and auth layout, sets cookie + refreshes
+
+### i18n Conventions
+- **All user-facing strings must be in locale files** — never hardcode UI text in components
+- **Namespace per entity:** `common`, `nav`, `auth`, `notFound`, `dashboard`, `users`, `roles`, `permissions`, `vendors`, `categories`, `products`, `orders`, `reviews`, `profile`, `localeSwitcher`
+- **Shared labels** (Cancel, Create, Update, Delete, Name, Email, etc.) live in `common` namespace
+- **Interpolation:** ICU syntax — `"deleteConfirm": "Are you sure you want to delete \"{name}\"?"`
+- When adding new pages/features, add translations to both `en.json` and `pt-BR.json`
+
 ## Environment Variables
 
 | Variable | Description | Default |

@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { Field } from '@/components/ui/field'
@@ -19,6 +20,8 @@ import { authApi } from '@/lib/api/auth'
 
 export default function LoginPage() {
   const router = useRouter()
+  const t = useTranslations('auth')
+  const tc = useTranslations('common')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -33,8 +36,8 @@ export default function LoginPage() {
       router.push('/')
     } catch {
       toaster.error({
-        title: 'Login failed',
-        description: 'Invalid credentials',
+        title: t('loginFailed'),
+        description: t('invalidCredentials'),
       })
     } finally {
       setLoading(false)
@@ -46,45 +49,45 @@ export default function LoginPage() {
       <Card.Root>
         <Card.Header>
           <Heading size={'lg'} textAlign={'center'}>
-            Admin Panel
+            {t('adminPanel')}
           </Heading>
           <Text color={'fg.muted'} textAlign={'center'}>
-            Sign in to your account
+            {t('signInTitle')}
           </Text>
         </Card.Header>
         <Card.Body>
           <form onSubmit={handleSubmit}>
             <Stack gap={'4'}>
-              <Field label={'Email'}>
+              <Field label={tc('email')}>
                 <Input
                   type={'email'}
-                  placeholder={'admin@example.com'}
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Password'}>
+              <Field label={tc('password')}>
                 <Input
                   type={'password'}
-                  placeholder={'Enter your password'}
+                  placeholder={t('passwordPlaceholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Field>
               <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-                Sign in
+                {t('signIn')}
               </Button>
             </Stack>
           </form>
         </Card.Body>
         <Card.Footer justifyContent={'center'}>
           <Text fontSize={'sm'} color={'fg.muted'}>
-            Don&apos;t have an account?{' '}
+            {t('noAccount')}{' '}
             <Link href={'/register'}>
               <Text as={'span'} color={'blue.fg'} fontWeight={'medium'}>
-                Sign up
+                {t('signUp')}
               </Text>
             </Link>
           </Text>

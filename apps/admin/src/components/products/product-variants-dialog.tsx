@@ -8,6 +8,7 @@ import {
   Stack,
   Table,
 } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
@@ -37,6 +38,8 @@ export function ProductVariantsDialog({
   product,
   onSaved,
 }: ProductVariantsDialogProps) {
+  const t = useTranslations('products')
+  const tc = useTranslations('common')
   const [variants, setVariants] = useState<ProductVariant[]>([])
   const [showForm, setShowForm] = useState(false)
   const [name, setName] = useState('')
@@ -54,9 +57,9 @@ export function ProductVariantsDialog({
 
       setVariants(p.variants ?? [])
     } catch {
-      toaster.error({ title: 'Failed to load variants' })
+      toaster.error({ title: t('loadVariantsFailed') })
     }
-  }, [product])
+  }, [product, t])
 
   useEffect(() => {
     if (open && product) fetch()
@@ -76,7 +79,7 @@ export function ProductVariantsDialog({
         compareAtPrice: compareAtPrice ? parseFloat(compareAtPrice) : undefined,
         stock: parseInt(stock),
       })
-      toaster.success({ title: 'Variant added' })
+      toaster.success({ title: t('variantAdded') })
       setShowForm(false)
       setName('')
       setSku('')
@@ -86,7 +89,7 @@ export function ProductVariantsDialog({
       fetch()
       onSaved()
     } catch {
-      toaster.error({ title: 'Failed to add variant' })
+      toaster.error({ title: t('addVariantFailed') })
     } finally {
       setSaving(false)
     }
@@ -97,11 +100,11 @@ export function ProductVariantsDialog({
 
     try {
       await productsApi.deleteVariant(product.id, variantId)
-      toaster.success({ title: 'Variant deleted' })
+      toaster.success({ title: t('variantDeleted') })
       fetch()
       onSaved()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     }
   }
 
@@ -113,18 +116,20 @@ export function ProductVariantsDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Variants - {product?.name}</DialogTitle>
+          <DialogTitle>
+            {t('variantsFor', { name: product?.name ?? '' })}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Table.Root size={'sm'} variant={'outline'}>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>Name</Table.ColumnHeader>
-                <Table.ColumnHeader>SKU</Table.ColumnHeader>
-                <Table.ColumnHeader>Price</Table.ColumnHeader>
-                <Table.ColumnHeader>Compare At</Table.ColumnHeader>
-                <Table.ColumnHeader>Stock</Table.ColumnHeader>
-                <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('name')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('sku')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('price')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('compareAt')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('stock')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{tc('actions')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -141,7 +146,7 @@ export function ProductVariantsDialog({
                   <Table.Cell>{v.stock}</Table.Cell>
                   <Table.Cell>
                     <IconButton
-                      aria-label={'Delete'}
+                      aria-label={tc('delete')}
                       size={'xs'}
                       variant={'ghost'}
                       colorPalette={'red'}
@@ -159,14 +164,14 @@ export function ProductVariantsDialog({
             <form onSubmit={handleAdd}>
               <Stack gap={'3'} mt={'4'}>
                 <HStack gap={'3'}>
-                  <Field label={'Name'}>
+                  <Field label={tc('name')}>
                     <Input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
                     />
                   </Field>
-                  <Field label={'SKU'}>
+                  <Field label={t('sku')}>
                     <Input
                       value={sku}
                       onChange={(e) => setSku(e.target.value)}
@@ -175,7 +180,7 @@ export function ProductVariantsDialog({
                   </Field>
                 </HStack>
                 <HStack gap={'3'}>
-                  <Field label={'Price'}>
+                  <Field label={t('price')}>
                     <Input
                       type={'number'}
                       step={'0.01'}
@@ -184,7 +189,7 @@ export function ProductVariantsDialog({
                       required
                     />
                   </Field>
-                  <Field label={'Compare At Price'}>
+                  <Field label={t('compareAtPrice')}>
                     <Input
                       type={'number'}
                       step={'0.01'}
@@ -192,7 +197,7 @@ export function ProductVariantsDialog({
                       onChange={(e) => setCompareAtPrice(e.target.value)}
                     />
                   </Field>
-                  <Field label={'Stock'}>
+                  <Field label={t('stock')}>
                     <Input
                       type={'number'}
                       value={stock}
@@ -207,14 +212,14 @@ export function ProductVariantsDialog({
                     size={'sm'}
                     loading={saving}
                   >
-                    Add Variant
+                    {t('addVariant')}
                   </Button>
                   <Button
                     variant={'outline'}
                     size={'sm'}
                     onClick={() => setShowForm(false)}
                   >
-                    Cancel
+                    {tc('cancel')}
                   </Button>
                 </HStack>
               </Stack>
@@ -227,7 +232,7 @@ export function ProductVariantsDialog({
               onClick={() => setShowForm(true)}
             >
               <LuPlus />
-              Add Variant
+              {t('addVariant')}
             </Button>
           )}
         </DialogBody>

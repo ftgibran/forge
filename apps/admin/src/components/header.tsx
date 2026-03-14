@@ -1,7 +1,9 @@
 'use client'
 
 import { Flex, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 
+import { LocaleSwitcher } from '@/components/locale-switcher'
 import { Avatar } from '@/components/ui/avatar'
 import { ColorModeButton } from '@/components/ui/color-mode'
 import {
@@ -14,6 +16,7 @@ import { useAuth } from '@/lib/auth-context'
 
 export function Header() {
   const { user, logout } = useAuth()
+  const t = useTranslations('auth')
 
   return (
     <Flex
@@ -26,6 +29,7 @@ export function Header() {
       borderBottomWidth={'1px'}
       bg={'bg.panel'}
     >
+      <LocaleSwitcher />
       <ColorModeButton />
       <MenuRoot>
         <MenuTrigger asChild>
@@ -45,7 +49,7 @@ export function Header() {
           </MenuItem>
 
           <MenuItem value={'logout'} onClick={logout}>
-            Sign out
+            {t('signOut')}
           </MenuItem>
         </MenuContent>
       </MenuRoot>

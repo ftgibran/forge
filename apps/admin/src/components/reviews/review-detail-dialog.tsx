@@ -1,6 +1,7 @@
 'use client'
 
 import { Stack, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import {
@@ -26,6 +27,7 @@ export function ReviewDetailDialog({
   onOpenChange,
   reviewId,
 }: ReviewDetailDialogProps) {
+  const t = useTranslations('reviews')
   const [review, setReview] = useState<Review | null>(null)
 
   useEffect(() => {
@@ -34,8 +36,8 @@ export function ReviewDetailDialog({
     reviewsApi
       .get(reviewId)
       .then(setReview)
-      .catch(() => toaster.error({ title: 'Failed to load review' }))
-  }, [open, reviewId])
+      .catch(() => toaster.error({ title: t('loadReviewFailed') }))
+  }, [open, reviewId, t])
 
   if (!review) return null
 
@@ -43,28 +45,28 @@ export function ReviewDetailDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Review Details</DialogTitle>
+          <DialogTitle>{t('reviewDetails')}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Stack gap={'3'}>
             <Text fontSize={'sm'}>
-              <strong>Product:</strong> {review.product?.name}
+              <strong>{t('product')}:</strong> {review.product?.name}
             </Text>
             <Text fontSize={'sm'}>
-              <strong>User:</strong> {review.user?.name}
+              <strong>{t('user')}:</strong> {review.user?.name}
             </Text>
             <Text fontSize={'sm'}>
-              <strong>Rating:</strong> {'★'.repeat(review.rating)}
+              <strong>{t('rating')}:</strong> {'★'.repeat(review.rating)}
               {'☆'.repeat(5 - review.rating)}
             </Text>
             {review.title && (
               <Text fontSize={'sm'}>
-                <strong>Title:</strong> {review.title}
+                <strong>{t('reviewTitle')}:</strong> {review.title}
               </Text>
             )}
             {review.comment && (
               <Text fontSize={'sm'}>
-                <strong>Comment:</strong> {review.comment}
+                <strong>{t('comment')}:</strong> {review.comment}
               </Text>
             )}
           </Stack>

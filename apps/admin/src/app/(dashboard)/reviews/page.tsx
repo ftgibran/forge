@@ -3,6 +3,7 @@
 import { formatDate } from '@app/utils'
 import { HStack, IconButton, Input } from '@chakra-ui/react'
 import { Box, Table, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuEye, LuTrash2 } from 'react-icons/lu'
 
@@ -16,6 +17,8 @@ import { reviewsApi } from '@/lib/api/reviews'
 import type { Product, Review } from '@/types'
 
 export default function ReviewsPage() {
+  const t = useTranslations('reviews')
+  const tc = useTranslations('common')
   const [products, setProducts] = useState<Product[]>([])
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
@@ -40,9 +43,9 @@ export default function ReviewsPage() {
           setSelectedProductId(r.items[0].id)
         }
       })
-      .catch(() => toaster.error({ title: 'Failed to load products' }))
+      .catch(() => toaster.error({ title: t('loadProductsFailed') }))
       .finally(() => setLoading(false))
-  }, [])
+  }, [t])
 
   const fetchReviews = useCallback(async () => {
     if (!selectedProductId) return
@@ -53,11 +56,11 @@ export default function ReviewsPage() {
 
       setReviews(res.items)
     } catch {
-      toaster.error({ title: 'Failed to load reviews' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [selectedProductId])
+  }, [selectedProductId, t])
 
   useEffect(() => {
     fetchReviews()
@@ -69,11 +72,11 @@ export default function ReviewsPage() {
     setDeleting(true)
     try {
       await reviewsApi.delete(deleteTarget.id)
-      toaster.success({ title: 'Review deleted' })
+      toaster.success({ title: t('reviewDeleted') })
       setDeleteOpen(false)
       fetchReviews()
     } catch {
-      toaster.error({ title: 'Delete failed' })
+      toaster.error({ title: tc('deleteFailed') })
     } finally {
       setDeleting(false)
     }
@@ -81,11 +84,11 @@ export default function ReviewsPage() {
 
   return (
     <>
-      <PageHeader title={'Reviews'} />
+      <PageHeader title={t('title')} />
 
       <Box mb={'4'}>
         <Text fontSize={'sm'} mb={'2'} fontWeight={'medium'}>
-          Select Product:
+          {t('selectProduct')}
         </Text>
         <Input
           as={'select'}
@@ -105,16 +108,16 @@ export default function ReviewsPage() {
       {loading ? (
         <TableSkeleton rows={5} />
       ) : reviews.length === 0 ? (
-        <Text color={'fg.muted'}>No reviews for this product.</Text>
+        <Text color={'fg.muted'}>{t('noReviews')}</Text>
       ) : (
         <Table.Root size={'sm'} variant={'outline'} interactive>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>User</Table.ColumnHeader>
-              <Table.ColumnHeader>Rating</Table.ColumnHeader>
-              <Table.ColumnHeader>Title</Table.ColumnHeader>
-              <Table.ColumnHeader>Created</Table.ColumnHeader>
-              <Table.ColumnHeader>Actions</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('user')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('rating')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('reviewTitle')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{tc('created')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{tc('actions')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -134,7 +137,7 @@ export default function ReviewsPage() {
                 <Table.Cell>
                   <HStack gap={'1'}>
                     <IconButton
-                      aria-label={'View'}
+                      aria-label={t('view')}
                       size={'xs'}
                       variant={'ghost'}
                       onClick={() => {
@@ -145,7 +148,7 @@ export default function ReviewsPage() {
                       <LuEye />
                     </IconButton>
                     <IconButton
-                      aria-label={'Delete'}
+                      aria-label={tc('delete')}
                       size={'xs'}
                       variant={'ghost'}
                       colorPalette={'red'}
@@ -173,10 +176,8 @@ export default function ReviewsPage() {
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={'Delete Review'}
-        description={
-          'Are you sure you want to delete this review? This action cannot be undone.'
-        }
+        title={t('deleteReview')}
+        description={t('deleteConfirm')}
         onConfirm={handleDelete}
         loading={deleting}
       />

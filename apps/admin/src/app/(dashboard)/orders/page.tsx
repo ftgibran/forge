@@ -2,6 +2,7 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, HStack, IconButton } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { LuEye } from 'react-icons/lu'
 
@@ -23,6 +24,8 @@ const statusColor: Record<string, string> = {
 }
 
 export default function OrdersPage() {
+  const t = useTranslations('orders')
+  const tc = useTranslations('common')
   const [orders, setOrders] = useState<Order[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -41,11 +44,11 @@ export default function OrdersPage() {
       setOrders(res.items)
       setTotal(res.total)
     } catch {
-      toaster.error({ title: 'Failed to load orders' })
+      toaster.error({ title: t('loadFailed') })
     } finally {
       setLoading(false)
     }
-  }, [page])
+  }, [page, t])
 
   useEffect(() => {
     fetchOrders()
@@ -53,19 +56,19 @@ export default function OrdersPage() {
 
   const columns = [
     {
-      header: 'Order ID',
+      header: t('orderId'),
       accessor: (o: Order) => o.id.slice(0, 8) + '...',
     },
     {
-      header: 'Customer',
+      header: t('customer'),
       accessor: (o: Order) => o.user?.name ?? '-',
     },
     {
-      header: 'Vendor',
+      header: t('vendor'),
       accessor: (o: Order) => o.vendor?.name ?? '-',
     },
     {
-      header: 'Status',
+      header: tc('status'),
       accessor: (o: Order) => (
         <Badge colorPalette={statusColor[o.status]} size={'sm'}>
           {o.status}
@@ -73,19 +76,19 @@ export default function OrdersPage() {
       ),
     },
     {
-      header: 'Total',
+      header: t('total'),
       accessor: (o: Order) => `$${Number(o.totalAmount).toFixed(2)}`,
     },
     {
-      header: 'Created',
+      header: tc('created'),
       accessor: (o: Order) => formatDate(o.createdAt),
     },
     {
-      header: 'Actions',
+      header: tc('actions'),
       accessor: (o: Order) => (
         <HStack gap={'1'}>
           <IconButton
-            aria-label={'View'}
+            aria-label={t('view')}
             size={'xs'}
             variant={'ghost'}
             onClick={() => {
@@ -102,7 +105,7 @@ export default function OrdersPage() {
 
   return (
     <>
-      <PageHeader title={'Orders'} />
+      <PageHeader title={t('title')} />
 
       {loading ? (
         <TableSkeleton />
