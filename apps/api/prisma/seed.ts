@@ -1,7 +1,9 @@
 import 'dotenv/config'
-import { PrismaClient } from '@/generated/prisma/client'
+
 import { PrismaPg } from '@prisma/adapter-pg'
 import * as bcrypt from 'bcrypt'
+
+import { PrismaClient } from '@/generated/prisma/client'
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -37,6 +39,7 @@ async function main() {
           description: `Can ${action} ${resource}`,
         },
       })
+
       permissions.push(permission)
     }
   }
@@ -94,6 +97,7 @@ async function main() {
 
   // Assign read permissions to user role
   const readPermissions = permissions.filter((p) => p.action === 'read')
+
   for (const permission of readPermissions) {
     await prisma.rolePermission.upsert({
       where: {
@@ -118,6 +122,7 @@ async function main() {
       (p.resource === 'order' && ['read', 'update'].includes(p.action)) ||
       (p.resource === 'review' && p.action === 'read'),
   )
+
   for (const permission of vendorPermissions) {
     await prisma.rolePermission.upsert({
       where: {
@@ -248,12 +253,14 @@ async function main() {
   ]
 
   const categories = []
+
   for (const cat of categoryData) {
     const category = await prisma.category.upsert({
       where: { slug: cat.slug },
       update: {},
       create: cat,
     })
+
     categories.push(category)
   }
 

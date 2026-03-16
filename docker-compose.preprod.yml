@@ -25,12 +25,8 @@ services:
     restart: unless-stopped
     ports:
       - '8080:8080'
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/nestjs_app?schema=public
-      JWT_SECRET: Y8QSgL0nismnATnkG6pw+aZeAgXxlcbIkUXMv3xuNenSbTxs0gQe7YgglsX/paa2
-      JWT_EXPIRES_IN: 1d
-      PORT: 8080
-      CORS_ORIGIN: http://localhost:3000,http://localhost:4000
+    env_file:
+      - ./apps/api/.env
     depends_on:
       postgres:
         condition: service_healthy
