@@ -4,13 +4,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .pnpm-approve-builds.json ./
-COPY apps/api/package.json apps/api/package.json
-COPY apps/admin/package.json apps/admin/package.json
-COPY apps/client/package.json apps/client/package.json
-COPY packages/utils/package.json packages/utils/package.json
+COPY package.json ./
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # ---
 
@@ -21,14 +17,10 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
+COPY . .
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .pnpm-approve-builds.json ./
-COPY apps/api/ apps/api/
-COPY packages/utils/ packages/utils/
-
-RUN pnpm --filter @app/api run prisma:generate
-RUN pnpm --filter @app/api run build
+RUN pnpm exec prisma generate
+RUN pnpm exec nest build
 
 # ---
 
@@ -39,21 +31,13 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=deps /app/packages/utils ./packages/utils
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/src/generated ./src/generated
 
-COPY --from=build /app/apps/api/dist ./apps/api/dist
-COPY --from=build /app/apps/api/src/generated ./apps/api/src/generated
+COPY package.json prisma.config.ts docker-entrypoint.sh ./
+COPY prisma ./prisma
 
-COPY apps/api/package.json apps/api/package.json
-COPY apps/api/prisma apps/api/prisma
-COPY apps/api/prisma.config.ts apps/api/prisma.config.ts
-COPY apps/api/docker-entrypoint.sh apps/api/docker-entrypoint.sh
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-
-RUN chmod +x apps/api/docker-entrypoint.sh
-
-WORKDIR /app/apps/api
+RUN chmod +x docker-entrypoint.sh
 
 EXPOSE 8080
 

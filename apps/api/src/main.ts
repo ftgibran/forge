@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common'
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { NestFactory } from '@nestjs/core'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AppModule } from '@/app.module'
 import { HttpExceptionFilter, TransformInterceptor } from '@/common'
@@ -35,6 +36,16 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalInterceptors(new TransformInterceptor())
+
+  const config = new DocumentBuilder()
+    .setTitle('Forge API')
+    .setDescription('NestJS API with JWT auth, Prisma, and RBAC')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+
+  SwaggerModule.setup('', app, document)
 
   await app.listen(process.env.PORT ?? 8080)
 }

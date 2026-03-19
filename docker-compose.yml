@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: forge-api
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    env_file:
+      - ./apps/api/.env
+    healthcheck:
+      test: ['CMD-SHELL', 'node -e "fetch(\"http://localhost:8080/api\").then(() => process.exit(0)).catch(() => process.exit(1))"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s

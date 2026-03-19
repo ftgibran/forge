@@ -8,6 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { Public, RequirePermissions } from '@/auth/decorators'
 
@@ -21,36 +22,45 @@ import {
 } from './dto'
 import { ProductsService } from './products.service'
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
   @RequirePermissions('create:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new product' })
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto)
   }
 
   @Get()
   @Public()
+  @ApiOperation({ summary: 'List all products' })
   findAll(@Query() query: ProductQueryDto) {
     return this.productsService.findAll(query)
   }
 
   @Get(':id')
   @Public()
+  @ApiOperation({ summary: 'Get a product by ID' })
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id)
   }
 
   @Patch(':id')
   @RequirePermissions('update:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a product' })
   update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.productsService.update(id, dto)
   }
 
   @Delete(':id')
   @RequirePermissions('delete:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a product' })
   remove(@Param('id') id: string) {
     return this.productsService.remove(id)
   }
@@ -58,12 +68,16 @@ export class ProductsController {
   // Variants
   @Post(':id/variants')
   @RequirePermissions('create:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Add a variant to a product' })
   addVariant(@Param('id') id: string, @Body() dto: CreateProductVariantDto) {
     return this.productsService.addVariant(id, dto)
   }
 
   @Patch(':id/variants/:variantId')
   @RequirePermissions('update:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a product variant' })
   updateVariant(
     @Param('id') id: string,
     @Param('variantId') variantId: string,
@@ -74,6 +88,8 @@ export class ProductsController {
 
   @Delete(':id/variants/:variantId')
   @RequirePermissions('delete:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Remove a product variant' })
   removeVariant(
     @Param('id') id: string,
     @Param('variantId') variantId: string,
@@ -84,12 +100,16 @@ export class ProductsController {
   // Images
   @Post(':id/images')
   @RequirePermissions('create:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Add an image to a product' })
   addImage(@Param('id') id: string, @Body() dto: CreateProductImageDto) {
     return this.productsService.addImage(id, dto)
   }
 
   @Patch(':id/images/:imageId')
   @RequirePermissions('update:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a product image' })
   updateImage(
     @Param('id') id: string,
     @Param('imageId') imageId: string,
@@ -100,6 +120,8 @@ export class ProductsController {
 
   @Delete(':id/images/:imageId')
   @RequirePermissions('delete:product')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Remove a product image' })
   removeImage(@Param('id') id: string, @Param('imageId') imageId: string) {
     return this.productsService.removeImage(id, imageId)
   }

@@ -7,27 +7,33 @@ import {
   Patch,
   Post,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { CurrentUser } from '@/auth/decorators'
 
 import { CartsService } from './carts.service'
 import { AddCartItemDto, UpdateCartItemDto } from './dto'
 
+@ApiTags('Cart')
+@ApiBearerAuth()
 @Controller('cart')
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get the current user cart' })
   getCart(@CurrentUser('sub') userId: string) {
     return this.cartsService.getCart(userId)
   }
 
   @Post('items')
+  @ApiOperation({ summary: 'Add an item to the cart' })
   addItem(@CurrentUser('sub') userId: string, @Body() dto: AddCartItemDto) {
     return this.cartsService.addItem(userId, dto)
   }
 
   @Patch('items/:itemId')
+  @ApiOperation({ summary: 'Update item quantity in the cart' })
   updateItem(
     @CurrentUser('sub') userId: string,
     @Param('itemId') itemId: string,
@@ -37,6 +43,7 @@ export class CartsController {
   }
 
   @Delete('items/:itemId')
+  @ApiOperation({ summary: 'Remove an item from the cart' })
   removeItem(
     @CurrentUser('sub') userId: string,
     @Param('itemId') itemId: string,
@@ -45,6 +52,7 @@ export class CartsController {
   }
 
   @Delete()
+  @ApiOperation({ summary: 'Clear the entire cart' })
   clearCart(@CurrentUser('sub') userId: string) {
     return this.cartsService.clearCart(userId)
   }
