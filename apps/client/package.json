@@ -6,7 +6,8 @@
     "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --fix && prettier --write \"src/**/*.{ts,tsx}\""
+    "lint": "eslint 'src/**/*.{ts,tsx}' --fix && prettier --write \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@app/utils": "workspace:*",

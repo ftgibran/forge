@@ -20,7 +20,7 @@ if ! docker container inspect "$CONTAINER_NAME" > /dev/null 2>&1; then
 fi
 
 step "Starting PostgreSQL"
-docker compose -f docker-compose.dev.yml up -d --wait
+docker-compose -f docker-compose.build.yml up -d --wait --build
 done_ "Database is healthy"
 
 step "Running migrations"
@@ -34,11 +34,7 @@ if [ "$NEEDS_SEED" = true ]; then
   done_ "Seed complete"
 fi
 
-step "Starting dev servers"
-info "API        → http://localhost:3000"
-info "Admin      → http://localhost:3001"
-info "Client     → http://localhost:3002"
-pnpm --filter @app/api run start:dev &
-pnpm --filter @app/admin run dev &
-pnpm --filter @app/client run dev &
-wait
+step "Build complete"
+done_ "All steps finished successfully"
+
+exit 0
