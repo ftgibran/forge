@@ -1,8 +1,9 @@
 'use client'
 
+import type { Order } from '@app/sdk'
+import { useOrders } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, HStack, IconButton } from '@chakra-ui/react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuEye } from 'react-icons/lu'
@@ -11,8 +12,6 @@ import { DataTable } from '@/components/data-table'
 import { OrderDetailDialog } from '@/components/orders/order-detail-dialog'
 import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { ordersApi } from '@/lib/api/orders'
-import type { Order } from '@/types'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',
@@ -26,7 +25,6 @@ const statusColor: Record<string, string> = {
 export default function OrdersPage() {
   const t = useTranslations('orders')
   const tc = useTranslations('common')
-  const queryClient = useQueryClient()
 
   const [page, setPage] = useState(1)
 
@@ -35,17 +33,10 @@ export default function OrdersPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['orders', page],
-    queryFn: () => ordersApi.list(page, limit),
-  })
+  const { data, isLoading } = useOrders(page, limit)
 
   const orders = data?.items ?? []
   const total = data?.total ?? 0
-
-  const invalidateOrders = () => {
-    queryClient.invalidateQueries({ queryKey: ['orders'] })
-  }
 
   const columns = [
     {
@@ -117,7 +108,7 @@ export default function OrdersPage() {
         open={detailOpen}
         onOpenChange={setDetailOpen}
         orderId={detailOrderId}
-        onSaved={invalidateOrders}
+        onSaved={() => {}}
       />
     </>
   )

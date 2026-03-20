@@ -1,5 +1,6 @@
 'use client'
 
+import { useCart } from '@app/sdk'
 import {
   Badge,
   Box,
@@ -24,11 +25,12 @@ import {
   MenuTrigger,
 } from '@/components/ui/menu'
 import { useAuth } from '@/lib/auth-context'
-import { useCart } from '@/lib/cart-context'
 
 export function Navbar() {
   const { user, logout } = useAuth()
-  const { cartCount } = useCart()
+  const { data: cart } = useCart()
+  const cartCount =
+    cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
   const router = useRouter()
   const [search, setSearch] = useState('')
 

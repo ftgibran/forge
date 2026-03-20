@@ -1,11 +1,9 @@
 'use client'
 
+import { useProductReviews } from '@app/sdk'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuStar } from 'react-icons/lu'
-
-import { reviewsApi } from '@/lib/api/reviews'
-import type { Review } from '@/types'
 
 import { ReviewCard } from './review-card'
 
@@ -20,21 +18,12 @@ export function ReviewList({
   productId,
   averageRating,
   reviewCount,
-  refreshKey,
 }: ReviewListProps) {
-  const [reviews, setReviews] = useState<Review[]>([])
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
 
-  useEffect(() => {
-    reviewsApi
-      .listByProduct(productId, page)
-      .then((data) => {
-        setReviews(data.items)
-        setTotalPages(data.totalPages)
-      })
-      .catch(() => {})
-  }, [productId, page, refreshKey])
+  const { data } = useProductReviews(productId, page, 10)
+  const reviews = data?.items ?? []
+  const totalPages = data?.totalPages ?? 1
 
   return (
     <VStack align={'stretch'} gap={'4'}>

@@ -1,5 +1,7 @@
 'use client'
 
+import type { Category } from '@app/sdk'
+import { useCreateCategory, useUpdateCategory } from '@app/sdk'
 import { Button, Input, Stack } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -19,8 +21,6 @@ import {
   NativeSelectRoot,
 } from '@/components/ui/native-select'
 import { toaster } from '@/components/ui/toaster'
-import { categoriesApi } from '@/lib/api/categories'
-import type { Category } from '@/types'
 
 interface CategoryFormDialogProps {
   open: boolean
@@ -43,7 +43,11 @@ export function CategoryFormDialog({
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [parentId, setParentId] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const createCategory = useCreateCategory()
+  const updateCategory = useUpdateCategory()
+
+  const loading = createCategory.isPending || updateCategory.isPending
 
   useEffect(() => {
     if (category) {
@@ -59,33 +63,40 @@ export function CategoryFormDialog({
     }
   }, [category, open])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      const data = {
-        name,
-        slug,
-        description: description || undefined,
-        parentId: parentId || undefined,
-      }
+    const data = {
+      name,
+      slug,
+      description: description || undefined,
+      parentId: parentId || undefined,
+    }
 
-      if (category) {
-        await categoriesApi.update(category.id, data)
-        toaster.success({ title: t('categoryUpdated') })
-      } else {
-        await categoriesApi.create(data)
-        toaster.success({ title: t('categoryCreated') })
-      }
-
-      onOpenChange(false)
-      onSaved()
-    } catch {
-      toaster.error({
-        title: category ? tc('updateFailed') : tc('createFailed'),
+    if (category) {
+      updateCategory.mutate(
+        { id: category.id, data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('categoryUpdated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('updateFailed') })
+          },
+        },
+      )
+    } else {
+      createCategory.mutate(data, {
+        onSuccess: () => {
+          toaster.success({ title: t('categoryCreated') })
+          onOpenChange(false)
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('createFailed') })
+        },
       })
-    } finally {
-      setLoading(false)
     }
   }
 

@@ -1,8 +1,14 @@
 'use client'
 
+import type { Product } from '@app/sdk'
+import {
+  useCategories,
+  useDeleteProduct,
+  useProducts,
+  useVendors,
+} from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuImage, LuLayers, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
@@ -15,10 +21,6 @@ import { ProductImagesDialog } from '@/components/products/product-images-dialog
 import { ProductVariantsDialog } from '@/components/products/product-variants-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
-import { categoriesApi } from '@/lib/api/categories'
-import { productsApi } from '@/lib/api/products'
-import { vendorsApi } from '@/lib/api/vendors'
-import type { Product } from '@/types'
 
 const statusColor: Record<string, string> = {
   DRAFT: 'gray',
@@ -29,7 +31,6 @@ const statusColor: Record<string, string> = {
 export default function ProductsPage() {
   const t = useTranslations('products')
   const tc = useTranslations('common')
-  const queryClient = useQueryClient()
 
   const [page, setPage] = useState(1)
 
@@ -47,45 +48,28 @@ export default function ProductsPage() {
 
   const limit = 10
 
-  const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products', { page, limit }],
-    queryFn: () => productsApi.list({ page, limit }),
-  })
-
-  const { data: categories = [] } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoriesApi.list(),
-  })
-
-  const { data: vendorsData } = useQuery({
-    queryKey: ['vendors-all'],
-    queryFn: () => vendorsApi.list(1, 100),
-  })
+  const { data: productsData, isLoading } = useProducts({ page, limit })
+  const { data: categories = [] } = useCategories()
+  const { data: vendorsData } = useVendors(1, 100)
 
   const products = productsData?.items ?? []
   const total = productsData?.total ?? 0
   const vendors = vendorsData?.items ?? []
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => productsApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('productDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeleteProduct()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
-  }
-
-  const invalidateProducts = () => {
-    queryClient.invalidateQueries({ queryKey: ['products'] })
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('productDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   const columns = [
@@ -203,7 +187,7 @@ export default function ProductsPage() {
         product={editProduct}
         categories={categories}
         vendors={vendors}
-        onSaved={invalidateProducts}
+        onSaved={() => {}}
       />
 
       <ConfirmDialog
@@ -219,14 +203,14 @@ export default function ProductsPage() {
         open={variantsOpen}
         onOpenChange={setVariantsOpen}
         product={variantsTarget}
-        onSaved={invalidateProducts}
+        onSaved={() => {}}
       />
 
       <ProductImagesDialog
         open={imagesOpen}
         onOpenChange={setImagesOpen}
         product={imagesTarget}
-        onSaved={invalidateProducts}
+        onSaved={() => {}}
       />
     </>
   )

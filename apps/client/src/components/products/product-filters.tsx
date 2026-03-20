@@ -1,14 +1,12 @@
 'use client'
 
+import { useCategories } from '@app/sdk'
 import { HStack, Input, Stack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
 
 import {
   NativeSelectField,
   NativeSelectRoot,
 } from '@/components/ui/native-select'
-import { categoriesApi } from '@/lib/api/categories'
-import type { Category } from '@/types'
 
 interface ProductFiltersProps {
   search?: string
@@ -33,14 +31,7 @@ export function ProductFilters({
   sortBy = 'newest',
   onFilterChange,
 }: ProductFiltersProps) {
-  const [categories, setCategories] = useState<Category[]>([])
-
-  useEffect(() => {
-    categoriesApi
-      .list()
-      .then(setCategories)
-      .catch(() => {})
-  }, [])
+  const { data: categories = [] } = useCategories()
 
   return (
     <Stack direction={{ base: 'column', md: 'row' }} gap={'4'} w={'full'}>

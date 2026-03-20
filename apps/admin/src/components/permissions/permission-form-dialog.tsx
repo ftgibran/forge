@@ -1,5 +1,7 @@
 'use client'
 
+import type { Permission } from '@app/sdk'
+import { useCreatePermission, useUpdatePermission } from '@app/sdk'
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -15,8 +17,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { permissionsApi } from '@/lib/api/permissions'
-import type { Permission } from '@/types'
 
 interface PermissionFormDialogProps {
   open: boolean
@@ -36,7 +36,11 @@ export function PermissionFormDialog({
   const [action, setAction] = useState('')
   const [resource, setResource] = useState('')
   const [description, setDescription] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const createPermission = useCreatePermission()
+  const updatePermission = useUpdatePermission()
+
+  const loading = createPermission.isPending || updatePermission.isPending
 
   useEffect(() => {
     if (permission) {
@@ -50,28 +54,35 @@ export function PermissionFormDialog({
     }
   }, [permission, open])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      const data = { action, resource, description: description || undefined }
+    const data = { action, resource, description: description || undefined }
 
-      if (permission) {
-        await permissionsApi.update(permission.id, data)
-        toaster.success({ title: t('permissionUpdated') })
-      } else {
-        await permissionsApi.create(data)
-        toaster.success({ title: t('permissionCreated') })
-      }
-
-      onOpenChange(false)
-      onSaved()
-    } catch {
-      toaster.error({
-        title: permission ? tc('updateFailed') : tc('createFailed'),
+    if (permission) {
+      updatePermission.mutate(
+        { id: permission.id, data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('permissionUpdated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('updateFailed') })
+          },
+        },
+      )
+    } else {
+      createPermission.mutate(data, {
+        onSuccess: () => {
+          toaster.success({ title: t('permissionCreated') })
+          onOpenChange(false)
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('createFailed') })
+        },
       })
-    } finally {
-      setLoading(false)
     }
   }
 

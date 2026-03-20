@@ -1,8 +1,9 @@
 'use client'
 
+import type { Vendor } from '@app/sdk'
+import { useDeleteVendor, useVendors } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuClipboardList, LuPencil, LuTrash2 } from 'react-icons/lu'
@@ -14,8 +15,6 @@ import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
 import { VendorApplicationsDialog } from '@/components/vendors/vendor-applications-dialog'
 import { VendorFormDialog } from '@/components/vendors/vendor-form-dialog'
-import { vendorsApi } from '@/lib/api/vendors'
-import type { Vendor } from '@/types'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',
@@ -27,7 +26,6 @@ export default function VendorsPage() {
   const t = useTranslations('vendors')
   const tc = useTranslations('common')
   const tn = useTranslations('nav')
-  const queryClient = useQueryClient()
 
   const [page, setPage] = useState(1)
 
@@ -41,34 +39,25 @@ export default function VendorsPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['vendors', page],
-    queryFn: () => vendorsApi.list(page, limit),
-  })
+  const { data, isLoading } = useVendors(page, limit)
 
   const vendors = data?.items ?? []
   const total = data?.total ?? 0
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => vendorsApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('vendorDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['vendors'] })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeleteVendor()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
-  }
-
-  const invalidateVendors = () => {
-    queryClient.invalidateQueries({ queryKey: ['vendors'] })
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('vendorDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   const columns = [
@@ -155,7 +144,7 @@ export default function VendorsPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         vendor={editVendor}
-        onSaved={invalidateVendors}
+        onSaved={() => {}}
       />
 
       <ConfirmDialog
@@ -170,7 +159,7 @@ export default function VendorsPage() {
       <VendorApplicationsDialog
         open={appsOpen}
         onOpenChange={setAppsOpen}
-        onReviewed={invalidateVendors}
+        onReviewed={() => {}}
       />
     </>
   )

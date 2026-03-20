@@ -1,9 +1,8 @@
 'use client'
 
+import type { CartItem } from '@app/sdk'
 import { Button, Card, HStack, Separator, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
-
-import type { CartItem } from '@/types'
 
 interface CartSummaryProps {
   items: CartItem[]

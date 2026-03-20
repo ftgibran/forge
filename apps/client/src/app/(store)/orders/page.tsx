@@ -1,5 +1,6 @@
 'use client'
 
+import { useMyOrders } from '@app/sdk'
 import {
   Badge,
   Button,
@@ -9,7 +10,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useState } from 'react'
 import { LuPackage } from 'react-icons/lu'
@@ -17,7 +17,6 @@ import { LuPackage } from 'react-icons/lu'
 import { AuthGuard } from '@/components/auth-guard'
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
-import { ordersApi } from '@/lib/api/orders'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',
@@ -31,10 +30,7 @@ const statusColor: Record<string, string> = {
 export default function OrdersPage() {
   const [page, setPage] = useState(1)
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['orders-my', page],
-    queryFn: () => ordersApi.listMy(page),
-  })
+  const { data, isLoading } = useMyOrders(page, 10)
 
   const orders = data?.items ?? []
   const totalPages = data?.totalPages ?? 1

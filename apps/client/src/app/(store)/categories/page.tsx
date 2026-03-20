@@ -1,18 +1,14 @@
 'use client'
 
+import { useCategories } from '@app/sdk'
 import { Card, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
-import { categoriesApi } from '@/lib/api/categories'
 
 export default function CategoriesPage() {
-  const { data: categories = [], isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoriesApi.list(),
-  })
+  const { data: categories = [], isLoading } = useCategories()
 
   return (
     <PageContainer>

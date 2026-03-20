@@ -1,5 +1,7 @@
 'use client'
 
+import type { Product, ProductImage } from '@app/sdk'
+import { useAddProductImage, useDeleteProductImage, useProduct } from '@app/sdk'
 import {
   Button,
   HStack,
@@ -9,7 +11,7 @@ import {
   Table,
 } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
 import {
@@ -22,8 +24,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
-import type { Product, ProductImage } from '@/types'
 
 interface ProductImagesDialogProps {
   open: boolean
@@ -40,66 +40,71 @@ export function ProductImagesDialog({
 }: ProductImagesDialogProps) {
   const t = useTranslations('products')
   const tc = useTranslations('common')
-  const [images, setImages] = useState<ProductImage[]>([])
   const [showForm, setShowForm] = useState(false)
   const [url, setUrl] = useState('')
   const [altText, setAltText] = useState('')
   const [position, setPosition] = useState('0')
-  const [saving, setSaving] = useState(false)
 
-  const fetch = useCallback(async () => {
-    if (!product) return
+  const { data: productData, refetch } = useProduct(product?.id ?? '', {
+    enabled: open && !!product?.id,
+  })
 
-    try {
-      const p = await productsApi.get(product.id)
+  const images: ProductImage[] = productData?.images ?? []
 
-      setImages(p.images ?? [])
-    } catch {
-      toaster.error({ title: t('loadImagesFailed') })
-    }
-  }, [product, t])
+  const addImage = useAddProductImage()
+  const deleteImage = useDeleteProductImage()
 
   useEffect(() => {
-    if (open && product) fetch()
-  }, [open, product, fetch])
+    if (open && product) refetch()
+  }, [open, product, refetch])
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!product) return
 
-    setSaving(true)
-    try {
-      await productsApi.addImage(product.id, {
-        url,
-        altText: altText || undefined,
-        position: parseInt(position),
-      })
-      toaster.success({ title: t('imageAdded') })
-      setShowForm(false)
-      setUrl('')
-      setAltText('')
-      setPosition('0')
-      fetch()
-      onSaved()
-    } catch {
-      toaster.error({ title: t('addImageFailed') })
-    } finally {
-      setSaving(false)
-    }
+    addImage.mutate(
+      {
+        productId: product.id,
+        data: {
+          url,
+          altText: altText || undefined,
+          position: parseInt(position),
+        },
+      },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('imageAdded') })
+          setShowForm(false)
+          setUrl('')
+          setAltText('')
+          setPosition('0')
+          refetch()
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: t('addImageFailed') })
+        },
+      },
+    )
   }
 
-  const handleDelete = async (imageId: string) => {
+  const handleDelete = (imageId: string) => {
     if (!product) return
 
-    try {
-      await productsApi.deleteImage(product.id, imageId)
-      toaster.success({ title: t('imageDeleted') })
-      fetch()
-      onSaved()
-    } catch {
-      toaster.error({ title: tc('deleteFailed') })
-    }
+    deleteImage.mutate(
+      { productId: product.id, imageId },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('imageDeleted') })
+          refetch()
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
+      },
+    )
   }
 
   return (
@@ -178,7 +183,7 @@ export function ProductImagesDialog({
                     type={'submit'}
                     colorPalette={'blue'}
                     size={'sm'}
-                    loading={saving}
+                    loading={addImage.isPending}
                   >
                     {t('addImage')}
                   </Button>

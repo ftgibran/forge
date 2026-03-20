@@ -1,5 +1,6 @@
 'use client'
 
+import type { Category } from '@app/sdk'
 import {
   Card,
   Container,
@@ -9,8 +10,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
-
-import type { Category } from '@/types'
 
 interface FeaturedCategoriesProps {
   categories: Category[]

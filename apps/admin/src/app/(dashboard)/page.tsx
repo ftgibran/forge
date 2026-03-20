@@ -1,8 +1,16 @@
 'use client'
 
+import type { User } from '@app/sdk'
+import {
+  useOrders,
+  usePermissions,
+  useProducts,
+  useRoles,
+  useUsers,
+  useVendors,
+} from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Box, SimpleGrid, Table, Text } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import {
   LuBox,
@@ -16,48 +24,18 @@ import {
 import { PageHeader } from '@/components/page-header'
 import { StatCard } from '@/components/stat-card'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { ordersApi } from '@/lib/api/orders'
-import { permissionsApi } from '@/lib/api/permissions'
-import { productsApi } from '@/lib/api/products'
-import { rolesApi } from '@/lib/api/roles'
-import { usersApi } from '@/lib/api/users'
-import { vendorsApi } from '@/lib/api/vendors'
-import type { User } from '@/types'
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard')
   const tn = useTranslations('nav')
   const tc = useTranslations('common')
 
-  const { data: usersData, isLoading: loading } = useQuery({
-    queryKey: ['dashboard-users'],
-    queryFn: () => usersApi.list(1, 5),
-  })
-
-  const { data: rolesData } = useQuery({
-    queryKey: ['dashboard-roles'],
-    queryFn: () => rolesApi.list(1, 1),
-  })
-
-  const { data: permissionsData } = useQuery({
-    queryKey: ['dashboard-permissions'],
-    queryFn: () => permissionsApi.list(1, 1),
-  })
-
-  const { data: vendorsData } = useQuery({
-    queryKey: ['dashboard-vendors'],
-    queryFn: () => vendorsApi.list(1, 1),
-  })
-
-  const { data: productsData } = useQuery({
-    queryKey: ['dashboard-products'],
-    queryFn: () => productsApi.list({ page: 1, limit: 1 }),
-  })
-
-  const { data: ordersData } = useQuery({
-    queryKey: ['dashboard-orders'],
-    queryFn: () => ordersApi.list(1, 1),
-  })
+  const { data: usersData, isLoading: loading } = useUsers(1, 5)
+  const { data: rolesData } = useRoles(1, 1)
+  const { data: permissionsData } = usePermissions(1, 1)
+  const { data: vendorsData } = useVendors(1, 1)
+  const { data: productsData } = useProducts({ page: 1, limit: 1 })
+  const { data: ordersData } = useOrders(1, 1)
 
   const users: User[] = usersData?.items ?? []
 

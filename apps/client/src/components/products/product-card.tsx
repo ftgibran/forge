@@ -1,5 +1,6 @@
 'use client'
 
+import type { Product } from '@app/sdk'
 import {
   Button,
   Card,
@@ -13,7 +14,6 @@ import Link from 'next/link'
 import { LuShoppingCart, LuStar } from 'react-icons/lu'
 
 import { PriceDisplay } from '@/components/price-display'
-import type { Product } from '@/types'
 
 interface ProductCardProps {
   product: Product

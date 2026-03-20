@@ -1,5 +1,6 @@
 'use client'
 
+import { useOrder } from '@app/sdk'
 import {
   Badge,
   Card,
@@ -10,13 +11,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { AuthGuard } from '@/components/auth-guard'
 import { PageContainer } from '@/components/page-container'
-import { ordersApi } from '@/lib/api/orders'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',
@@ -30,10 +29,7 @@ const statusColor: Record<string, string> = {
 export default function OrderDetailPage() {
   const params = useParams<{ id: string }>()
 
-  const { data: order, isLoading } = useQuery({
-    queryKey: ['order', params.id],
-    queryFn: () => ordersApi.get(params.id),
-  })
+  const { data: order, isLoading } = useOrder(params.id)
 
   if (isLoading) {
     return (

@@ -1,5 +1,12 @@
 'use client'
 
+import type { Role, User } from '@app/sdk'
+import {
+  useAssignUserRole,
+  useRemoveUserRole,
+  useRoles,
+  useUser,
+} from '@app/sdk'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -13,9 +20,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
-import { rolesApi } from '@/lib/api/roles'
-import { usersApi } from '@/lib/api/users'
-import type { Role, User } from '@/types'
 
 interface UserRolesDialogProps {
   open: boolean
@@ -32,51 +36,68 @@ export function UserRolesDialog({
 }: UserRolesDialogProps) {
   const t = useTranslations('users')
   const tc = useTranslations('common')
-  const [allRoles, setAllRoles] = useState<Role[]>([])
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
-  const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
+  const { data: rolesData, isLoading } = useRoles(1, 100, { enabled: open })
+  const { data: freshUser } = useUser(user?.id ?? '', {
+    enabled: open && !!user?.id,
+  })
+
+  const allRoles: Role[] = rolesData?.items ?? []
+
+  const assignRole = useAssignUserRole()
+  const removeRole = useRemoveUserRole()
+
   useEffect(() => {
-    if (!open || !user) return
+    if (freshUser) {
+      setAssignedIds(
+        new Set(freshUser.userRoles?.map((ur) => ur.role.id) ?? []),
+      )
+    }
+  }, [freshUser])
 
-    setLoading(true)
-    Promise.all([rolesApi.list(1, 100), usersApi.get(user.id)])
-      .then(([rolesRes, freshUser]) => {
-        setAllRoles(rolesRes.items)
-        setAssignedIds(
-          new Set(freshUser.userRoles?.map((ur) => ur.role.id) ?? []),
-        )
-      })
-      .finally(() => setLoading(false))
-  }, [open, user])
-
-  const toggle = async (roleId: string) => {
+  const toggle = (roleId: string) => {
     if (!user) return
 
     setActionLoading(roleId)
-    try {
-      if (assignedIds.has(roleId)) {
-        await usersApi.removeRole(user.id, roleId)
-        setAssignedIds((prev) => {
-          const next = new Set(prev)
 
-          next.delete(roleId)
+    if (assignedIds.has(roleId)) {
+      removeRole.mutate(
+        { userId: user.id, roleId },
+        {
+          onSuccess: () => {
+            setAssignedIds((prev) => {
+              const next = new Set(prev)
 
-          return next
-        })
-        toaster.success({ title: t('roleRemoved') })
-      } else {
-        await usersApi.assignRole(user.id, roleId)
-        setAssignedIds((prev) => new Set(prev).add(roleId))
-        toaster.success({ title: t('roleAssigned') })
-      }
+              next.delete(roleId)
 
-      onSaved()
-    } catch {
-      toaster.error({ title: tc('operationFailed') })
-    } finally {
-      setActionLoading(null)
+              return next
+            })
+            toaster.success({ title: t('roleRemoved') })
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('operationFailed') })
+          },
+          onSettled: () => setActionLoading(null),
+        },
+      )
+    } else {
+      assignRole.mutate(
+        { userId: user.id, roleId },
+        {
+          onSuccess: () => {
+            setAssignedIds((prev) => new Set(prev).add(roleId))
+            toaster.success({ title: t('roleAssigned') })
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('operationFailed') })
+          },
+          onSettled: () => setActionLoading(null),
+        },
+      )
     }
   }
 
@@ -89,7 +110,7 @@ export function UserRolesDialog({
           </DialogTitle>
         </DialogHeader>
         <DialogBody>
-          {loading ? (
+          {isLoading ? (
             <Flex justify={'center'} py={'4'}>
               <Spinner />
             </Flex>

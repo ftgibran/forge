@@ -1,5 +1,7 @@
 'use client'
 
+import type { Category, Product, Vendor } from '@app/sdk'
+import { useCreateProduct, useUpdateProduct } from '@app/sdk'
 import { Button, Input, SimpleGrid, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -19,8 +21,6 @@ import {
   NativeSelectRoot,
 } from '@/components/ui/native-select'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
-import type { Category, Product, Vendor } from '@/types'
 
 interface ProductFormDialogProps {
   open: boolean
@@ -56,7 +56,11 @@ export function ProductFormDialog({
   const [nozzleSize, setNozzleSize] = useState('')
   const [infillPercentage, setInfillPercentage] = useState('')
   const [supportsRequired, setSupportsRequired] = useState('false')
-  const [loading, setLoading] = useState(false)
+
+  const createProduct = useCreateProduct()
+  const updateProduct = useUpdateProduct()
+
+  const loading = createProduct.isPending || updateProduct.isPending
 
   useEffect(() => {
     if (product) {
@@ -94,47 +98,54 @@ export function ProductFormDialog({
     }
   }, [product, open])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      const data: Record<string, unknown> = {
-        name,
-        slug,
-        description: description || undefined,
-        vendorId,
-        categoryId: categoryId || undefined,
-        status,
-        filamentType: filamentType || undefined,
-        printTimeHours: printTimeHours ? parseFloat(printTimeHours) : undefined,
-        dimensionX: dimensionX ? parseFloat(dimensionX) : undefined,
-        dimensionY: dimensionY ? parseFloat(dimensionY) : undefined,
-        dimensionZ: dimensionZ ? parseFloat(dimensionZ) : undefined,
-        fileFormat: fileFormat || undefined,
-        nozzleSize: nozzleSize ? parseFloat(nozzleSize) : undefined,
-        infillPercentage: infillPercentage
-          ? parseInt(infillPercentage)
-          : undefined,
-        supportsRequired: supportsRequired === 'true',
-      }
+    const data: Record<string, unknown> = {
+      name,
+      slug,
+      description: description || undefined,
+      vendorId,
+      categoryId: categoryId || undefined,
+      status,
+      filamentType: filamentType || undefined,
+      printTimeHours: printTimeHours ? parseFloat(printTimeHours) : undefined,
+      dimensionX: dimensionX ? parseFloat(dimensionX) : undefined,
+      dimensionY: dimensionY ? parseFloat(dimensionY) : undefined,
+      dimensionZ: dimensionZ ? parseFloat(dimensionZ) : undefined,
+      fileFormat: fileFormat || undefined,
+      nozzleSize: nozzleSize ? parseFloat(nozzleSize) : undefined,
+      infillPercentage: infillPercentage
+        ? parseInt(infillPercentage)
+        : undefined,
+      supportsRequired: supportsRequired === 'true',
+    }
 
-      if (product) {
-        delete data.vendorId
-        await productsApi.update(product.id, data)
-        toaster.success({ title: t('productUpdated') })
-      } else {
-        await productsApi.create(data)
-        toaster.success({ title: t('productCreated') })
-      }
-
-      onOpenChange(false)
-      onSaved()
-    } catch {
-      toaster.error({
-        title: product ? tc('updateFailed') : tc('createFailed'),
+    if (product) {
+      delete data.vendorId
+      updateProduct.mutate(
+        { id: product.id, data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('productUpdated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('updateFailed') })
+          },
+        },
+      )
+    } else {
+      createProduct.mutate(data, {
+        onSuccess: () => {
+          toaster.success({ title: t('productCreated') })
+          onOpenChange(false)
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('createFailed') })
+        },
       })
-    } finally {
-      setLoading(false)
     }
   }
 

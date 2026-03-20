@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
+import { Providers } from '@/components/providers'
 import { Provider } from '@/components/ui/provider'
 import { Toaster } from '@/components/ui/toaster'
-import { ReactQueryProvider } from '@/lib/query-client'
 
 export const metadata: Metadata = {
   title: 'Admin Panel',
@@ -23,12 +23,12 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <ReactQueryProvider>
+          <Providers>
             <Provider>
               {children}
               <Toaster />
             </Provider>
-          </ReactQueryProvider>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -10,6 +10,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@app/sdk": "workspace:*",
     "@app/utils": "workspace:*",
     "@chakra-ui/react": "^3.21.0",
     "@emotion/react": "^11.14.0",

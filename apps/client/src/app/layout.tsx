@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
+import { Providers } from '@/components/providers'
 import { Provider } from '@/components/ui/provider'
 import { Toaster } from '@/components/ui/toaster'
-import { ReactQueryProvider } from '@/lib/query-client'
 
 export const metadata: Metadata = {
   title: 'Marketplace',
@@ -17,12 +17,12 @@ export default function RootLayout({
   return (
     <html lang={'en'} suppressHydrationWarning>
       <body>
-        <ReactQueryProvider>
+        <Providers>
           <Provider>
             {children}
             <Toaster />
           </Provider>
-        </ReactQueryProvider>
+        </Providers>
       </body>
     </html>
   )

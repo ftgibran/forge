@@ -1,5 +1,11 @@
 'use client'
 
+import type { Product, ProductVariant } from '@app/sdk'
+import {
+  useAddProductVariant,
+  useDeleteProductVariant,
+  useProduct,
+} from '@app/sdk'
 import {
   Button,
   HStack,
@@ -9,7 +15,7 @@ import {
   Table,
 } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
 import {
@@ -22,8 +28,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
-import type { Product, ProductVariant } from '@/types'
 
 interface ProductVariantsDialogProps {
   open: boolean
@@ -40,72 +44,79 @@ export function ProductVariantsDialog({
 }: ProductVariantsDialogProps) {
   const t = useTranslations('products')
   const tc = useTranslations('common')
-  const [variants, setVariants] = useState<ProductVariant[]>([])
   const [showForm, setShowForm] = useState(false)
   const [name, setName] = useState('')
   const [sku, setSku] = useState('')
   const [price, setPrice] = useState('')
   const [compareAtPrice, setCompareAtPrice] = useState('')
   const [stock, setStock] = useState('0')
-  const [saving, setSaving] = useState(false)
 
-  const fetch = useCallback(async () => {
-    if (!product) return
+  const { data: productData, refetch } = useProduct(product?.id ?? '', {
+    enabled: open && !!product?.id,
+  })
 
-    try {
-      const p = await productsApi.get(product.id)
+  const variants: ProductVariant[] = productData?.variants ?? []
 
-      setVariants(p.variants ?? [])
-    } catch {
-      toaster.error({ title: t('loadVariantsFailed') })
-    }
-  }, [product, t])
+  const addVariant = useAddProductVariant()
+  const deleteVariant = useDeleteProductVariant()
 
   useEffect(() => {
-    if (open && product) fetch()
-  }, [open, product, fetch])
+    if (open && product) refetch()
+  }, [open, product, refetch])
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!product) return
 
-    setSaving(true)
-    try {
-      await productsApi.addVariant(product.id, {
-        name,
-        sku,
-        price: parseFloat(price),
-        compareAtPrice: compareAtPrice ? parseFloat(compareAtPrice) : undefined,
-        stock: parseInt(stock),
-      })
-      toaster.success({ title: t('variantAdded') })
-      setShowForm(false)
-      setName('')
-      setSku('')
-      setPrice('')
-      setCompareAtPrice('')
-      setStock('0')
-      fetch()
-      onSaved()
-    } catch {
-      toaster.error({ title: t('addVariantFailed') })
-    } finally {
-      setSaving(false)
-    }
+    addVariant.mutate(
+      {
+        productId: product.id,
+        data: {
+          name,
+          sku,
+          price: parseFloat(price),
+          compareAtPrice: compareAtPrice
+            ? parseFloat(compareAtPrice)
+            : undefined,
+          stock: parseInt(stock),
+        },
+      },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('variantAdded') })
+          setShowForm(false)
+          setName('')
+          setSku('')
+          setPrice('')
+          setCompareAtPrice('')
+          setStock('0')
+          refetch()
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: t('addVariantFailed') })
+        },
+      },
+    )
   }
 
-  const handleDelete = async (variantId: string) => {
+  const handleDelete = (variantId: string) => {
     if (!product) return
 
-    try {
-      await productsApi.deleteVariant(product.id, variantId)
-      toaster.success({ title: t('variantDeleted') })
-      fetch()
-      onSaved()
-    } catch {
-      toaster.error({ title: tc('deleteFailed') })
-    }
+    deleteVariant.mutate(
+      { productId: product.id, variantId },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('variantDeleted') })
+          refetch()
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
+      },
+    )
   }
 
   return (
@@ -210,7 +221,7 @@ export function ProductVariantsDialog({
                     type={'submit'}
                     colorPalette={'blue'}
                     size={'sm'}
-                    loading={saving}
+                    loading={addVariant.isPending}
                   >
                     {t('addVariant')}
                   </Button>

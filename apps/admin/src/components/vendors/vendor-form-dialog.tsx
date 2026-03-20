@@ -1,5 +1,7 @@
 'use client'
 
+import type { Vendor } from '@app/sdk'
+import { useCreateVendor, useUpdateVendor } from '@app/sdk'
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -15,8 +17,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { vendorsApi } from '@/lib/api/vendors'
-import type { Vendor } from '@/types'
 
 interface VendorFormDialogProps {
   open: boolean
@@ -37,7 +37,11 @@ export function VendorFormDialog({
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const createVendor = useCreateVendor()
+  const updateVendor = useUpdateVendor()
+
+  const loading = createVendor.isPending || updateVendor.isPending
 
   useEffect(() => {
     if (vendor) {
@@ -53,33 +57,40 @@ export function VendorFormDialog({
     }
   }, [vendor, open])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      const data = {
-        name,
-        slug,
-        description: description || undefined,
-        logoUrl: logoUrl || undefined,
-      }
+    const data = {
+      name,
+      slug,
+      description: description || undefined,
+      logoUrl: logoUrl || undefined,
+    }
 
-      if (vendor) {
-        await vendorsApi.update(vendor.id, data)
-        toaster.success({ title: t('vendorUpdated') })
-      } else {
-        await vendorsApi.create(data)
-        toaster.success({ title: t('vendorCreated') })
-      }
-
-      onOpenChange(false)
-      onSaved()
-    } catch {
-      toaster.error({
-        title: vendor ? tc('updateFailed') : tc('createFailed'),
+    if (vendor) {
+      updateVendor.mutate(
+        { id: vendor.id, data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('vendorUpdated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('updateFailed') })
+          },
+        },
+      )
+    } else {
+      createVendor.mutate(data, {
+        onSuccess: () => {
+          toaster.success({ title: t('vendorCreated') })
+          onOpenChange(false)
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('createFailed') })
+        },
       })
-    } finally {
-      setLoading(false)
     }
   }
 

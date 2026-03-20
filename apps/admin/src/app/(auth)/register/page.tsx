@@ -1,5 +1,6 @@
 'use client'
 
+import { useApiClient } from '@app/sdk'
 import {
   Box,
   Button,
@@ -16,7 +17,6 @@ import { useState } from 'react'
 
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { authApi } from '@/lib/api/auth'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -26,12 +26,17 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const client = useApiClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await authApi.register(name, email, password)
+      const res = await client.post<{ accessToken: string }>('/auth/register', {
+        name,
+        email,
+        password,
+      })
 
       localStorage.setItem('token', res.accessToken)
       router.push('/')

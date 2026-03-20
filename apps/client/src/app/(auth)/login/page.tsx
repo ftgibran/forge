@@ -15,10 +15,11 @@ import { useState } from 'react'
 
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { authApi } from '@/lib/api/auth'
+import { useAuth } from '@/lib/auth-context'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,9 +28,7 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await authApi.login(email, password)
-
-      localStorage.setItem('token', res.accessToken)
+      await login(email, password)
       router.push('/')
     } catch {
       toaster.error({

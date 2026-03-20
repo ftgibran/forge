@@ -1,5 +1,12 @@
 'use client'
 
+import type { Permission, User } from '@app/sdk'
+import {
+  useAssignUserPermission,
+  usePermissions,
+  useRemoveUserPermission,
+  useUser,
+} from '@app/sdk'
 import { formatPermission } from '@app/utils'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -14,9 +21,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
-import { permissionsApi } from '@/lib/api/permissions'
-import { usersApi } from '@/lib/api/users'
-import type { Permission, User } from '@/types'
 
 interface UserPermissionsDialogProps {
   open: boolean
@@ -33,53 +37,70 @@ export function UserPermissionsDialog({
 }: UserPermissionsDialogProps) {
   const t = useTranslations('users')
   const tc = useTranslations('common')
-  const [allPermissions, setAllPermissions] = useState<Permission[]>([])
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
-  const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
+  const { data: permsData, isLoading } = usePermissions(1, 100, {
+    enabled: open,
+  })
+  const { data: freshUser } = useUser(user?.id ?? '', {
+    enabled: open && !!user?.id,
+  })
+
+  const allPermissions: Permission[] = permsData?.items ?? []
+
+  const assignPermission = useAssignUserPermission()
+  const removePermission = useRemoveUserPermission()
+
   useEffect(() => {
-    if (!open || !user) return
+    if (freshUser) {
+      setAssignedIds(
+        new Set(freshUser.userPermissions?.map((up) => up.permission.id) ?? []),
+      )
+    }
+  }, [freshUser])
 
-    setLoading(true)
-    Promise.all([permissionsApi.list(1, 100), usersApi.get(user.id)])
-      .then(([permsRes, freshUser]) => {
-        setAllPermissions(permsRes.items)
-        setAssignedIds(
-          new Set(
-            freshUser.userPermissions?.map((up) => up.permission.id) ?? [],
-          ),
-        )
-      })
-      .finally(() => setLoading(false))
-  }, [open, user])
-
-  const toggle = async (permissionId: string) => {
+  const toggle = (permissionId: string) => {
     if (!user) return
 
     setActionLoading(permissionId)
-    try {
-      if (assignedIds.has(permissionId)) {
-        await usersApi.removePermission(user.id, permissionId)
-        setAssignedIds((prev) => {
-          const next = new Set(prev)
 
-          next.delete(permissionId)
+    if (assignedIds.has(permissionId)) {
+      removePermission.mutate(
+        { userId: user.id, permissionId },
+        {
+          onSuccess: () => {
+            setAssignedIds((prev) => {
+              const next = new Set(prev)
 
-          return next
-        })
-        toaster.success({ title: t('permissionRemoved') })
-      } else {
-        await usersApi.assignPermission(user.id, permissionId)
-        setAssignedIds((prev) => new Set(prev).add(permissionId))
-        toaster.success({ title: t('permissionAssigned') })
-      }
+              next.delete(permissionId)
 
-      onSaved()
-    } catch {
-      toaster.error({ title: tc('operationFailed') })
-    } finally {
-      setActionLoading(null)
+              return next
+            })
+            toaster.success({ title: t('permissionRemoved') })
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('operationFailed') })
+          },
+          onSettled: () => setActionLoading(null),
+        },
+      )
+    } else {
+      assignPermission.mutate(
+        { userId: user.id, permissionId },
+        {
+          onSuccess: () => {
+            setAssignedIds((prev) => new Set(prev).add(permissionId))
+            toaster.success({ title: t('permissionAssigned') })
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('operationFailed') })
+          },
+          onSettled: () => setActionLoading(null),
+        },
+      )
     }
   }
 
@@ -92,7 +113,7 @@ export function UserPermissionsDialog({
           </DialogTitle>
         </DialogHeader>
         <DialogBody>
-          {loading ? (
+          {isLoading ? (
             <Flex justify={'center'} py={'4'}>
               <Spinner />
             </Flex>

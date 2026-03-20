@@ -1,5 +1,12 @@
 'use client'
 
+import type { Permission, Role } from '@app/sdk'
+import {
+  useAssignRolePermission,
+  usePermissions,
+  useRemoveRolePermission,
+  useRole,
+} from '@app/sdk'
 import { formatPermission } from '@app/utils'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -14,9 +21,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
-import { permissionsApi } from '@/lib/api/permissions'
-import { rolesApi } from '@/lib/api/roles'
-import type { Permission, Role } from '@/types'
 
 interface RolePermissionsDialogProps {
   open: boolean
@@ -33,53 +37,70 @@ export function RolePermissionsDialog({
 }: RolePermissionsDialogProps) {
   const t = useTranslations('roles')
   const tc = useTranslations('common')
-  const [allPermissions, setAllPermissions] = useState<Permission[]>([])
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
-  const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
+  const { data: permsData, isLoading } = usePermissions(1, 100, {
+    enabled: open,
+  })
+  const { data: freshRole } = useRole(role?.id ?? '', {
+    enabled: open && !!role?.id,
+  })
+
+  const allPermissions: Permission[] = permsData?.items ?? []
+
+  const assignPermission = useAssignRolePermission()
+  const removePermission = useRemoveRolePermission()
+
   useEffect(() => {
-    if (!open || !role) return
+    if (freshRole) {
+      setAssignedIds(
+        new Set(freshRole.rolePermissions?.map((rp) => rp.permission.id) ?? []),
+      )
+    }
+  }, [freshRole])
 
-    setLoading(true)
-    Promise.all([permissionsApi.list(1, 100), rolesApi.get(role.id)])
-      .then(([permsRes, freshRole]) => {
-        setAllPermissions(permsRes.items)
-        setAssignedIds(
-          new Set(
-            freshRole.rolePermissions?.map((rp) => rp.permission.id) ?? [],
-          ),
-        )
-      })
-      .finally(() => setLoading(false))
-  }, [open, role])
-
-  const toggle = async (permissionId: string) => {
+  const toggle = (permissionId: string) => {
     if (!role) return
 
     setActionLoading(permissionId)
-    try {
-      if (assignedIds.has(permissionId)) {
-        await rolesApi.removePermission(role.id, permissionId)
-        setAssignedIds((prev) => {
-          const next = new Set(prev)
 
-          next.delete(permissionId)
+    if (assignedIds.has(permissionId)) {
+      removePermission.mutate(
+        { roleId: role.id, permissionId },
+        {
+          onSuccess: () => {
+            setAssignedIds((prev) => {
+              const next = new Set(prev)
 
-          return next
-        })
-        toaster.success({ title: t('permissionRemoved') })
-      } else {
-        await rolesApi.assignPermission(role.id, permissionId)
-        setAssignedIds((prev) => new Set(prev).add(permissionId))
-        toaster.success({ title: t('permissionAssigned') })
-      }
+              next.delete(permissionId)
 
-      onSaved()
-    } catch {
-      toaster.error({ title: tc('operationFailed') })
-    } finally {
-      setActionLoading(null)
+              return next
+            })
+            toaster.success({ title: t('permissionRemoved') })
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('operationFailed') })
+          },
+          onSettled: () => setActionLoading(null),
+        },
+      )
+    } else {
+      assignPermission.mutate(
+        { roleId: role.id, permissionId },
+        {
+          onSuccess: () => {
+            setAssignedIds((prev) => new Set(prev).add(permissionId))
+            toaster.success({ title: t('permissionAssigned') })
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('operationFailed') })
+          },
+          onSettled: () => setActionLoading(null),
+        },
+      )
     }
   }
 
@@ -92,7 +113,7 @@ export function RolePermissionsDialog({
           </DialogTitle>
         </DialogHeader>
         <DialogBody>
-          {loading ? (
+          {isLoading ? (
             <Flex justify={'center'} py={'4'}>
               <Spinner />
             </Flex>

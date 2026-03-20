@@ -1,5 +1,6 @@
 'use client'
 
+import { useCart, useCheckout, useClearCart } from '@app/sdk'
 import {
   Button,
   Card,
@@ -13,7 +14,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -21,12 +21,11 @@ import { AuthGuard } from '@/components/auth-guard'
 import { PageContainer } from '@/components/page-container'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { ordersApi } from '@/lib/api/orders'
-import { useCart } from '@/lib/cart-context'
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { cart, clearCart } = useCart()
+  const { data: cart } = useCart()
+  const clearCartMutation = useClearCart()
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -42,10 +41,9 @@ export default function CheckoutPage() {
       return sum + price * item.quantity
     }, 0) ?? 0
 
-  const checkoutMutation = useMutation({
-    mutationFn: ordersApi.checkout,
+  const checkoutMutation = useCheckout({
     onSuccess: async () => {
-      await clearCart()
+      await clearCartMutation.mutateAsync()
       toaster.success({
         title: 'Order placed!',
         description: 'Your order has been placed successfully.',

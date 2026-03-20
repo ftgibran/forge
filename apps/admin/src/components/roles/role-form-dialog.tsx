@@ -1,5 +1,7 @@
 'use client'
 
+import type { Role } from '@app/sdk'
+import { useCreateRole, useUpdateRole } from '@app/sdk'
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -15,8 +17,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { rolesApi } from '@/lib/api/roles'
-import type { Role } from '@/types'
 
 interface RoleFormDialogProps {
   open: boolean
@@ -35,7 +35,11 @@ export function RoleFormDialog({
   const tc = useTranslations('common')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const createRole = useCreateRole()
+  const updateRole = useUpdateRole()
+
+  const loading = createRole.isPending || updateRole.isPending
 
   useEffect(() => {
     if (role) {
@@ -47,28 +51,35 @@ export function RoleFormDialog({
     }
   }, [role, open])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      const data = { name, description: description || undefined }
+    const data = { name, description: description || undefined }
 
-      if (role) {
-        await rolesApi.update(role.id, data)
-        toaster.success({ title: t('roleUpdated') })
-      } else {
-        await rolesApi.create(data)
-        toaster.success({ title: t('roleCreated') })
-      }
-
-      onOpenChange(false)
-      onSaved()
-    } catch {
-      toaster.error({
-        title: role ? tc('updateFailed') : tc('createFailed'),
+    if (role) {
+      updateRole.mutate(
+        { id: role.id, data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('roleUpdated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('updateFailed') })
+          },
+        },
+      )
+    } else {
+      createRole.mutate(data, {
+        onSuccess: () => {
+          toaster.success({ title: t('roleCreated') })
+          onOpenChange(false)
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('createFailed') })
+        },
       })
-    } finally {
-      setLoading(false)
     }
   }
 

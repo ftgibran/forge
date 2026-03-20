@@ -1,8 +1,9 @@
 'use client'
 
+import { useOrder, useUpdateOrderStatus } from '@app/sdk'
 import { Badge, Button, HStack, Stack, Table, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   DialogBody,
@@ -19,8 +20,6 @@ import {
   NativeSelectRoot,
 } from '@/components/ui/native-select'
 import { toaster } from '@/components/ui/toaster'
-import { ordersApi } from '@/lib/api/orders'
-import type { Order } from '@/types'
 
 interface OrderDetailDialogProps {
   open: boolean
@@ -55,41 +54,36 @@ export function OrderDetailDialog({
 }: OrderDetailDialogProps) {
   const t = useTranslations('orders')
   const tc = useTranslations('common')
-  const [order, setOrder] = useState<Order | null>(null)
   const [newStatus, setNewStatus] = useState('')
-  const [updating, setUpdating] = useState(false)
 
-  const fetch = useCallback(async () => {
-    if (!orderId) return
+  const { data: order, refetch } = useOrder(orderId ?? '', {
+    enabled: open && !!orderId,
+  })
 
-    try {
-      const o = await ordersApi.get(orderId)
-
-      setOrder(o)
-      setNewStatus(o.status)
-    } catch {
-      toaster.error({ title: t('loadOrderFailed') })
-    }
-  }, [orderId, t])
+  const updateStatus = useUpdateOrderStatus()
 
   useEffect(() => {
-    if (open && orderId) fetch()
-  }, [open, orderId, fetch])
+    if (order) {
+      setNewStatus(order.status)
+    }
+  }, [order])
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateStatus = () => {
     if (!orderId || !newStatus) return
 
-    setUpdating(true)
-    try {
-      await ordersApi.updateStatus(orderId, newStatus)
-      toaster.success({ title: t('statusUpdated') })
-      fetch()
-      onSaved()
-    } catch {
-      toaster.error({ title: tc('updateFailed') })
-    } finally {
-      setUpdating(false)
-    }
+    updateStatus.mutate(
+      { id: orderId, status: newStatus },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('statusUpdated') })
+          refetch()
+          onSaved()
+        },
+        onError: () => {
+          toaster.error({ title: tc('updateFailed') })
+        },
+      },
+    )
   }
 
   if (!order) return null
@@ -177,7 +171,7 @@ export function OrderDetailDialog({
               colorPalette={'blue'}
               size={'sm'}
               onClick={handleUpdateStatus}
-              loading={updating}
+              loading={updateStatus.isPending}
               alignSelf={'flex-end'}
             >
               {tc('update')}

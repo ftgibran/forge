@@ -20,6 +20,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@app/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@app/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -49,7 +52,7 @@ importers:
         version: 15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-intl:
         specifier: ^4.8.2
-        version: 4.8.2(@swc/helpers@0.5.18)(next@15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+        version: 4.8.2(@swc/helpers@0.5.18)(next@15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -259,6 +262,9 @@ importers:
 
   apps/client:
     dependencies:
+      '@app/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@app/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -335,6 +341,24 @@ importers:
       typescript-eslint:
         specifier: ^8.54.0
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+
+  packages/sdk:
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.91.2
+        version: 5.91.2(react@19.2.4)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.91.3
+        version: 5.91.3(@tanstack/react-query@5.91.2(react@19.2.4))(react@19.2.4)
+      '@types/react':
+        specifier: ^19.1.2
+        version: 19.2.13
+      react:
+        specifier: ^19.1.0
+        version: 19.2.4
+      typescript:
+        specifier: ^5.8.3
+        version: 5.9.3
 
   packages/utils:
     devDependencies:
@@ -9793,7 +9817,7 @@ snapshots:
 
   next-intl-swc-plugin-extractor@4.8.2: {}
 
-  next-intl@4.8.2(@swc/helpers@0.5.18)(next@15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
+  next-intl@4.8.2(@swc/helpers@0.5.18)(next@15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.10
       '@parcel/watcher': 2.5.6

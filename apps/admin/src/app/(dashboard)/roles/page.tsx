@@ -1,8 +1,9 @@
 'use client'
 
+import type { Role } from '@app/sdk'
+import { useDeleteRole, useRoles } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
@@ -14,14 +15,11 @@ import { RoleFormDialog } from '@/components/roles/role-form-dialog'
 import { RolePermissionsDialog } from '@/components/roles/role-permissions-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
-import { rolesApi } from '@/lib/api/roles'
-import type { Role } from '@/types'
 
 export default function RolesPage() {
   const t = useTranslations('roles')
   const tc = useTranslations('common')
   const tn = useTranslations('nav')
-  const queryClient = useQueryClient()
 
   const [page, setPage] = useState(1)
 
@@ -36,34 +34,25 @@ export default function RolesPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['roles', page],
-    queryFn: () => rolesApi.list(page, limit),
-  })
+  const { data, isLoading } = useRoles(page, limit)
 
   const roles = data?.items ?? []
   const total = data?.total ?? 0
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => rolesApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('roleDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['roles'] })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeleteRole()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
-  }
-
-  const invalidateRoles = () => {
-    queryClient.invalidateQueries({ queryKey: ['roles'] })
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('roleDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   const columns = [
@@ -163,7 +152,7 @@ export default function RolesPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         role={editRole}
-        onSaved={invalidateRoles}
+        onSaved={() => {}}
       />
 
       <ConfirmDialog
@@ -179,7 +168,7 @@ export default function RolesPage() {
         open={permsOpen}
         onOpenChange={setPermsOpen}
         role={permsTarget}
-        onSaved={invalidateRoles}
+        onSaved={() => {}}
       />
     </>
   )

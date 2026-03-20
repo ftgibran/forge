@@ -1,8 +1,7 @@
 'use client'
 
+import type { Product } from '@app/sdk'
 import { SimpleGrid } from '@chakra-ui/react'
-
-import type { Product } from '@/types'
 
 import { ProductCard } from './product-card'
 

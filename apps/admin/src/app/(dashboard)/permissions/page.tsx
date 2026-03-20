@@ -1,8 +1,9 @@
 'use client'
 
+import type { Permission } from '@app/sdk'
+import { useDeletePermission, usePermissions } from '@app/sdk'
 import { formatDate, formatPermission } from '@app/utils'
 import { Button, HStack, IconButton } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
@@ -13,13 +14,10 @@ import { PageHeader } from '@/components/page-header'
 import { PermissionFormDialog } from '@/components/permissions/permission-form-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
-import { permissionsApi } from '@/lib/api/permissions'
-import type { Permission } from '@/types'
 
 export default function PermissionsPage() {
   const t = useTranslations('permissions')
   const tc = useTranslations('common')
-  const queryClient = useQueryClient()
 
   const [page, setPage] = useState(1)
 
@@ -31,34 +29,25 @@ export default function PermissionsPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['permissions', page],
-    queryFn: () => permissionsApi.list(page, limit),
-  })
+  const { data, isLoading } = usePermissions(page, limit)
 
   const permissions = data?.items ?? []
   const total = data?.total ?? 0
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => permissionsApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('permissionDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['permissions'] })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeletePermission()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
-  }
-
-  const invalidatePermissions = () => {
-    queryClient.invalidateQueries({ queryKey: ['permissions'] })
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('permissionDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   const columns = [
@@ -141,7 +130,7 @@ export default function PermissionsPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         permission={editPerm}
-        onSaved={invalidatePermissions}
+        onSaved={() => {}}
       />
 
       <ConfirmDialog

@@ -1,9 +1,10 @@
 'use client'
 
+import type { Review } from '@app/sdk'
+import { useDeleteReview, useProductReviews, useProducts } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { HStack, IconButton, Input } from '@chakra-ui/react'
 import { Box, Table, Text } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuEye, LuTrash2 } from 'react-icons/lu'
@@ -13,14 +14,10 @@ import { PageHeader } from '@/components/page-header'
 import { ReviewDetailDialog } from '@/components/reviews/review-detail-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
-import { reviewsApi } from '@/lib/api/reviews'
-import type { Review } from '@/types'
 
 export default function ReviewsPage() {
   const t = useTranslations('reviews')
   const tc = useTranslations('common')
-  const queryClient = useQueryClient()
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
@@ -32,41 +29,34 @@ export default function ReviewsPage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null)
 
-  const { data: productsData } = useQuery({
-    queryKey: ['products-all'],
-    queryFn: () => productsApi.list({ limit: 100 }),
-  })
+  const { data: productsData } = useProducts({ limit: 100 })
 
   const products = productsData?.items ?? []
   const effectiveProductId =
     selectedProductId ?? productsData?.items[0]?.id ?? null
 
-  const { data: reviewsData, isLoading: loading } = useQuery({
-    queryKey: ['reviews', effectiveProductId],
-    queryFn: () => reviewsApi.listByProduct(effectiveProductId!, 1, 50),
-    enabled: !!effectiveProductId,
-  })
+  const { data: reviewsData, isLoading: loading } = useProductReviews(
+    effectiveProductId ?? '',
+    1,
+    50,
+  )
 
   const reviews = reviewsData?.items ?? []
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => reviewsApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('reviewDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({
-        queryKey: ['reviews', effectiveProductId],
-      })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeleteReview()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('reviewDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   return (

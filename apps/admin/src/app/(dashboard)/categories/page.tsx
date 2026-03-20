@@ -1,9 +1,10 @@
 'use client'
 
+import type { Category } from '@app/sdk'
+import { useCategories, useDeleteCategory } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { Box, Table } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
@@ -13,13 +14,10 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
-import { categoriesApi } from '@/lib/api/categories'
-import type { Category } from '@/types'
 
 export default function CategoriesPage() {
   const t = useTranslations('categories')
   const tc = useTranslations('common')
-  const queryClient = useQueryClient()
 
   const [formOpen, setFormOpen] = useState(false)
   const [editCategory, setEditCategory] = useState<Category | null>(null)
@@ -27,31 +25,22 @@ export default function CategoriesPage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
 
-  const { data: categories = [], isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoriesApi.list(),
-  })
+  const { data: categories = [], isLoading } = useCategories()
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => categoriesApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('categoryDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeleteCategory()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
-  }
-
-  const invalidateCategories = () => {
-    queryClient.invalidateQueries({ queryKey: ['categories'] })
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('categoryDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   // Flatten tree for table display
@@ -152,7 +141,7 @@ export default function CategoriesPage() {
         onOpenChange={setFormOpen}
         category={editCategory}
         categories={categories}
-        onSaved={invalidateCategories}
+        onSaved={() => {}}
       />
 
       <ConfirmDialog

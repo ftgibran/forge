@@ -1,7 +1,7 @@
 'use client'
 
+import { useAddToCart, useProducts } from '@app/sdk'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 
@@ -11,14 +11,12 @@ import { ProductSkeleton } from '@/components/product-skeleton'
 import { ProductFilters } from '@/components/products/product-filters'
 import { ProductGrid } from '@/components/products/product-grid'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
 import { useAuth } from '@/lib/auth-context'
-import { useCart } from '@/lib/cart-context'
 
 function ProductsContent() {
   const searchParams = useSearchParams()
   const { user } = useAuth()
-  const { addToCart } = useCart()
+  const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
@@ -27,15 +25,11 @@ function ProductsContent() {
     sortBy: searchParams.get('sortBy') || 'newest',
   })
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['products', { ...filters, page }],
-    queryFn: () =>
-      productsApi.list({
-        ...filters,
-        status: 'ACTIVE',
-        page,
-        limit: 12,
-      }),
+  const { data, isLoading } = useProducts({
+    ...filters,
+    status: 'ACTIVE',
+    page,
+    limit: 12,
   })
 
   const products = data?.items ?? []
@@ -57,7 +51,7 @@ function ProductsContent() {
     }
 
     try {
-      await addToCart(variantId)
+      await addToCartMutation.mutateAsync({ variantId })
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })

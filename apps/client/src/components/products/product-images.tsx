@@ -1,9 +1,8 @@
 'use client'
 
+import type { ProductImage } from '@app/sdk'
 import { Box, HStack, Image, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
-
-import type { ProductImage } from '@/types'
 
 interface ProductImagesProps {
   images: ProductImage[]

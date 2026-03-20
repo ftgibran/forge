@@ -65,6 +65,7 @@ export default tseslint.config(
       ],
 
       // React
+      'react-hooks/set-state-in-effect': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/self-closing-comp': ['error', { component: true, html: true }],
       'react/jsx-curly-brace-presence': [

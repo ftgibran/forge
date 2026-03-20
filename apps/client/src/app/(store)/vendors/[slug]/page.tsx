@@ -1,5 +1,6 @@
 'use client'
 
+import { useAddToCart, useProducts, useVendorBySlug } from '@app/sdk'
 import {
   Badge,
   Button,
@@ -9,7 +10,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 
@@ -18,33 +18,27 @@ import { PageContainer } from '@/components/page-container'
 import { ProductSkeleton } from '@/components/product-skeleton'
 import { ProductGrid } from '@/components/products/product-grid'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
-import { vendorsApi } from '@/lib/api/vendors'
 import { useAuth } from '@/lib/auth-context'
-import { useCart } from '@/lib/cart-context'
 
 export default function VendorDetailPage() {
   const params = useParams<{ slug: string }>()
   const { user } = useAuth()
-  const { addToCart } = useCart()
+  const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
 
-  const { data: vendor, isLoading: vendorLoading } = useQuery({
-    queryKey: ['vendor', params.slug],
-    queryFn: () => vendorsApi.getBySlug(params.slug),
-  })
+  const { data: vendor, isLoading: vendorLoading } = useVendorBySlug(
+    params.slug,
+  )
 
-  const { data: productsData, isLoading: productsLoading } = useQuery({
-    queryKey: ['products', { vendorId: vendor?.id, page }],
-    queryFn: () =>
-      productsApi.list({
-        vendorId: vendor!.id,
-        status: 'ACTIVE',
-        page,
-        limit: 12,
-      }),
-    enabled: !!vendor?.id,
-  })
+  const { data: productsData, isLoading: productsLoading } = useProducts(
+    {
+      vendorId: vendor?.id,
+      status: 'ACTIVE',
+      page,
+      limit: 12,
+    },
+    { enabled: !!vendor?.id },
+  )
 
   const products = productsData?.items ?? []
   const totalPages = productsData?.totalPages ?? 1
@@ -61,7 +55,7 @@ export default function VendorDetailPage() {
     }
 
     try {
-      await addToCart(variantId)
+      await addToCartMutation.mutateAsync({ variantId })
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })

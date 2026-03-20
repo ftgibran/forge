@@ -1,8 +1,7 @@
 'use client'
 
+import type { Product } from '@app/sdk'
 import { Table } from '@chakra-ui/react'
-
-import type { Product } from '@/types'
 
 interface ProductSpecsProps {
   product: Product

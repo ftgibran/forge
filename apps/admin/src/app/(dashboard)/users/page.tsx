@@ -1,8 +1,9 @@
 'use client'
 
+import type { User } from '@app/sdk'
+import { useDeleteUser, useUsers } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuShield, LuTrash2 } from 'react-icons/lu'
@@ -15,14 +16,11 @@ import { toaster } from '@/components/ui/toaster'
 import { UserFormDialog } from '@/components/users/user-form-dialog'
 import { UserPermissionsDialog } from '@/components/users/user-permissions-dialog'
 import { UserRolesDialog } from '@/components/users/user-roles-dialog'
-import { usersApi } from '@/lib/api/users'
-import type { User } from '@/types'
 
 export default function UsersPage() {
   const t = useTranslations('users')
   const tc = useTranslations('common')
   const tn = useTranslations('nav')
-  const queryClient = useQueryClient()
 
   const [page, setPage] = useState(1)
 
@@ -40,34 +38,25 @@ export default function UsersPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['users', page],
-    queryFn: () => usersApi.list(page, limit),
-  })
+  const { data, isLoading } = useUsers(page, limit)
 
   const users = data?.items ?? []
   const total = data?.total ?? 0
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => usersApi.delete(id),
-    onSuccess: () => {
-      toaster.success({ title: t('userDeleted') })
-      setDeleteOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onError: () => {
-      toaster.error({ title: tc('deleteFailed') })
-    },
-  })
+  const deleteMutation = useDeleteUser()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id)
-  }
-
-  const invalidateUsers = () => {
-    queryClient.invalidateQueries({ queryKey: ['users'] })
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        toaster.success({ title: t('userDeleted') })
+        setDeleteOpen(false)
+      },
+      onError: () => {
+        toaster.error({ title: tc('deleteFailed') })
+      },
+    })
   }
 
   const columns = [
@@ -173,7 +162,7 @@ export default function UsersPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         user={editUser}
-        onSaved={invalidateUsers}
+        onSaved={() => {}}
       />
 
       <ConfirmDialog
@@ -189,14 +178,14 @@ export default function UsersPage() {
         open={rolesOpen}
         onOpenChange={setRolesOpen}
         user={rolesTarget}
-        onSaved={invalidateUsers}
+        onSaved={() => {}}
       />
 
       <UserPermissionsDialog
         open={permsOpen}
         onOpenChange={setPermsOpen}
         user={permsTarget}
-        onSaved={invalidateUsers}
+        onSaved={() => {}}
       />
     </>
   )

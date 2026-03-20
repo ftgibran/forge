@@ -1,5 +1,7 @@
 'use client'
 
+import type { User } from '@app/sdk'
+import { useCreateUser, useUpdateUser } from '@app/sdk'
 import { Button, Input, Stack } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -15,8 +17,6 @@ import {
 } from '@/components/ui/dialog'
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { usersApi } from '@/lib/api/users'
-import type { User } from '@/types'
 
 interface UserFormDialogProps {
   open: boolean
@@ -36,7 +36,11 @@ export function UserFormDialog({
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const createUser = useCreateUser()
+  const updateUser = useUpdateUser()
+
+  const loading = createUser.isPending || updateUser.isPending
 
   useEffect(() => {
     if (user) {
@@ -50,30 +54,41 @@ export function UserFormDialog({
     }
   }, [user, open])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      if (user) {
-        const data: Record<string, string> = { name, email }
 
-        if (password) data.password = password
+    if (user) {
+      const data: Record<string, string> = { name, email }
 
-        await usersApi.update(user.id, data)
-        toaster.success({ title: t('userUpdated') })
-      } else {
-        await usersApi.create({ name, email, password })
-        toaster.success({ title: t('userCreated') })
-      }
+      if (password) data.password = password
 
-      onOpenChange(false)
-      onSaved()
-    } catch {
-      toaster.error({
-        title: user ? tc('updateFailed') : tc('createFailed'),
-      })
-    } finally {
-      setLoading(false)
+      updateUser.mutate(
+        { id: user.id, data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('userUpdated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('updateFailed') })
+          },
+        },
+      )
+    } else {
+      createUser.mutate(
+        { name, email, password },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('userCreated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('createFailed') })
+          },
+        },
+      )
     }
   }
 

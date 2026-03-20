@@ -1,5 +1,6 @@
 'use client'
 
+import { useCreateReview } from '@app/sdk'
 import {
   Button,
   HStack,
@@ -13,7 +14,6 @@ import { LuStar } from 'react-icons/lu'
 
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { reviewsApi } from '@/lib/api/reviews'
 
 interface ReviewFormProps {
   productId: string
@@ -24,7 +24,8 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
   const [rating, setRating] = useState(0)
   const [title, setTitle] = useState('')
   const [comment, setComment] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const createReviewMutation = useCreateReview()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,9 +36,8 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
       return
     }
 
-    setLoading(true)
     try {
-      await reviewsApi.create({
+      await createReviewMutation.mutateAsync({
         productId,
         rating,
         title: title || undefined,
@@ -50,8 +50,6 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
       onSubmitted()
     } catch {
       toaster.error({ title: 'Failed to submit review' })
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -96,7 +94,11 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
             rows={3}
           />
         </Field>
-        <Button type={'submit'} colorPalette={'blue'} loading={loading}>
+        <Button
+          type={'submit'}
+          colorPalette={'blue'}
+          loading={createReviewMutation.isPending}
+        >
           Submit Review
         </Button>
       </Stack>

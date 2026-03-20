@@ -1,10 +1,10 @@
 'use client'
 
+import type { Product } from '@app/sdk'
 import { Button, Container, Heading, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
 
 import { ProductGrid } from '@/components/products/product-grid'
-import type { Product } from '@/types'
 
 interface FeaturedProductsProps {
   products: Product[]

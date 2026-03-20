@@ -1,9 +1,8 @@
 'use client'
 
+import type { CartItem as CartItemType } from '@app/sdk'
 import { HStack, IconButton, Image, Text, VStack } from '@chakra-ui/react'
 import { LuMinus, LuPlus, LuTrash2 } from 'react-icons/lu'
-
-import type { CartItem as CartItemType } from '@/types'
 
 interface CartItemProps {
   item: CartItemType

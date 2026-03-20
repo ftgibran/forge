@@ -1,5 +1,6 @@
 'use client'
 
+import { useAddToCart, useProductBySlug } from '@app/sdk'
 import {
   Badge,
   Box,
@@ -12,7 +13,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -28,21 +28,16 @@ import {
   NativeSelectRoot,
 } from '@/components/ui/native-select'
 import { toaster } from '@/components/ui/toaster'
-import { productsApi } from '@/lib/api/products'
 import { useAuth } from '@/lib/auth-context'
-import { useCart } from '@/lib/cart-context'
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>()
   const { user } = useAuth()
-  const { addToCart } = useCart()
+  const addToCartMutation = useAddToCart()
   const [addingToCart, setAddingToCart] = useState(false)
   const [reviewRefreshKey, setReviewRefreshKey] = useState(0)
 
-  const { data: product, isLoading } = useQuery({
-    queryKey: ['product', params.slug],
-    queryFn: () => productsApi.getBySlug(params.slug),
-  })
+  const { data: product, isLoading } = useProductBySlug(params.slug)
 
   const [selectedVariantId, setSelectedVariantId] = useState('')
 
@@ -70,7 +65,7 @@ export default function ProductDetailPage() {
 
     setAddingToCart(true)
     try {
-      await addToCart(effectiveVariantId)
+      await addToCartMutation.mutateAsync({ variantId: effectiveVariantId })
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })

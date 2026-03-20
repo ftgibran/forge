@@ -1,9 +1,10 @@
 'use client'
 
+import type { VendorApplication } from '@app/sdk'
+import { useReviewVendorApplication, useVendorApplications } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, Table, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
 
 import {
   DialogBody,
@@ -14,8 +15,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { toaster } from '@/components/ui/toaster'
-import { vendorsApi } from '@/lib/api/vendors'
-import type { VendorApplication } from '@/types'
 
 interface VendorApplicationsDialogProps {
   open: boolean
@@ -36,35 +35,25 @@ export function VendorApplicationsDialog({
 }: VendorApplicationsDialogProps) {
   const t = useTranslations('vendors')
   const tc = useTranslations('common')
-  const [applications, setApplications] = useState<VendorApplication[]>([])
-  const [loading, setLoading] = useState(false)
 
-  const fetch = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await vendorsApi.listApplications(1, 50)
+  const { data, isLoading } = useVendorApplications(1, 50, { enabled: open })
+  const applications: VendorApplication[] = data?.items ?? []
 
-      setApplications(res.items)
-    } catch {
-      toaster.error({ title: t('loadApplicationsFailed') })
-    } finally {
-      setLoading(false)
-    }
-  }, [t])
+  const reviewApplication = useReviewVendorApplication()
 
-  useEffect(() => {
-    if (open) fetch()
-  }, [open, fetch])
-
-  const handleReview = async (id: string, status: 'APPROVED' | 'REJECTED') => {
-    try {
-      await vendorsApi.reviewApplication(id, status)
-      toaster.success({ title: `Application ${status.toLowerCase()}` })
-      fetch()
-      onReviewed()
-    } catch {
-      toaster.error({ title: t('reviewFailed') })
-    }
+  const handleReview = (id: string, status: 'APPROVED' | 'REJECTED') => {
+    reviewApplication.mutate(
+      { id, status },
+      {
+        onSuccess: () => {
+          toaster.success({ title: `Application ${status.toLowerCase()}` })
+          onReviewed()
+        },
+        onError: () => {
+          toaster.error({ title: t('reviewFailed') })
+        },
+      },
+    )
   }
 
   return (
@@ -78,7 +67,7 @@ export function VendorApplicationsDialog({
           <DialogTitle>{t('vendorApplications')}</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          {loading ? (
+          {isLoading ? (
             <Text>{tc('loading')}</Text>
           ) : applications.length === 0 ? (
             <Text color={'fg.muted'}>{t('noApplications')}</Text>
