@@ -9,15 +9,15 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuPackage } from 'react-icons/lu'
 
 import { AuthGuard } from '@/components/auth-guard'
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
 import { ordersApi } from '@/lib/api/orders'
-import type { Order } from '@/types'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',
@@ -29,28 +29,15 @@ const statusColor: Record<string, string> = {
 }
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
 
-  const fetchOrders = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await ordersApi.listMy(page)
+  const { data, isLoading } = useQuery({
+    queryKey: ['orders-my', page],
+    queryFn: () => ordersApi.listMy(page),
+  })
 
-      setOrders(data.items)
-      setTotalPages(data.totalPages)
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [page])
-
-  useEffect(() => {
-    fetchOrders()
-  }, [fetchOrders])
+  const orders = data?.items ?? []
+  const totalPages = data?.totalPages ?? 1
 
   return (
     <AuthGuard>
@@ -59,7 +46,7 @@ export default function OrdersPage() {
           My Orders
         </Heading>
 
-        {!loading && orders.length === 0 ? (
+        {!isLoading && orders.length === 0 ? (
           <EmptyState
             icon={<LuPackage size={48} />}
             title={'No orders yet'}

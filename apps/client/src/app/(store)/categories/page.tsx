@@ -1,40 +1,25 @@
 'use client'
 
 import { Card, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
 
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
 import { categoriesApi } from '@/lib/api/categories'
-import type { Category } from '@/types'
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-
-  const fetchCategories = useCallback(async () => {
-    try {
-      const data = await categoriesApi.list()
-
-      setCategories(data)
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchCategories()
-  }, [fetchCategories])
+  const { data: categories = [], isLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.list(),
+  })
 
   return (
     <PageContainer>
       <VStack align={'stretch'} gap={'6'}>
         <Heading size={'xl'}>Categories</Heading>
 
-        {!loading && categories.length === 0 ? (
+        {!isLoading && categories.length === 0 ? (
           <EmptyState
             title={'No categories yet'}
             description={'Check back later for new categories.'}

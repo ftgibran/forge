@@ -3,8 +3,9 @@
 import { formatDate } from '@app/utils'
 import { HStack, IconButton, Input } from '@chakra-ui/react'
 import { Box, Table, Text } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuEye, LuTrash2 } from 'react-icons/lu'
 
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -14,72 +15,58 @@ import { TableSkeleton } from '@/components/table-skeleton'
 import { toaster } from '@/components/ui/toaster'
 import { productsApi } from '@/lib/api/products'
 import { reviewsApi } from '@/lib/api/reviews'
-import type { Product, Review } from '@/types'
+import type { Review } from '@/types'
 
 export default function ReviewsPage() {
   const t = useTranslations('reviews')
   const tc = useTranslations('common')
-  const [products, setProducts] = useState<Product[]>([])
+  const queryClient = useQueryClient()
+
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   )
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [loading, setLoading] = useState(true)
 
   const [detailOpen, setDetailOpen] = useState(false)
   const [detailReviewId, setDetailReviewId] = useState<string | null>(null)
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null)
-  const [deleting, setDeleting] = useState(false)
 
-  useEffect(() => {
-    productsApi
-      .list({ limit: 100 })
-      .then((r) => {
-        setProducts(r.items)
+  const { data: productsData } = useQuery({
+    queryKey: ['products-all'],
+    queryFn: () => productsApi.list({ limit: 100 }),
+  })
 
-        if (r.items.length > 0) {
-          setSelectedProductId(r.items[0].id)
-        }
-      })
-      .catch(() => toaster.error({ title: t('loadProductsFailed') }))
-      .finally(() => setLoading(false))
-  }, [t])
+  const products = productsData?.items ?? []
+  const effectiveProductId =
+    selectedProductId ?? productsData?.items[0]?.id ?? null
 
-  const fetchReviews = useCallback(async () => {
-    if (!selectedProductId) return
+  const { data: reviewsData, isLoading: loading } = useQuery({
+    queryKey: ['reviews', effectiveProductId],
+    queryFn: () => reviewsApi.listByProduct(effectiveProductId!, 1, 50),
+    enabled: !!effectiveProductId,
+  })
 
-    setLoading(true)
-    try {
-      const res = await reviewsApi.listByProduct(selectedProductId, 1, 50)
+  const reviews = reviewsData?.items ?? []
 
-      setReviews(res.items)
-    } catch {
-      toaster.error({ title: t('loadFailed') })
-    } finally {
-      setLoading(false)
-    }
-  }, [selectedProductId, t])
-
-  useEffect(() => {
-    fetchReviews()
-  }, [fetchReviews])
-
-  const handleDelete = async () => {
-    if (!deleteTarget) return
-
-    setDeleting(true)
-    try {
-      await reviewsApi.delete(deleteTarget.id)
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => reviewsApi.delete(id),
+    onSuccess: () => {
       toaster.success({ title: t('reviewDeleted') })
       setDeleteOpen(false)
-      fetchReviews()
-    } catch {
+      queryClient.invalidateQueries({
+        queryKey: ['reviews', effectiveProductId],
+      })
+    },
+    onError: () => {
       toaster.error({ title: tc('deleteFailed') })
-    } finally {
-      setDeleting(false)
-    }
+    },
+  })
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+
+    deleteMutation.mutate(deleteTarget.id)
   }
 
   return (
@@ -94,7 +81,7 @@ export default function ReviewsPage() {
           as={'select'}
           size={'sm'}
           maxW={'400px'}
-          value={selectedProductId ?? ''}
+          value={effectiveProductId ?? ''}
           onChange={(e) => setSelectedProductId(e.target.value || null)}
         >
           {products.map((p) => (
@@ -179,7 +166,7 @@ export default function ReviewsPage() {
         title={t('deleteReview')}
         description={t('deleteConfirm')}
         onConfirm={handleDelete}
-        loading={deleting}
+        loading={deleteMutation.isPending}
       />
     </>
   )

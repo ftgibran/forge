@@ -8,8 +8,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
@@ -20,44 +21,33 @@ import { categoriesApi } from '@/lib/api/categories'
 import { productsApi } from '@/lib/api/products'
 import { useAuth } from '@/lib/auth-context'
 import { useCart } from '@/lib/cart-context'
-import type { Category, Product } from '@/types'
 
 export default function CategoryDetailPage() {
   const params = useParams<{ slug: string }>()
   const { user } = useAuth()
   const { addToCart } = useCart()
-  const [category, setCategory] = useState<Category | null>(null)
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    try {
-      const cat = await categoriesApi.getBySlug(params.slug)
+  const { data: category, isLoading: categoryLoading } = useQuery({
+    queryKey: ['category', params.slug],
+    queryFn: () => categoriesApi.getBySlug(params.slug),
+  })
 
-      setCategory(cat)
-
-      const prods = await productsApi.list({
-        categoryId: cat.id,
+  const { data: productsData, isLoading: productsLoading } = useQuery({
+    queryKey: ['products', { categoryId: category?.id, page }],
+    queryFn: () =>
+      productsApi.list({
+        categoryId: category!.id,
         status: 'ACTIVE',
         page,
         limit: 12,
-      })
+      }),
+    enabled: !!category?.id,
+  })
 
-      setProducts(prods.items)
-      setTotalPages(prods.totalPages)
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [params.slug, page])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  const products = productsData?.items ?? []
+  const totalPages = productsData?.totalPages ?? 1
+  const loading = categoryLoading || productsLoading
 
   const handleAddToCart = async (variantId: string) => {
     if (!user) {
@@ -77,7 +67,7 @@ export default function CategoryDetailPage() {
     }
   }
 
-  if (loading && !category) {
+  if (categoryLoading) {
     return (
       <PageContainer>
         <Spinner size={'xl'} />

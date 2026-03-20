@@ -13,6 +13,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -26,7 +27,6 @@ import { useCart } from '@/lib/cart-context'
 export default function CheckoutPage() {
   const router = useRouter()
   const { cart, clearCart } = useCart()
-  const [loading, setLoading] = useState(false)
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -42,22 +42,24 @@ export default function CheckoutPage() {
       return sum + price * item.quantity
     }, 0) ?? 0
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      await ordersApi.checkout({ shippingAddress: address })
+  const checkoutMutation = useMutation({
+    mutationFn: ordersApi.checkout,
+    onSuccess: async () => {
       await clearCart()
       toaster.success({
         title: 'Order placed!',
         description: 'Your order has been placed successfully.',
       })
       router.push('/orders')
-    } catch {
+    },
+    onError: () => {
       toaster.error({ title: 'Checkout failed. Please try again.' })
-    } finally {
-      setLoading(false)
-    }
+    },
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    checkoutMutation.mutate({ shippingAddress: address })
   }
 
   return (
@@ -174,7 +176,7 @@ export default function CheckoutPage() {
                     type={'submit'}
                     colorPalette={'blue'}
                     w={'full'}
-                    loading={loading}
+                    loading={checkoutMutation.isPending}
                     disabled={!cart?.items?.length}
                   >
                     Place Order

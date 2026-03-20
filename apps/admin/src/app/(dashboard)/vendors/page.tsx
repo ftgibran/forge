@@ -2,8 +2,9 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuClipboardList, LuPencil, LuTrash2 } from 'react-icons/lu'
 
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -26,54 +27,48 @@ export default function VendorsPage() {
   const t = useTranslations('vendors')
   const tc = useTranslations('common')
   const tn = useTranslations('nav')
-  const [vendors, setVendors] = useState<Vendor[]>([])
-  const [total, setTotal] = useState(0)
+  const queryClient = useQueryClient()
+
   const [page, setPage] = useState(1)
-  const [loading, setLoading] = useState(true)
 
   const [formOpen, setFormOpen] = useState(false)
   const [editVendor, setEditVendor] = useState<Vendor | null>(null)
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Vendor | null>(null)
-  const [deleting, setDeleting] = useState(false)
 
   const [appsOpen, setAppsOpen] = useState(false)
 
   const limit = 10
 
-  const fetchVendors = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await vendorsApi.list(page, limit)
+  const { data, isLoading } = useQuery({
+    queryKey: ['vendors', page],
+    queryFn: () => vendorsApi.list(page, limit),
+  })
 
-      setVendors(res.items)
-      setTotal(res.total)
-    } catch {
-      toaster.error({ title: t('loadFailed') })
-    } finally {
-      setLoading(false)
-    }
-  }, [page, t])
+  const vendors = data?.items ?? []
+  const total = data?.total ?? 0
 
-  useEffect(() => {
-    fetchVendors()
-  }, [fetchVendors])
-
-  const handleDelete = async () => {
-    if (!deleteTarget) return
-
-    setDeleting(true)
-    try {
-      await vendorsApi.delete(deleteTarget.id)
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => vendorsApi.delete(id),
+    onSuccess: () => {
       toaster.success({ title: t('vendorDeleted') })
       setDeleteOpen(false)
-      fetchVendors()
-    } catch {
+      queryClient.invalidateQueries({ queryKey: ['vendors'] })
+    },
+    onError: () => {
       toaster.error({ title: tc('deleteFailed') })
-    } finally {
-      setDeleting(false)
-    }
+    },
+  })
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+
+    deleteMutation.mutate(deleteTarget.id)
+  }
+
+  const invalidateVendors = () => {
+    queryClient.invalidateQueries({ queryKey: ['vendors'] })
   }
 
   const columns = [
@@ -143,7 +138,7 @@ export default function VendorsPage() {
         </Button>
       </PageHeader>
 
-      {loading ? (
+      {isLoading ? (
         <TableSkeleton />
       ) : (
         <DataTable
@@ -160,7 +155,7 @@ export default function VendorsPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         vendor={editVendor}
-        onSaved={fetchVendors}
+        onSaved={invalidateVendors}
       />
 
       <ConfirmDialog
@@ -169,13 +164,13 @@ export default function VendorsPage() {
         title={t('deleteVendor')}
         description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
-        loading={deleting}
+        loading={deleteMutation.isPending}
       />
 
       <VendorApplicationsDialog
         open={appsOpen}
         onOpenChange={setAppsOpen}
-        onReviewed={fetchVendors}
+        onReviewed={invalidateVendors}
       />
     </>
   )

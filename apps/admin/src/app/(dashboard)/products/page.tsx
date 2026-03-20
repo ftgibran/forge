@@ -2,8 +2,9 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuImage, LuLayers, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -17,7 +18,7 @@ import { toaster } from '@/components/ui/toaster'
 import { categoriesApi } from '@/lib/api/categories'
 import { productsApi } from '@/lib/api/products'
 import { vendorsApi } from '@/lib/api/vendors'
-import type { Category, Product, Vendor } from '@/types'
+import type { Product } from '@/types'
 
 const statusColor: Record<string, string> = {
   DRAFT: 'gray',
@@ -28,20 +29,15 @@ const statusColor: Record<string, string> = {
 export default function ProductsPage() {
   const t = useTranslations('products')
   const tc = useTranslations('common')
-  const [products, setProducts] = useState<Product[]>([])
-  const [total, setTotal] = useState(0)
-  const [page, setPage] = useState(1)
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
 
-  const [categories, setCategories] = useState<Category[]>([])
-  const [vendors, setVendors] = useState<Vendor[]>([])
+  const [page, setPage] = useState(1)
 
   const [formOpen, setFormOpen] = useState(false)
   const [editProduct, setEditProduct] = useState<Product | null>(null)
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
-  const [deleting, setDeleting] = useState(false)
 
   const [variantsOpen, setVariantsOpen] = useState(false)
   const [variantsTarget, setVariantsTarget] = useState<Product | null>(null)
@@ -51,46 +47,45 @@ export default function ProductsPage() {
 
   const limit = 10
 
-  const fetchProducts = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await productsApi.list({ page, limit })
+  const { data: productsData, isLoading } = useQuery({
+    queryKey: ['products', { page, limit }],
+    queryFn: () => productsApi.list({ page, limit }),
+  })
 
-      setProducts(res.items)
-      setTotal(res.total)
-    } catch {
-      toaster.error({ title: t('loadFailed') })
-    } finally {
-      setLoading(false)
-    }
-  }, [page, t])
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.list(),
+  })
 
-  useEffect(() => {
-    fetchProducts()
-    categoriesApi
-      .list()
-      .then(setCategories)
-      .catch(() => {})
-    vendorsApi
-      .list(1, 100)
-      .then((r) => setVendors(r.items))
-      .catch(() => {})
-  }, [fetchProducts])
+  const { data: vendorsData } = useQuery({
+    queryKey: ['vendors-all'],
+    queryFn: () => vendorsApi.list(1, 100),
+  })
 
-  const handleDelete = async () => {
-    if (!deleteTarget) return
+  const products = productsData?.items ?? []
+  const total = productsData?.total ?? 0
+  const vendors = vendorsData?.items ?? []
 
-    setDeleting(true)
-    try {
-      await productsApi.delete(deleteTarget.id)
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => productsApi.delete(id),
+    onSuccess: () => {
       toaster.success({ title: t('productDeleted') })
       setDeleteOpen(false)
-      fetchProducts()
-    } catch {
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+    },
+    onError: () => {
       toaster.error({ title: tc('deleteFailed') })
-    } finally {
-      setDeleting(false)
-    }
+    },
+  })
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+
+    deleteMutation.mutate(deleteTarget.id)
+  }
+
+  const invalidateProducts = () => {
+    queryClient.invalidateQueries({ queryKey: ['products'] })
   }
 
   const columns = [
@@ -189,7 +184,7 @@ export default function ProductsPage() {
         </Button>
       </PageHeader>
 
-      {loading ? (
+      {isLoading ? (
         <TableSkeleton />
       ) : (
         <DataTable
@@ -208,7 +203,7 @@ export default function ProductsPage() {
         product={editProduct}
         categories={categories}
         vendors={vendors}
-        onSaved={fetchProducts}
+        onSaved={invalidateProducts}
       />
 
       <ConfirmDialog
@@ -217,21 +212,21 @@ export default function ProductsPage() {
         title={t('deleteProduct')}
         description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
-        loading={deleting}
+        loading={deleteMutation.isPending}
       />
 
       <ProductVariantsDialog
         open={variantsOpen}
         onOpenChange={setVariantsOpen}
         product={variantsTarget}
-        onSaved={fetchProducts}
+        onSaved={invalidateProducts}
       />
 
       <ProductImagesDialog
         open={imagesOpen}
         onOpenChange={setImagesOpen}
         product={imagesTarget}
-        onSaved={fetchProducts}
+        onSaved={invalidateProducts}
       />
     </>
   )

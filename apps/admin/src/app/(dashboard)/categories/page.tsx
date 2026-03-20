@@ -3,8 +3,9 @@
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { Box, Table } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
 import { CategoryFormDialog } from '@/components/categories/category-form-dialog'
@@ -18,47 +19,39 @@ import type { Category } from '@/types'
 export default function CategoriesPage() {
   const t = useTranslations('categories')
   const tc = useTranslations('common')
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
 
   const [formOpen, setFormOpen] = useState(false)
   const [editCategory, setEditCategory] = useState<Category | null>(null)
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
-  const [deleting, setDeleting] = useState(false)
 
-  const fetchCategories = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await categoriesApi.list()
+  const { data: categories = [], isLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.list(),
+  })
 
-      setCategories(res)
-    } catch {
-      toaster.error({ title: t('loadFailed') })
-    } finally {
-      setLoading(false)
-    }
-  }, [t])
-
-  useEffect(() => {
-    fetchCategories()
-  }, [fetchCategories])
-
-  const handleDelete = async () => {
-    if (!deleteTarget) return
-
-    setDeleting(true)
-    try {
-      await categoriesApi.delete(deleteTarget.id)
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => categoriesApi.delete(id),
+    onSuccess: () => {
       toaster.success({ title: t('categoryDeleted') })
       setDeleteOpen(false)
-      fetchCategories()
-    } catch {
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+    },
+    onError: () => {
       toaster.error({ title: tc('deleteFailed') })
-    } finally {
-      setDeleting(false)
-    }
+    },
+  })
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+
+    deleteMutation.mutate(deleteTarget.id)
+  }
+
+  const invalidateCategories = () => {
+    queryClient.invalidateQueries({ queryKey: ['categories'] })
   }
 
   // Flatten tree for table display
@@ -89,7 +82,7 @@ export default function CategoriesPage() {
         </Button>
       </PageHeader>
 
-      {loading ? (
+      {isLoading ? (
         <TableSkeleton />
       ) : (
         <Box>
@@ -159,7 +152,7 @@ export default function CategoriesPage() {
         onOpenChange={setFormOpen}
         category={editCategory}
         categories={categories}
-        onSaved={fetchCategories}
+        onSaved={invalidateCategories}
       />
 
       <ConfirmDialog
@@ -168,7 +161,7 @@ export default function CategoriesPage() {
         title={t('deleteCategory')}
         description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
-        loading={deleting}
+        loading={deleteMutation.isPending}
       />
     </>
   )

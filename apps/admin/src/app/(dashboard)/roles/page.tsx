@@ -2,8 +2,9 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -20,55 +21,49 @@ export default function RolesPage() {
   const t = useTranslations('roles')
   const tc = useTranslations('common')
   const tn = useTranslations('nav')
-  const [roles, setRoles] = useState<Role[]>([])
-  const [total, setTotal] = useState(0)
+  const queryClient = useQueryClient()
+
   const [page, setPage] = useState(1)
-  const [loading, setLoading] = useState(true)
 
   const [formOpen, setFormOpen] = useState(false)
   const [editRole, setEditRole] = useState<Role | null>(null)
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Role | null>(null)
-  const [deleting, setDeleting] = useState(false)
 
   const [permsOpen, setPermsOpen] = useState(false)
   const [permsTarget, setPermsTarget] = useState<Role | null>(null)
 
   const limit = 10
 
-  const fetchRoles = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await rolesApi.list(page, limit)
+  const { data, isLoading } = useQuery({
+    queryKey: ['roles', page],
+    queryFn: () => rolesApi.list(page, limit),
+  })
 
-      setRoles(res.items)
-      setTotal(res.total)
-    } catch {
-      toaster.error({ title: t('loadFailed') })
-    } finally {
-      setLoading(false)
-    }
-  }, [page, t])
+  const roles = data?.items ?? []
+  const total = data?.total ?? 0
 
-  useEffect(() => {
-    fetchRoles()
-  }, [fetchRoles])
-
-  const handleDelete = async () => {
-    if (!deleteTarget) return
-
-    setDeleting(true)
-    try {
-      await rolesApi.delete(deleteTarget.id)
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => rolesApi.delete(id),
+    onSuccess: () => {
       toaster.success({ title: t('roleDeleted') })
       setDeleteOpen(false)
-      fetchRoles()
-    } catch {
+      queryClient.invalidateQueries({ queryKey: ['roles'] })
+    },
+    onError: () => {
       toaster.error({ title: tc('deleteFailed') })
-    } finally {
-      setDeleting(false)
-    }
+    },
+  })
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+
+    deleteMutation.mutate(deleteTarget.id)
+  }
+
+  const invalidateRoles = () => {
+    queryClient.invalidateQueries({ queryKey: ['roles'] })
   }
 
   const columns = [
@@ -151,7 +146,7 @@ export default function RolesPage() {
         </Button>
       </PageHeader>
 
-      {loading ? (
+      {isLoading ? (
         <TableSkeleton />
       ) : (
         <DataTable
@@ -168,7 +163,7 @@ export default function RolesPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         role={editRole}
-        onSaved={fetchRoles}
+        onSaved={invalidateRoles}
       />
 
       <ConfirmDialog
@@ -177,14 +172,14 @@ export default function RolesPage() {
         title={t('deleteRole')}
         description={tc('deleteConfirm', { name: deleteTarget?.name ?? '' })}
         onConfirm={handleDelete}
-        loading={deleting}
+        loading={deleteMutation.isPending}
       />
 
       <RolePermissionsDialog
         open={permsOpen}
         onOpenChange={setPermsOpen}
         role={permsTarget}
-        onSaved={fetchRoles}
+        onSaved={invalidateRoles}
       />
     </>
   )

@@ -9,8 +9,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
@@ -21,44 +22,33 @@ import { productsApi } from '@/lib/api/products'
 import { vendorsApi } from '@/lib/api/vendors'
 import { useAuth } from '@/lib/auth-context'
 import { useCart } from '@/lib/cart-context'
-import type { Product, Vendor } from '@/types'
 
 export default function VendorDetailPage() {
   const params = useParams<{ slug: string }>()
   const { user } = useAuth()
   const { addToCart } = useCart()
-  const [vendor, setVendor] = useState<Vendor | null>(null)
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    try {
-      const v = await vendorsApi.getBySlug(params.slug)
+  const { data: vendor, isLoading: vendorLoading } = useQuery({
+    queryKey: ['vendor', params.slug],
+    queryFn: () => vendorsApi.getBySlug(params.slug),
+  })
 
-      setVendor(v)
-
-      const prods = await productsApi.list({
-        vendorId: v.id,
+  const { data: productsData, isLoading: productsLoading } = useQuery({
+    queryKey: ['products', { vendorId: vendor?.id, page }],
+    queryFn: () =>
+      productsApi.list({
+        vendorId: vendor!.id,
         status: 'ACTIVE',
         page,
         limit: 12,
-      })
+      }),
+    enabled: !!vendor?.id,
+  })
 
-      setProducts(prods.items)
-      setTotalPages(prods.totalPages)
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [params.slug, page])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  const products = productsData?.items ?? []
+  const totalPages = productsData?.totalPages ?? 1
+  const loading = vendorLoading || productsLoading
 
   const handleAddToCart = async (variantId: string) => {
     if (!user) {
@@ -78,7 +68,7 @@ export default function VendorDetailPage() {
     }
   }
 
-  if (loading && !vendor) {
+  if (vendorLoading) {
     return (
       <PageContainer>
         <Spinner size={'xl'} />

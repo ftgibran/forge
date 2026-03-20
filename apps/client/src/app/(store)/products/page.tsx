@@ -1,8 +1,9 @@
 'use client'
 
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
 
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
@@ -13,16 +14,12 @@ import { toaster } from '@/components/ui/toaster'
 import { productsApi } from '@/lib/api/products'
 import { useAuth } from '@/lib/auth-context'
 import { useCart } from '@/lib/cart-context'
-import type { Product } from '@/types'
 
 function ProductsContent() {
   const searchParams = useSearchParams()
   const { user } = useAuth()
   const { addToCart } = useCart()
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
     categoryId: searchParams.get('categoryId') || '',
@@ -30,28 +27,19 @@ function ProductsContent() {
     sortBy: searchParams.get('sortBy') || 'newest',
   })
 
-  const fetchProducts = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await productsApi.list({
+  const { data, isLoading } = useQuery({
+    queryKey: ['products', { ...filters, page }],
+    queryFn: () =>
+      productsApi.list({
         ...filters,
         status: 'ACTIVE',
         page,
         limit: 12,
-      })
+      }),
+  })
 
-      setProducts(data.items)
-      setTotalPages(data.totalPages)
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [filters, page])
-
-  useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+  const products = data?.items ?? []
+  const totalPages = data?.totalPages ?? 1
 
   const handleFilterChange = (newFilters: Record<string, string>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }))
@@ -88,7 +76,7 @@ function ProductsContent() {
           onFilterChange={handleFilterChange}
         />
 
-        {loading ? (
+        {isLoading ? (
           <ProductSkeleton count={12} />
         ) : products.length === 0 ? (
           <EmptyState

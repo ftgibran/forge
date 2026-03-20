@@ -12,9 +12,10 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { PageContainer } from '@/components/page-container'
 import { PriceDisplay } from '@/components/price-display'
@@ -30,41 +31,29 @@ import { toaster } from '@/components/ui/toaster'
 import { productsApi } from '@/lib/api/products'
 import { useAuth } from '@/lib/auth-context'
 import { useCart } from '@/lib/cart-context'
-import type { Product } from '@/types'
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>()
   const { user } = useAuth()
   const { addToCart } = useCart()
-  const [product, setProduct] = useState<Product | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [selectedVariantId, setSelectedVariantId] = useState('')
   const [addingToCart, setAddingToCart] = useState(false)
   const [reviewRefreshKey, setReviewRefreshKey] = useState(0)
 
-  const fetchProduct = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await productsApi.getBySlug(params.slug)
+  const { data: product, isLoading } = useQuery({
+    queryKey: ['product', params.slug],
+    queryFn: () => productsApi.getBySlug(params.slug),
+  })
 
-      setProduct(data)
+  const [selectedVariantId, setSelectedVariantId] = useState('')
 
-      if (data.variants && data.variants.length > 0) {
-        setSelectedVariantId(data.variants[0].id)
-      }
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [params.slug])
-
-  useEffect(() => {
-    fetchProduct()
-  }, [fetchProduct])
+  const effectiveVariantId =
+    selectedVariantId ||
+    (product?.variants && product.variants.length > 0
+      ? product.variants[0].id
+      : '')
 
   const selectedVariant = product?.variants?.find(
-    (v) => v.id === selectedVariantId,
+    (v) => v.id === effectiveVariantId,
   )
 
   const handleAddToCart = async () => {
@@ -77,11 +66,11 @@ export default function ProductDetailPage() {
       return
     }
 
-    if (!selectedVariantId) return
+    if (!effectiveVariantId) return
 
     setAddingToCart(true)
     try {
-      await addToCart(selectedVariantId)
+      await addToCart(effectiveVariantId)
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })
@@ -90,7 +79,7 @@ export default function ProductDetailPage() {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <VStack py={'20'} justify={'center'}>
         <Spinner size={'xl'} />
@@ -149,7 +138,7 @@ export default function ProductDetailPage() {
             {product.variants && product.variants.length > 1 && (
               <NativeSelectRoot>
                 <NativeSelectField
-                  value={selectedVariantId}
+                  value={effectiveVariantId}
                   onChange={(e) => setSelectedVariantId(e.target.value)}
                 >
                   {product.variants.map((variant) => (

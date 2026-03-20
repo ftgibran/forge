@@ -2,8 +2,8 @@
 
 import { formatDate } from '@app/utils'
 import { Badge, Box, SimpleGrid, Table, Text } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
 import {
   LuBox,
   LuKey,
@@ -28,57 +28,72 @@ export default function DashboardPage() {
   const t = useTranslations('dashboard')
   const tn = useTranslations('nav')
   const tc = useTranslations('common')
-  const [users, setUsers] = useState<User[]>([])
-  const [counts, setCounts] = useState({
-    users: 0,
-    roles: 0,
-    permissions: 0,
-    vendors: 0,
-    products: 0,
-    orders: 0,
-  })
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    Promise.all([
-      usersApi.list(1, 5),
-      rolesApi.list(1, 1),
-      permissionsApi.list(1, 1),
-      vendorsApi.list(1, 1),
-      productsApi.list({ page: 1, limit: 1 }),
-      ordersApi.list(1, 1),
-    ])
-      .then(([userRes, roleRes, permRes, vendorRes, productRes, orderRes]) => {
-        setUsers(userRes.items)
-        setCounts({
-          users: userRes.total,
-          roles: roleRes.total,
-          permissions: permRes.total,
-          vendors: vendorRes.total,
-          products: productRes.total,
-          orders: orderRes.total,
-        })
-      })
-      .finally(() => setLoading(false))
-  }, [])
+  const { data: usersData, isLoading: loading } = useQuery({
+    queryKey: ['dashboard-users'],
+    queryFn: () => usersApi.list(1, 5),
+  })
+
+  const { data: rolesData } = useQuery({
+    queryKey: ['dashboard-roles'],
+    queryFn: () => rolesApi.list(1, 1),
+  })
+
+  const { data: permissionsData } = useQuery({
+    queryKey: ['dashboard-permissions'],
+    queryFn: () => permissionsApi.list(1, 1),
+  })
+
+  const { data: vendorsData } = useQuery({
+    queryKey: ['dashboard-vendors'],
+    queryFn: () => vendorsApi.list(1, 1),
+  })
+
+  const { data: productsData } = useQuery({
+    queryKey: ['dashboard-products'],
+    queryFn: () => productsApi.list({ page: 1, limit: 1 }),
+  })
+
+  const { data: ordersData } = useQuery({
+    queryKey: ['dashboard-orders'],
+    queryFn: () => ordersApi.list(1, 1),
+  })
+
+  const users: User[] = usersData?.items ?? []
 
   return (
     <>
       <PageHeader title={t('title')} />
 
       <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} gap={'6'} mb={'8'}>
-        <StatCard label={tn('users')} value={counts.users} icon={LuUsers} />
-        <StatCard label={tn('roles')} value={counts.roles} icon={LuShield} />
+        <StatCard
+          label={tn('users')}
+          value={usersData?.total ?? 0}
+          icon={LuUsers}
+        />
+        <StatCard
+          label={tn('roles')}
+          value={rolesData?.total ?? 0}
+          icon={LuShield}
+        />
         <StatCard
           label={tn('permissions')}
-          value={counts.permissions}
+          value={permissionsData?.total ?? 0}
           icon={LuKey}
         />
-        <StatCard label={tn('vendors')} value={counts.vendors} icon={LuStore} />
-        <StatCard label={tn('products')} value={counts.products} icon={LuBox} />
+        <StatCard
+          label={tn('vendors')}
+          value={vendorsData?.total ?? 0}
+          icon={LuStore}
+        />
+        <StatCard
+          label={tn('products')}
+          value={productsData?.total ?? 0}
+          icon={LuBox}
+        />
         <StatCard
           label={tn('orders')}
-          value={counts.orders}
+          value={ordersData?.total ?? 0}
           icon={LuShoppingCart}
         />
       </SimpleGrid>

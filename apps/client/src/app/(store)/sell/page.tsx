@@ -10,6 +10,7 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import { AuthGuard } from '@/components/auth-guard'
@@ -19,8 +20,8 @@ import { toaster } from '@/components/ui/toaster'
 import { vendorsApi } from '@/lib/api/vendors'
 
 export default function SellPage() {
+  const queryClient = useQueryClient()
   const [step, setStep] = useState<'form' | 'application' | 'done'>('form')
-  const [loading, setLoading] = useState(false)
   const [vendor, setVendor] = useState({
     name: '',
     slug: '',
@@ -28,42 +29,48 @@ export default function SellPage() {
   })
   const [applicationMessage, setApplicationMessage] = useState('')
 
-  const handleCreateVendor = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const created = await vendorsApi.create(vendor)
-
-      setVendor((v) => ({ ...v, id: created.id }))
+  const createVendorMutation = useMutation({
+    mutationFn: (data: { name: string; slug: string; description?: string }) =>
+      vendorsApi.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vendor-me'] })
       setStep('application')
       toaster.success({ title: 'Vendor profile created!' })
-    } catch (err) {
+    },
+    onError: (err) => {
       const message =
         err instanceof Error ? err.message : 'Failed to create vendor profile'
 
       toaster.error({ title: message })
-    } finally {
-      setLoading(false)
-    }
-  }
+    },
+  })
 
-  const handleSubmitApplication = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
+  const applyMutation = useMutation({
+    mutationFn: async (message: string) => {
       const me = await vendorsApi.getMe()
 
-      await vendorsApi.createApplication(me.id, applicationMessage)
+      return vendorsApi.createApplication(me.id, message)
+    },
+    onSuccess: () => {
       setStep('done')
       toaster.success({ title: 'Application submitted!' })
-    } catch (err) {
+    },
+    onError: (err) => {
       const message =
         err instanceof Error ? err.message : 'Failed to submit application'
 
       toaster.error({ title: message })
-    } finally {
-      setLoading(false)
-    }
+    },
+  })
+
+  const handleCreateVendor = (e: React.FormEvent) => {
+    e.preventDefault()
+    createVendorMutation.mutate(vendor)
+  }
+
+  const handleSubmitApplication = (e: React.FormEvent) => {
+    e.preventDefault()
+    applyMutation.mutate(applicationMessage)
   }
 
   const generateSlug = (name: string) => {
@@ -134,7 +141,7 @@ export default function SellPage() {
                     <Button
                       type={'submit'}
                       colorPalette={'blue'}
-                      loading={loading}
+                      loading={createVendorMutation.isPending}
                     >
                       Create Vendor Profile
                     </Button>
@@ -169,7 +176,7 @@ export default function SellPage() {
                     <Button
                       type={'submit'}
                       colorPalette={'blue'}
-                      loading={loading}
+                      loading={applyMutation.isPending}
                     >
                       Submit Application
                     </Button>
