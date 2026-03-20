@@ -5,5 +5,5 @@ export {
   displayPermission,
 } from './format-permission'
 export type { PaginatedResponse } from './pagination'
-export { AuthProvider, useAuth } from './auth'
-export type { AuthUser, JwtPayload } from './auth'
+export { decodeJwt } from './decode-jwt'
+export type { JwtPayload } from './decode-jwt'

@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@app/sdk'
 import { Flex, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 
@@ -12,7 +13,6 @@ import {
   MenuRoot,
   MenuTrigger,
 } from '@/components/ui/menu'
-import { useAuth } from '@/lib/auth-context'
 
 export function Header() {
   const { user, logout } = useAuth()

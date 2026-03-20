@@ -1,6 +1,9 @@
 import type { ProductQueryParams } from '../types'
 
 export const queryKeys = {
+  auth: {
+    me: ['auth', 'me'] as const,
+  },
   users: {
     all: ['users'] as const,
     list: (page: number, limit: number) =>

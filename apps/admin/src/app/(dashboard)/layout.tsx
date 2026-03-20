@@ -1,12 +1,12 @@
 'use client'
 
+import { useAuth } from '@app/sdk'
 import { Box, Flex, Spinner } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 import { Header } from '@/components/header'
 import { Sidebar } from '@/components/sidebar'
-import { AuthProvider, useAuth } from '@/lib/auth-context'
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
@@ -46,11 +46,5 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <AuthProvider
-      apiUrl={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}
-    >
-      <DashboardShell>{children}</DashboardShell>
-    </AuthProvider>
-  )
+  return <DashboardShell>{children}</DashboardShell>
 }

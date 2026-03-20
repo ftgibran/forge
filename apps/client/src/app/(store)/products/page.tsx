@@ -1,6 +1,7 @@
 'use client'
 
 import { useAddToCart, useProducts } from '@app/sdk'
+import { useAuth } from '@app/sdk'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
@@ -11,7 +12,6 @@ import { ProductSkeleton } from '@/components/product-skeleton'
 import { ProductFilters } from '@/components/products/product-filters'
 import { ProductGrid } from '@/components/products/product-grid'
 import { toaster } from '@/components/ui/toaster'
-import { useAuth } from '@/lib/auth-context'
 
 function ProductsContent() {
   const searchParams = useSearchParams()

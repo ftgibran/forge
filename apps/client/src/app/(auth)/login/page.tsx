@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@app/sdk'
 import {
   Box,
   Button,
@@ -15,7 +16,6 @@ import { useState } from 'react'
 
 import { Field } from '@/components/ui/field'
 import { toaster } from '@/components/ui/toaster'
-import { useAuth } from '@/lib/auth-context'
 
 export default function LoginPage() {
   const router = useRouter()

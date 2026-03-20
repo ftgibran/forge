@@ -343,6 +343,10 @@ importers:
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
   packages/sdk:
+    dependencies:
+      '@app/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@tanstack/react-query':
         specifier: ^5.91.2

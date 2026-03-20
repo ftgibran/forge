@@ -1,6 +1,9 @@
 // Types
 export * from './types'
 
+// Auth
+export * from './auth'
+
 // API Client
 export * from './client/api-client'
 export * from './client/context'

@@ -1,6 +1,7 @@
 'use client'
 
 import { useCart } from '@app/sdk'
+import { useAuth } from '@app/sdk'
 import {
   Badge,
   Box,
@@ -24,7 +25,6 @@ import {
   MenuRoot,
   MenuTrigger,
 } from '@/components/ui/menu'
-import { useAuth } from '@/lib/auth-context'
 
 export function Navbar() {
   const { user, logout } = useAuth()

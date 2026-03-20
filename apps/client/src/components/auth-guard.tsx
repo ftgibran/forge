@@ -1,10 +1,9 @@
 'use client'
 
+import { useAuth } from '@app/sdk'
 import { Spinner, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-
-import { useAuth } from '@/lib/auth-context'
 
 interface AuthGuardProps {
   children: React.ReactNode

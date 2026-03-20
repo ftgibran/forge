@@ -1,6 +1,7 @@
 'use client'
 
 import { useAddToCart, useProductBySlug } from '@app/sdk'
+import { useAuth } from '@app/sdk'
 import {
   Badge,
   Box,
@@ -28,7 +29,6 @@ import {
   NativeSelectRoot,
 } from '@/components/ui/native-select'
 import { toaster } from '@/components/ui/toaster'
-import { useAuth } from '@/lib/auth-context'
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>()
