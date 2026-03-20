@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { VendorApplication } from '../../types'
 
 interface ReviewVendorApplicationInput {
@@ -27,6 +28,7 @@ export function useReviewVendorApplication(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<VendorApplication, ApiError, ReviewVendorApplicationInput>(
     {
       mutationFn: ({ id, status }) =>

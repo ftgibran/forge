@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Product } from '../../types'
 
 export function useCreateProduct(
@@ -18,6 +19,7 @@ export function useCreateProduct(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Product, ApiError, Record<string, unknown>>({
     mutationFn: (data) => client.post('/products', data),
     onSuccess: (data, variables, context, meta) => {

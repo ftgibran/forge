@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Category } from '../../types'
 
 export function useDeleteCategory(
@@ -15,6 +16,7 @@ export function useDeleteCategory(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Category, ApiError, string>({
     mutationFn: (id) => client.delete(`/categories/${id}`),
     onSuccess: (data, variables, context, meta) => {

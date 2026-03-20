@@ -7,11 +7,13 @@ export function parsePermission(permission: string): {
   resource: string
 } {
   const [action, ...rest] = permission.split(':')
+
   return { action, resource: rest.join(':') }
 }
 
 export function displayPermission(permission: string): string {
   const { action, resource } = parsePermission(permission)
+
   return `${capitalize(action)} ${capitalize(resource)}`
 }
 

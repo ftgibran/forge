@@ -1,9 +1,10 @@
 'use client'
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { PaginatedList, VendorApplication } from '../../types'
 
 export function useVendorApplications(
@@ -15,6 +16,7 @@ export function useVendorApplications(
   >,
 ) {
   const client = useApiClient()
+
   return useQuery<PaginatedList<VendorApplication>, ApiError>({
     queryKey: queryKeys.vendors.applications.list(page, limit),
     queryFn: () =>

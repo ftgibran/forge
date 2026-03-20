@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Permission } from '../../types'
 
 interface UpdatePermissionInput {
@@ -23,6 +24,7 @@ export function useUpdatePermission(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Permission, ApiError, UpdatePermissionInput>({
     mutationFn: ({ id, data }) => client.patch(`/permissions/${id}`, data),
     onSuccess: (data, variables, context, meta) => {

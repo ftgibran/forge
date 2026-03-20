@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Category } from '../../types'
 
 interface UpdateCategoryInput {
@@ -28,6 +29,7 @@ export function useUpdateCategory(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Category, ApiError, UpdateCategoryInput>({
     mutationFn: ({ id, data }) => client.patch(`/categories/${id}`, data),
     onSuccess: (data, variables, context, meta) => {

@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Review } from '../../types'
 
 interface UpdateReviewInput {
@@ -23,6 +24,7 @@ export function useUpdateReview(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Review, ApiError, UpdateReviewInput>({
     mutationFn: ({ id, data }) => client.patch(`/reviews/${id}`, data),
     onSuccess: (data, variables, context, meta) => {

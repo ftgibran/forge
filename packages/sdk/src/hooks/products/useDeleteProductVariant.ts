@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { ProductVariant } from '../../types'
 
 interface DeleteProductVariantInput {
@@ -23,6 +24,7 @@ export function useDeleteProductVariant(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<ProductVariant, ApiError, DeleteProductVariantInput>({
     mutationFn: ({ productId, variantId }) =>
       client.delete(`/products/${productId}/variants/${variantId}`),

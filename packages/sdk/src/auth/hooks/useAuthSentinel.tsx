@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
-import type { User } from '../../types'
 import { decodeJwt } from '@app/utils'
-import { useAuth } from './useAuth'
-import { TOKEN_KEY } from '../constants'
+import { useEffect } from 'react'
+
 import { useApiClient } from '../../client/context'
+import type { User } from '../../types'
+import { TOKEN_KEY } from '../constants'
+import { useAuth } from './useAuth'
 
 export function useAuthSentinel() {
   const { getToken, removeCookie, setTokenPayload, setUser, setIsLoading } =
@@ -16,6 +17,7 @@ export function useAuthSentinel() {
 
     if (!token) {
       setIsLoading(false)
+
       return
     }
 
@@ -27,5 +29,5 @@ export function useAuthSentinel() {
       })
       .catch(() => removeCookie(TOKEN_KEY))
       .finally(() => setIsLoading(false))
-  }, [client, getToken, removeCookie])
+  }, [client, getToken, removeCookie, setIsLoading, setTokenPayload, setUser])
 }

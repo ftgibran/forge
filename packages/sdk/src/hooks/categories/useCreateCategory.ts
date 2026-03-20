@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Category } from '../../types'
 
 interface CreateCategoryInput {
@@ -25,6 +26,7 @@ export function useCreateCategory(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Category, ApiError, CreateCategoryInput>({
     mutationFn: (data) => client.post('/categories', data),
     onSuccess: (data, variables, context, meta) => {

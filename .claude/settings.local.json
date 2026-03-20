@@ -50,7 +50,9 @@
       "Bash(npx tsc:*)",
       "Bash(./node_modules/.bin/tsc --noEmit)",
       "Bash(node_modules/.bin/tsc --version)",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(grep -rn \"from ''@/\" /Users/ftgibran/Dev/forge/packages/sdk/src/ --include=\"*.ts\" --include=\"*.tsx\")",
+      "Bash(grep -rn \"from ''@/\" /Users/ftgibran/Dev/forge/packages/utils/src/ --include=\"*.ts\" --include=\"*.tsx\")"
     ]
   }
 }

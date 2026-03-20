@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Cart } from '../../types'
 
 interface UpdateCartItemInput {
@@ -23,6 +24,7 @@ export function useUpdateCartItem(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Cart, ApiError, UpdateCartItemInput>({
     mutationFn: ({ itemId, quantity }) =>
       client.patch(`/cart/items/${itemId}`, { quantity }),

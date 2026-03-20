@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useMemo } from 'react'
-import { getValidElements } from '../react/getValidElements'
+
 import { findElementByName } from '../react/findElementByName'
+import { getValidElements } from '../react/getValidElements'
 
 export type ChildrenWithContext<T> = ReactNode | ((context: T) => ReactNode)
 
@@ -10,6 +11,7 @@ export type ChildrenWithContext<T> = ReactNode | ((context: T) => ReactNode)
 export function useChildrenWithContext<T>(
   children: ChildrenWithContext<T>,
   context: T,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ContainerFallback?: FC<any>,
 ) {
   return useMemo(() => {

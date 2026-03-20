@@ -1,4 +1,5 @@
 import { Children, isValidElement, type ReactNode } from 'react'
+
 import { isFragmentChild } from './isFragmentChild'
 
 /**
@@ -10,6 +11,7 @@ export const extractChildrenFromFragment = (children: ReactNode) => {
     const node = Children.only(children)
 
     if (isValidElement(node)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (node.props as any).children
     }
   }

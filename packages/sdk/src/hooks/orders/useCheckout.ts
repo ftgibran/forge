@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Order, ShippingAddress } from '../../types'
 
 interface CheckoutInput {
@@ -22,6 +23,7 @@ export function useCheckout(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Order, ApiError, CheckoutInput>({
     mutationFn: (data) => client.post('/orders/checkout', data),
     onSuccess: (data, variables, context, meta) => {

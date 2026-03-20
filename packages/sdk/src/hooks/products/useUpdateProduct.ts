@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Product } from '../../types'
 
 interface UpdateProductInput {
@@ -23,6 +24,7 @@ export function useUpdateProduct(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Product, ApiError, UpdateProductInput>({
     mutationFn: ({ id, data }) => client.patch(`/products/${id}`, data),
     onSuccess: (data, variables, context, meta) => {

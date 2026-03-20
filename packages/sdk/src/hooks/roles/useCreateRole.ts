@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Role } from '../../types'
 
 interface CreateRoleInput {
@@ -23,6 +24,7 @@ export function useCreateRole(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Role, ApiError, CreateRoleInput>({
     mutationFn: (data) => client.post('/roles', data),
     onSuccess: (data, variables, context, meta) => {

@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Role } from '../../types'
 
 export function useDeleteRole(
@@ -15,6 +16,7 @@ export function useDeleteRole(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Role, ApiError, string>({
     mutationFn: (id) => client.delete(`/roles/${id}`),
     onSuccess: (data, variables, context, meta) => {

@@ -39,6 +39,7 @@ export function createClient(options: ApiClientOptions): ApiClient {
       'Content-Type': 'application/json',
       ...((init.headers as Record<string, string>) ?? {}),
     }
+
     if (token) headers['Authorization'] = `Bearer ${token}`
 
     const res = await fetch(`${apiUrl}${path}`, { ...init, headers })
@@ -50,6 +51,7 @@ export function createClient(options: ApiClientOptions): ApiClient {
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}))
+
       throw new ApiError(
         res.status,
         (body as { message?: string }).message ??
@@ -58,6 +60,7 @@ export function createClient(options: ApiClientOptions): ApiClient {
     }
 
     const json = (await res.json()) as { data?: T } | T
+
     return (json as { data?: T }).data !== undefined
       ? ((json as { data: T }).data as T)
       : (json as T)

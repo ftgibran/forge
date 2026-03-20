@@ -1,9 +1,10 @@
-import { useCookies } from 'react-cookie'
-import { useState } from 'react'
-import type { User } from '../../types'
 import type { JwtPayload } from '@app/utils'
-import type { AuthParams } from './useAuth'
+import { useState } from 'react'
+import { useCookies } from 'react-cookie'
+
+import type { User } from '../../types'
 import { TOKEN_KEY } from '../constants'
+import type { AuthParams } from './useAuth'
 
 export type UseAuthBaseReturn = ReturnType<typeof useAuthBase>
 

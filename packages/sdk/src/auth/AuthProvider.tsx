@@ -1,15 +1,15 @@
 'use client'
 
+import { type ChildrenWithContext, useChildrenWithContext } from '@app/utils'
 import { FC } from 'react'
 
-import { type ChildrenWithContext, useChildrenWithContext } from '@app/utils'
+import { AuthConsumer } from './AuthConsumer'
 import {
   _AuthProvider,
-  type AuthParams,
   _useAuth,
+  type AuthParams,
   type UseAuthReturn,
 } from './hooks/useAuth'
-import { AuthConsumer } from './AuthConsumer'
 
 export interface AuthProviderProps extends AuthParams {
   children: ChildrenWithContext<UseAuthReturn>

@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, type JwtPayload } from '@app/utils'
+
 import { useAuthBase, type UseAuthBaseReturn } from './useAuthBase'
 import {
   useAuthController,
@@ -15,13 +16,14 @@ export const [_AuthProvider, useAuth] = createContext<UseAuthReturn>({
 
 export type UseAuthReturn = ReturnType<typeof _useAuth>
 
-export interface AuthParams {
-  //
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface AuthParams {}
 
+/* eslint-disable react-hooks/rules-of-hooks */
 export function _useAuth(params: AuthParams = {}) {
   const base: UseAuthBaseReturn = useAuthBase(params)
   const controller: UseAuthControllerReturn = useAuthController(base)
 
   return { ...base, ...controller }
 }
+/* eslint-enable react-hooks/rules-of-hooks */

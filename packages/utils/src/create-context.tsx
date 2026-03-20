@@ -45,6 +45,7 @@ export function createContext<T>(options: CreateContextOptions<T> = {}) {
       const error = new Error(
         errorMessage ?? getErrorMessage(hookName, providerName),
       )
+
       error.name = 'ContextError'
       throw error
     }

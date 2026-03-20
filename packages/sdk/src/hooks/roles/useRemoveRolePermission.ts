@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 
 interface RemoveRolePermissionInput {
   roleId: string
@@ -22,6 +23,7 @@ export function useRemoveRolePermission(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<unknown, ApiError, RemoveRolePermissionInput>({
     mutationFn: ({ roleId, permissionId }) =>
       client.delete(`/roles/${roleId}/permissions/${permissionId}`),

@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Product } from '../../types'
 
 export function useDeleteProduct(
@@ -15,6 +16,7 @@ export function useDeleteProduct(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Product, ApiError, string>({
     mutationFn: (id) => client.delete(`/products/${id}`),
     onSuccess: (data, variables, context, meta) => {

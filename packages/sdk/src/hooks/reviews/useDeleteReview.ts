@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 import type { Review } from '../../types'
 
 export function useDeleteReview(
@@ -15,6 +16,7 @@ export function useDeleteReview(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<Review, ApiError, string>({
     mutationFn: (id) => client.delete(`/reviews/${id}`),
     onSuccess: (data, variables, context, meta) => {

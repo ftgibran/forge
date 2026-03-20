@@ -3,8 +3,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import Cookies from 'js-cookie'
+import { type ReactNode, useState } from 'react'
 import { CookiesProvider } from 'react-cookie'
-import { useState, type ReactNode } from 'react'
+
 import { AuthProvider } from '../auth'
 import { createClient } from '../client/api-client'
 import { ApiClientContext } from '../client/context'

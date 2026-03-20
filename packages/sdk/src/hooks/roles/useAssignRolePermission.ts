@@ -2,12 +2,13 @@
 
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
+  useQueryClient,
 } from '@tanstack/react-query'
+
+import type { ApiError } from '../../client/api-client'
 import { useApiClient } from '../../client/context'
 import { queryKeys } from '../../keys'
-import type { ApiError } from '../../client/api-client'
 
 interface AssignRolePermissionInput {
   roleId: string
@@ -22,6 +23,7 @@ export function useAssignRolePermission(
 ) {
   const client = useApiClient()
   const queryClient = useQueryClient()
+
   return useMutation<unknown, ApiError, AssignRolePermissionInput>({
     mutationFn: ({ roleId, permissionId }) =>
       client.post(`/roles/${roleId}/permissions`, { permissionId }),
