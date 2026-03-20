@@ -1,14 +1,20 @@
 'use client'
 
 import { SdkProvider } from '@app/sdk'
-import type { ReactNode } from 'react'
+import type { PropsWithChildren } from 'react'
 
-export function Providers({ children }: { children: ReactNode }) {
+import { DesignSystemProvider } from '@/components/ui/design-system-provider'
+import { Toaster } from '@/components/ui/toaster'
+import { API_URL } from '@/config/constants'
+
+export function Providers({ children }: PropsWithChildren) {
   return (
-    <SdkProvider
-      apiUrl={process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080/api'}
-    >
-      {children}
+    <SdkProvider apiUrl={API_URL}>
+      <DesignSystemProvider>
+        {children}
+
+        <Toaster />
+      </DesignSystemProvider>
     </SdkProvider>
   )
 }
