@@ -1,6 +1,6 @@
 'use client'
 
-import { useApiClient } from '@app/sdk'
+import { useAuth } from '@app/sdk'
 import {
   Box,
   Button,
@@ -25,18 +25,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const client = useApiClient()
+  const { login } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await client.post<{ accessToken: string }>('/auth/login', {
-        email,
-        password,
-      })
-
-      localStorage.setItem('token', res.accessToken)
+      await login(email, password)
       router.push('/')
     } catch {
       toaster.error({

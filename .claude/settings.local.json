@@ -49,7 +49,8 @@
       "WebFetch(domain:next-intl.dev)",
       "Bash(npx tsc:*)",
       "Bash(./node_modules/.bin/tsc --noEmit)",
-      "Bash(node_modules/.bin/tsc --version)"
+      "Bash(node_modules/.bin/tsc --version)",
+      "WebFetch(domain:www.npmjs.com)"
     ]
   }
 }

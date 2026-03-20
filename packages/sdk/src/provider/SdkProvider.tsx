@@ -2,10 +2,14 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import Cookies from 'js-cookie'
+import { CookiesProvider } from 'react-cookie'
 import { useState, type ReactNode } from 'react'
 import { AuthProvider } from '../auth'
 import { createClient } from '../client/api-client'
 import { ApiClientContext } from '../client/context'
+
+const TOKEN_KEY = 'token'
 
 interface SdkProviderProps {
   apiUrl: string
@@ -25,11 +29,11 @@ export function SdkProvider({
   const [apiClient] = useState(() =>
     createClient({
       apiUrl,
-      getToken: () =>
-        typeof window !== 'undefined' ? localStorage.getItem('token') : null,
       onUnauthorized,
+      getToken: () => Cookies.get(TOKEN_KEY) ?? null,
     }),
   )
+
   const [queryClient] = useState(
     () =>
       externalClient ??
@@ -41,14 +45,16 @@ export function SdkProvider({
   )
 
   return (
-    <ApiClientContext.Provider value={apiClient}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          {children}
+    <CookiesProvider defaultSetOptions={{ path: '/' }}>
+      <ApiClientContext.Provider value={apiClient}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            {children}
 
-          {devtools && <ReactQueryDevtools initialIsOpen={false} />}
-        </AuthProvider>
-      </QueryClientProvider>
-    </ApiClientContext.Provider>
+            {devtools && <ReactQueryDevtools initialIsOpen={false} />}
+          </AuthProvider>
+        </QueryClientProvider>
+      </ApiClientContext.Provider>
+    </CookiesProvider>
   )
 }

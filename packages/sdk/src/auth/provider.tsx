@@ -1,29 +1,39 @@
 'use client'
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCookies } from 'react-cookie'
 
 import { decodeJwt, type JwtPayload } from '@app/utils'
 import { useApiClient } from '../client/context'
 import type { AuthResponse, User } from '../types'
 import { AuthContext } from './context'
 
+const TOKEN_KEY = 'token'
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const client = useApiClient()
+  const [cookies, setCookie, removeCookie] = useCookies([TOKEN_KEY])
   const [user, setUser] = useState<User | null>(null)
   const [tokenPayload, setTokenPayload] = useState<JwtPayload | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const getToken = useCallback(
-    () =>
-      typeof window !== 'undefined' ? localStorage.getItem('token') : null,
-    [],
+    () => (cookies[TOKEN_KEY] as string | undefined) ?? null,
+    [cookies],
   )
 
-  const applyAuth = useCallback((res: AuthResponse) => {
-    localStorage.setItem('token', res.accessToken)
-    setUser(res.user)
-    setTokenPayload(decodeJwt(res.accessToken))
-  }, [])
+  const applyAuth = useCallback(
+    (res: AuthResponse) => {
+      const payload = decodeJwt(res.accessToken)
+      const maxAge = payload
+        ? payload.exp - Math.floor(Date.now() / 1000)
+        : undefined
+      setCookie(TOKEN_KEY, res.accessToken, { sameSite: 'lax', maxAge })
+      setUser(res.user)
+      setTokenPayload(payload)
+    },
+    [setCookie],
+  )
 
   useEffect(() => {
     const token = getToken()
@@ -39,9 +49,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(u)
         setTokenPayload(decodeJwt(token))
       })
-      .catch(() => localStorage.removeItem('token'))
+      .catch(() => removeCookie(TOKEN_KEY))
       .finally(() => setIsLoading(false))
-  }, [client, getToken])
+  }, [client, getToken, removeCookie])
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -67,11 +77,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token')
+    removeCookie(TOKEN_KEY)
     setUser(null)
     setTokenPayload(null)
     window.location.href = '/login'
-  }, [])
+  }, [removeCookie])
 
   return (
     <AuthContext.Provider
