@@ -35,7 +35,9 @@ export default function ProfilePage() {
               </HStack>
               <HStack justify={'space-between'}>
                 <Text color={'fg.muted'}>{t('memberSince')}</Text>
-                <Text fontWeight={'medium'}>{formatDate(user.createdAt)}</Text>
+                <Text fontWeight={'medium'}>
+                  {user.createdAt ? formatDate(user.createdAt) : '—'}
+                </Text>
               </HStack>
             </Stack>
           </Card.Body>

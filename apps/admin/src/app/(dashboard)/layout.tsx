@@ -47,7 +47,9 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <AuthProvider>
+    <AuthProvider
+      apiUrl={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}
+    >
       <DashboardShell>{children}</DashboardShell>
     </AuthProvider>
   )

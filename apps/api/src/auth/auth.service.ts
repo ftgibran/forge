@@ -36,7 +36,7 @@ export class AuthService {
       },
     })
 
-    const token = this.generateToken(user.id, user.email)
+    const token = this.generateToken(user.id, user.email, user.name, [])
 
     return {
       accessToken: token,
@@ -46,8 +46,9 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.validateUser(dto.email, dto.password)
+    const roles = user.userRoles.map((ur) => ur.role.name)
 
-    const token = this.generateToken(user.id, user.email)
+    const token = this.generateToken(user.id, user.email, user.name, roles)
 
     return {
       accessToken: token,
@@ -58,6 +59,7 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
+      include: { userRoles: { include: { role: true } } },
     })
 
     if (!user) {
@@ -82,12 +84,17 @@ export class AuthService {
       },
     })
 
-    const { password, ...result } = user
+    const { password: _password, ...result } = user
 
     return result
   }
 
-  private generateToken(userId: string, email: string): string {
-    return this.jwtService.sign({ sub: userId, email })
+  private generateToken(
+    userId: string,
+    email: string,
+    name: string,
+    roles: string[],
+  ): string {
+    return this.jwtService.sign({ sub: userId, email, name, roles })
   }
 }

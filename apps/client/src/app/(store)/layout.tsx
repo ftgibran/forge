@@ -13,7 +13,9 @@ export default function StoreLayout({
   children: React.ReactNode
 }) {
   return (
-    <AuthProvider>
+    <AuthProvider
+      apiUrl={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}
+    >
       <CartProvider>
         <Navbar />
         <Box as={'main'} minH={'calc(100vh - 64px)'}>

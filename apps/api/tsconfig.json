@@ -17,9 +17,11 @@
       "@/*": ["src/*"]
     },
     "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo",
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "vitest.config*.ts"]
 }

@@ -46,7 +46,10 @@
       "Bash(npm ls:*)",
       "Bash(openssl rand:*)",
       "Bash(npx @chakra-ui/cli snippet add:*)",
-      "WebFetch(domain:next-intl.dev)"
+      "WebFetch(domain:next-intl.dev)",
+      "Bash(npx tsc:*)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(node_modules/.bin/tsc --version)"
     ]
   }
 }
