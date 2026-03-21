@@ -4,7 +4,7 @@ import type { Product, ProductVariant } from '@app/sdk'
 import {
   useAddProductVariant,
   useDeleteProductVariant,
-  useProduct,
+  useGetProduct,
 } from '@app/sdk'
 import {
   Button,
@@ -51,11 +51,11 @@ export function ProductVariantsDialog({
   const [compareAtPrice, setCompareAtPrice] = useState('')
   const [stock, setStock] = useState('0')
 
-  const { data: productData, refetch } = useProduct(product?.id ?? '', {
-    enabled: open && !!product?.id,
+  const { data: productData, refetch } = useGetProduct(product?.id ?? '', {
+    query: { enabled: open && !!product?.id },
   })
 
-  const variants: ProductVariant[] = productData?.variants ?? []
+  const variants = (productData?.variants ?? []) as ProductVariant[]
 
   const addVariant = useAddProductVariant()
   const deleteVariant = useDeleteProductVariant()
@@ -71,7 +71,7 @@ export function ProductVariantsDialog({
 
     addVariant.mutate(
       {
-        productId: product.id,
+        id: product.id,
         data: {
           name,
           sku,
@@ -105,7 +105,7 @@ export function ProductVariantsDialog({
     if (!product) return
 
     deleteVariant.mutate(
-      { productId: product.id, variantId },
+      { id: product.id, variantId },
       {
         onSuccess: () => {
           toaster.success({ title: t('variantDeleted') })

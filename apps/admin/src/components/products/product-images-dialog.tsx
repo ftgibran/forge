@@ -1,7 +1,11 @@
 'use client'
 
 import type { Product, ProductImage } from '@app/sdk'
-import { useAddProductImage, useDeleteProductImage, useProduct } from '@app/sdk'
+import {
+  useAddProductImage,
+  useDeleteProductImage,
+  useGetProduct,
+} from '@app/sdk'
 import {
   Button,
   HStack,
@@ -45,11 +49,11 @@ export function ProductImagesDialog({
   const [altText, setAltText] = useState('')
   const [position, setPosition] = useState('0')
 
-  const { data: productData, refetch } = useProduct(product?.id ?? '', {
-    enabled: open && !!product?.id,
+  const { data: productData, refetch } = useGetProduct(product?.id ?? '', {
+    query: { enabled: open && !!product?.id },
   })
 
-  const images: ProductImage[] = productData?.images ?? []
+  const images = (productData?.images ?? []) as ProductImage[]
 
   const addImage = useAddProductImage()
   const deleteImage = useDeleteProductImage()
@@ -65,7 +69,7 @@ export function ProductImagesDialog({
 
     addImage.mutate(
       {
-        productId: product.id,
+        id: product.id,
         data: {
           url,
           altText: altText || undefined,
@@ -93,7 +97,7 @@ export function ProductImagesDialog({
     if (!product) return
 
     deleteImage.mutate(
-      { productId: product.id, imageId },
+      { id: product.id, imageId },
       {
         onSuccess: () => {
           toaster.success({ title: t('imageDeleted') })

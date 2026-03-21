@@ -1,7 +1,7 @@
 'use client'
 
 import type { Vendor } from '@app/sdk'
-import { useDeleteVendor, useVendors } from '@app/sdk'
+import { useDeleteVendor, useGetVendors } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -39,7 +39,7 @@ export default function VendorsPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useVendors(page, limit)
+  const { data, isLoading } = useGetVendors({ page, limit })
 
   const vendors = data?.items ?? []
   const total = data?.total ?? 0
@@ -49,15 +49,18 @@ export default function VendorsPage() {
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('vendorDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('vendorDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   const columns = [

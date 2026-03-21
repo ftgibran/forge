@@ -1,6 +1,7 @@
 'use client'
 
 import type { Category, Product, Vendor } from '@app/sdk'
+import type { CreateProductDto, UpdateProductDto } from '@app/sdk'
 import { useCreateProduct, useUpdateProduct } from '@app/sdk'
 import { Button, Input, SimpleGrid, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -100,7 +101,7 @@ export function ProductFormDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const data: Record<string, unknown> = {
+    const data = {
       name,
       slug,
       description: description || undefined,
@@ -121,9 +122,10 @@ export function ProductFormDialog({
     }
 
     if (product) {
-      delete data.vendorId
+      const { vendorId: _v, ...updateData } = data
+
       updateProduct.mutate(
-        { id: product.id, data },
+        { id: product.id, data: updateData as UpdateProductDto },
         {
           onSuccess: () => {
             toaster.success({ title: t('productUpdated') })
@@ -136,16 +138,19 @@ export function ProductFormDialog({
         },
       )
     } else {
-      createProduct.mutate(data, {
-        onSuccess: () => {
-          toaster.success({ title: t('productCreated') })
-          onOpenChange(false)
-          onSaved()
+      createProduct.mutate(
+        { data: data as CreateProductDto },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('productCreated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('createFailed') })
+          },
         },
-        onError: () => {
-          toaster.error({ title: tc('createFailed') })
-        },
-      })
+      )
     }
   }
 

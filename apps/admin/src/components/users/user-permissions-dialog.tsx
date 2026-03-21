@@ -3,9 +3,9 @@
 import type { Permission, User } from '@app/sdk'
 import {
   useAssignUserPermission,
-  usePermissions,
+  useGetPermissions,
+  useGetUser,
   useRemoveUserPermission,
-  useUser,
 } from '@app/sdk'
 import { formatPermission } from '@app/utils'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
@@ -40,11 +40,12 @@ export function UserPermissionsDialog({
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
-  const { data: permsData, isLoading } = usePermissions(1, 100, {
-    enabled: open,
-  })
-  const { data: freshUser } = useUser(user?.id ?? '', {
-    enabled: open && !!user?.id,
+  const { data: permsData, isLoading } = useGetPermissions(
+    { page: 1, limit: 100 },
+    { query: { enabled: open } },
+  )
+  const { data: freshUser } = useGetUser(user?.id ?? '', {
+    query: { enabled: open && !!user?.id },
   })
 
   const allPermissions: Permission[] = permsData?.items ?? []
@@ -67,7 +68,7 @@ export function UserPermissionsDialog({
 
     if (assignedIds.has(permissionId)) {
       removePermission.mutate(
-        { userId: user.id, permissionId },
+        { id: user.id, permissionId },
         {
           onSuccess: () => {
             setAssignedIds((prev) => {
@@ -88,7 +89,7 @@ export function UserPermissionsDialog({
       )
     } else {
       assignPermission.mutate(
-        { userId: user.id, permissionId },
+        { id: user.id, data: { permissionId } },
         {
           onSuccess: () => {
             setAssignedIds((prev) => new Set(prev).add(permissionId))

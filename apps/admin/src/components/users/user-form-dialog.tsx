@@ -77,7 +77,7 @@ export function UserFormDialog({
       )
     } else {
       createUser.mutate(
-        { name, email, password },
+        { data: { name, email, password } },
         {
           onSuccess: () => {
             toaster.success({ title: t('userCreated') })

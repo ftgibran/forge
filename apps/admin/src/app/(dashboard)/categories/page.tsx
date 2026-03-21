@@ -1,7 +1,7 @@
 'use client'
 
 import type { Category } from '@app/sdk'
-import { useCategories, useDeleteCategory } from '@app/sdk'
+import { useDeleteCategory, useGetCategories } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { Box, Table } from '@chakra-ui/react'
@@ -25,22 +25,26 @@ export default function CategoriesPage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
 
-  const { data: categories = [], isLoading } = useCategories()
+  const { data: rawCategories, isLoading } = useGetCategories()
+  const categories = rawCategories ?? []
 
   const deleteMutation = useDeleteCategory()
 
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('categoryDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('categoryDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   // Flatten tree for table display

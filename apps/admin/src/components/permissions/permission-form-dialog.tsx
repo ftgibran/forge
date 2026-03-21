@@ -73,16 +73,19 @@ export function PermissionFormDialog({
         },
       )
     } else {
-      createPermission.mutate(data, {
-        onSuccess: () => {
-          toaster.success({ title: t('permissionCreated') })
-          onOpenChange(false)
-          onSaved()
+      createPermission.mutate(
+        { data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('permissionCreated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('createFailed') })
+          },
         },
-        onError: () => {
-          toaster.error({ title: tc('createFailed') })
-        },
-      })
+      )
     }
   }
 

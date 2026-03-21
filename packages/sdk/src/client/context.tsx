@@ -1,15 +1,1 @@
-'use client'
-
-import { createContext, useContext } from 'react'
-
-import type { ApiClient } from './api-client'
-
-export const ApiClientContext = createContext<ApiClient | null>(null)
-
-export function useApiClient(): ApiClient {
-  const client = useContext(ApiClientContext)
-
-  if (!client) throw new Error('useApiClient must be used within SdkProvider')
-
-  return client
-}
+export { useApiClient } from './hooks/useApiClient'

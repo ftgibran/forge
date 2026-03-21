@@ -70,16 +70,19 @@ export function RoleFormDialog({
         },
       )
     } else {
-      createRole.mutate(data, {
-        onSuccess: () => {
-          toaster.success({ title: t('roleCreated') })
-          onOpenChange(false)
-          onSaved()
+      createRole.mutate(
+        { data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('roleCreated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('createFailed') })
+          },
         },
-        onError: () => {
-          toaster.error({ title: tc('createFailed') })
-        },
-      })
+      )
     }
   }
 

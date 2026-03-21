@@ -1,96 +1,42 @@
-// Types
+// Entity types (User, Role, Product, etc.)
 export * from './types'
+
+// DTO types — generated models
+export * from './generated/model'
 
 // Auth
 export * from './auth'
 
 // API Client
-export * from './client/api-client'
 export * from './client/context'
+export * from './client/createClient'
 
 // Provider
 export * from './provider/SdkProvider'
 
-// Query Keys
-export * from './keys'
+// Generated hooks — Users
+export * from './generated/users/users'
 
-// Hooks — Users
-export * from './hooks/users/useAssignUserPermission'
-export * from './hooks/users/useAssignUserRole'
-export * from './hooks/users/useCreateUser'
-export * from './hooks/users/useDeleteUser'
-export * from './hooks/users/useRemoveUserPermission'
-export * from './hooks/users/useRemoveUserRole'
-export * from './hooks/users/useUpdateUser'
-export * from './hooks/users/useUser'
-export * from './hooks/users/useUsers'
+// Generated hooks — Roles
+export * from './generated/roles/roles'
 
-// Hooks — Roles
-export * from './hooks/roles/useAssignRolePermission'
-export * from './hooks/roles/useCreateRole'
-export * from './hooks/roles/useDeleteRole'
-export * from './hooks/roles/useRemoveRolePermission'
-export * from './hooks/roles/useRole'
-export * from './hooks/roles/useRoles'
-export * from './hooks/roles/useUpdateRole'
+// Generated hooks — Permissions
+export * from './generated/permissions/permissions'
 
-// Hooks — Permissions
-export * from './hooks/permissions/useCreatePermission'
-export * from './hooks/permissions/useDeletePermission'
-export * from './hooks/permissions/usePermission'
-export * from './hooks/permissions/usePermissions'
-export * from './hooks/permissions/useUpdatePermission'
+// Generated hooks — Vendors
+export * from './generated/vendors/vendors'
 
-// Hooks — Vendors
-export * from './hooks/vendors/useCreateVendor'
-export * from './hooks/vendors/useCreateVendorApplication'
-export * from './hooks/vendors/useDeleteVendor'
-export * from './hooks/vendors/useReviewVendorApplication'
-export * from './hooks/vendors/useUpdateVendor'
-export * from './hooks/vendors/useVendor'
-export * from './hooks/vendors/useVendorApplications'
-export * from './hooks/vendors/useVendorBySlug'
-export * from './hooks/vendors/useVendorMe'
-export * from './hooks/vendors/useVendors'
+// Generated hooks — Categories
+export * from './generated/categories/categories'
 
-// Hooks — Categories
-export * from './hooks/categories/useCategories'
-export * from './hooks/categories/useCategory'
-export * from './hooks/categories/useCategoryBySlug'
-export * from './hooks/categories/useCreateCategory'
-export * from './hooks/categories/useDeleteCategory'
-export * from './hooks/categories/useUpdateCategory'
+// Generated hooks — Products
+export * from './generated/products/products'
 
-// Hooks — Products
-export * from './hooks/products/useAddProductImage'
-export * from './hooks/products/useAddProductVariant'
-export * from './hooks/products/useCreateProduct'
-export * from './hooks/products/useDeleteProduct'
-export * from './hooks/products/useDeleteProductImage'
-export * from './hooks/products/useDeleteProductVariant'
-export * from './hooks/products/useProduct'
-export * from './hooks/products/useProductBySlug'
-export * from './hooks/products/useProducts'
-export * from './hooks/products/useUpdateProduct'
-export * from './hooks/products/useUpdateProductImage'
-export * from './hooks/products/useUpdateProductVariant'
+// Generated hooks — Orders
+export * from './generated/orders/orders'
 
-// Hooks — Orders
-export * from './hooks/orders/useCheckout'
-export * from './hooks/orders/useMyOrders'
-export * from './hooks/orders/useOrder'
-export * from './hooks/orders/useOrders'
-export * from './hooks/orders/useUpdateOrderStatus'
+// Generated hooks — Reviews
+export * from './generated/reviews/reviews'
 
-// Hooks — Reviews
-export * from './hooks/reviews/useCreateReview'
-export * from './hooks/reviews/useDeleteReview'
-export * from './hooks/reviews/useProductReviews'
-export * from './hooks/reviews/useUpdateReview'
-
-// Hooks — Cart
-export * from './hooks/cart/useAddToCart'
-export * from './hooks/cart/useCart'
-export * from './hooks/cart/useClearCart'
-export * from './hooks/cart/useRemoveCartItem'
-export * from './hooks/cart/useUpdateCartItem'
+// Generated hooks — Cart
+export * from './generated/cart/cart'

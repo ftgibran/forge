@@ -1,7 +1,7 @@
 'use client'
 
 import type { Permission } from '@app/sdk'
-import { useDeletePermission, usePermissions } from '@app/sdk'
+import { useDeletePermission, useGetPermissions } from '@app/sdk'
 import { formatDate, formatPermission } from '@app/utils'
 import { Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -29,7 +29,7 @@ export default function PermissionsPage() {
 
   const limit = 10
 
-  const { data, isLoading } = usePermissions(page, limit)
+  const { data, isLoading } = useGetPermissions({ page, limit })
 
   const permissions = data?.items ?? []
   const total = data?.total ?? 0
@@ -39,15 +39,18 @@ export default function PermissionsPage() {
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('permissionDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('permissionDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   const columns = [

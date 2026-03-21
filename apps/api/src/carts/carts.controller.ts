@@ -7,12 +7,17 @@ import {
   Patch,
   Post,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { CurrentUser } from '@/auth/decorators'
 
 import { CartsService } from './carts.service'
-import { AddCartItemDto, UpdateCartItemDto } from './dto'
+import { AddCartItemDto, CartResponseDto, UpdateCartItemDto } from './dto'
 
 @ApiTags('Cart')
 @ApiBearerAuth()
@@ -21,19 +26,29 @@ export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get the current user cart' })
+  @ApiOkResponse({ type: CartResponseDto })
+  @ApiOperation({
+    summary: 'Get the current user cart',
+    operationId: 'getCart',
+  })
   getCart(@CurrentUser('sub') userId: string) {
     return this.cartsService.getCart(userId)
   }
 
   @Post('items')
-  @ApiOperation({ summary: 'Add an item to the cart' })
+  @ApiOperation({
+    summary: 'Add an item to the cart',
+    operationId: 'addToCart',
+  })
   addItem(@CurrentUser('sub') userId: string, @Body() dto: AddCartItemDto) {
     return this.cartsService.addItem(userId, dto)
   }
 
   @Patch('items/:itemId')
-  @ApiOperation({ summary: 'Update item quantity in the cart' })
+  @ApiOperation({
+    summary: 'Update item quantity in the cart',
+    operationId: 'updateCartItem',
+  })
   updateItem(
     @CurrentUser('sub') userId: string,
     @Param('itemId') itemId: string,
@@ -43,7 +58,10 @@ export class CartsController {
   }
 
   @Delete('items/:itemId')
-  @ApiOperation({ summary: 'Remove an item from the cart' })
+  @ApiOperation({
+    summary: 'Remove an item from the cart',
+    operationId: 'removeCartItem',
+  })
   removeItem(
     @CurrentUser('sub') userId: string,
     @Param('itemId') itemId: string,
@@ -52,7 +70,7 @@ export class CartsController {
   }
 
   @Delete()
-  @ApiOperation({ summary: 'Clear the entire cart' })
+  @ApiOperation({ summary: 'Clear the entire cart', operationId: 'clearCart' })
   clearCart(@CurrentUser('sub') userId: string) {
     return this.cartsService.clearCart(userId)
   }

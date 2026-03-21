@@ -1,7 +1,7 @@
 'use client'
 
 import type { Order } from '@app/sdk'
-import { useOrders } from '@app/sdk'
+import { useGetOrders } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -33,7 +33,7 @@ export default function OrdersPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useOrders(page, limit)
+  const { data, isLoading } = useGetOrders({ page, limit })
 
   const orders = data?.items ?? []
   const total = data?.total ?? 0

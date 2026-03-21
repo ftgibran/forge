@@ -81,16 +81,19 @@ export function VendorFormDialog({
         },
       )
     } else {
-      createVendor.mutate(data, {
-        onSuccess: () => {
-          toaster.success({ title: t('vendorCreated') })
-          onOpenChange(false)
-          onSaved()
+      createVendor.mutate(
+        { data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('vendorCreated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('createFailed') })
+          },
         },
-        onError: () => {
-          toaster.error({ title: tc('createFailed') })
-        },
-      })
+      )
     }
   }
 

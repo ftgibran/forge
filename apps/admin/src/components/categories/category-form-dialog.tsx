@@ -87,16 +87,19 @@ export function CategoryFormDialog({
         },
       )
     } else {
-      createCategory.mutate(data, {
-        onSuccess: () => {
-          toaster.success({ title: t('categoryCreated') })
-          onOpenChange(false)
-          onSaved()
+      createCategory.mutate(
+        { data },
+        {
+          onSuccess: () => {
+            toaster.success({ title: t('categoryCreated') })
+            onOpenChange(false)
+            onSaved()
+          },
+          onError: () => {
+            toaster.error({ title: tc('createFailed') })
+          },
         },
-        onError: () => {
-          toaster.error({ title: tc('createFailed') })
-        },
-      })
+      )
     }
   }
 

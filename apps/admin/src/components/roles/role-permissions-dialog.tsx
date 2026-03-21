@@ -3,9 +3,9 @@
 import type { Permission, Role } from '@app/sdk'
 import {
   useAssignRolePermission,
-  usePermissions,
+  useGetPermissions,
+  useGetRole,
   useRemoveRolePermission,
-  useRole,
 } from '@app/sdk'
 import { formatPermission } from '@app/utils'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
@@ -40,11 +40,12 @@ export function RolePermissionsDialog({
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
-  const { data: permsData, isLoading } = usePermissions(1, 100, {
-    enabled: open,
-  })
-  const { data: freshRole } = useRole(role?.id ?? '', {
-    enabled: open && !!role?.id,
+  const { data: permsData, isLoading } = useGetPermissions(
+    { page: 1, limit: 100 },
+    { query: { enabled: open } },
+  )
+  const { data: freshRole } = useGetRole(role?.id ?? '', {
+    query: { enabled: open && !!role?.id },
   })
 
   const allPermissions: Permission[] = permsData?.items ?? []
@@ -67,7 +68,7 @@ export function RolePermissionsDialog({
 
     if (assignedIds.has(permissionId)) {
       removePermission.mutate(
-        { roleId: role.id, permissionId },
+        { id: role.id, permissionId },
         {
           onSuccess: () => {
             setAssignedIds((prev) => {
@@ -88,7 +89,7 @@ export function RolePermissionsDialog({
       )
     } else {
       assignPermission.mutate(
-        { roleId: role.id, permissionId },
+        { id: role.id, data: { permissionId } },
         {
           onSuccess: () => {
             setAssignedIds((prev) => new Set(prev).add(permissionId))

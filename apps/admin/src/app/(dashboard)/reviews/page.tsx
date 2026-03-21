@@ -1,7 +1,7 @@
 'use client'
 
 import type { Review } from '@app/sdk'
-import { useDeleteReview, useProductReviews, useProducts } from '@app/sdk'
+import { useDeleteReview, useGetProductReviews, useGetProducts } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { HStack, IconButton, Input } from '@chakra-ui/react'
 import { Box, Table, Text } from '@chakra-ui/react'
@@ -29,16 +29,15 @@ export default function ReviewsPage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null)
 
-  const { data: productsData } = useProducts({ limit: 100 })
+  const { data: productsData } = useGetProducts({ limit: 100 })
 
   const products = productsData?.items ?? []
   const effectiveProductId =
-    selectedProductId ?? productsData?.items[0]?.id ?? null
+    selectedProductId ?? productsData?.items?.[0]?.id ?? null
 
-  const { data: reviewsData, isLoading: loading } = useProductReviews(
+  const { data: reviewsData, isLoading: loading } = useGetProductReviews(
     effectiveProductId ?? '',
-    1,
-    50,
+    { page: 1, limit: 50 },
   )
 
   const reviews = reviewsData?.items ?? []
@@ -48,15 +47,18 @@ export default function ReviewsPage() {
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('reviewDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('reviewDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   return (

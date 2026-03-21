@@ -1,6 +1,7 @@
 'use client'
 
-import { useOrder, useUpdateOrderStatus } from '@app/sdk'
+import type { UpdateOrderStatusDtoStatus } from '@app/sdk'
+import { useGetOrder, useUpdateOrderStatus } from '@app/sdk'
 import { Badge, Button, HStack, Stack, Table, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -56,8 +57,8 @@ export function OrderDetailDialog({
   const tc = useTranslations('common')
   const [newStatus, setNewStatus] = useState('')
 
-  const { data: order, refetch } = useOrder(orderId ?? '', {
-    enabled: open && !!orderId,
+  const { data: order, refetch } = useGetOrder(orderId ?? '', {
+    query: { enabled: open && !!orderId },
   })
 
   const updateStatus = useUpdateOrderStatus()
@@ -72,7 +73,10 @@ export function OrderDetailDialog({
     if (!orderId || !newStatus) return
 
     updateStatus.mutate(
-      { id: orderId, status: newStatus },
+      {
+        id: orderId,
+        data: { status: newStatus as UpdateOrderStatusDtoStatus },
+      },
       {
         onSuccess: () => {
           toaster.success({ title: t('statusUpdated') })

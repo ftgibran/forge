@@ -1,8 +1,8 @@
 import { decodeJwt } from '@app/utils'
 import { useCallback } from 'react'
 
-import { useApiClient } from '../../client/context'
-import type { AuthResponse } from '../../types'
+import { useApiClient } from '../../client'
+import type { AuthResponse, User } from '../../types'
 import { TOKEN_KEY } from '../constants'
 import type { UseAuthBaseReturn } from './useAuthBase'
 
@@ -26,7 +26,7 @@ export function useAuthController(base: UseAuthBaseReturn) {
         : undefined
 
       setCookie(TOKEN_KEY, res.accessToken, { sameSite: 'lax', maxAge })
-      setUser(res.user)
+      setUser(res.user as unknown as User)
       setTokenPayload(payload)
     },
     [setCookie, setTokenPayload, setUser],

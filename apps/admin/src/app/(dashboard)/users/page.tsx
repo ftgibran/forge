@@ -1,7 +1,7 @@
 'use client'
 
 import type { User } from '@app/sdk'
-import { useDeleteUser, useUsers } from '@app/sdk'
+import { useDeleteUser, useGetUsers } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -38,7 +38,7 @@ export default function UsersPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useUsers(page, limit)
+  const { data, isLoading } = useGetUsers({ page, limit })
 
   const users = data?.items ?? []
   const total = data?.total ?? 0
@@ -48,15 +48,18 @@ export default function UsersPage() {
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('userDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('userDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   const columns = [

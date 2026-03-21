@@ -2,15 +2,15 @@
 
 import type { User } from '@app/sdk'
 import {
-  useOrders,
-  usePermissions,
-  useProducts,
-  useRoles,
-  useUsers,
-  useVendors,
+  useGetOrders,
+  useGetPermissions,
+  useGetProducts,
+  useGetRoles,
+  useGetUsers,
+  useGetVendors,
 } from '@app/sdk'
 import { formatDate } from '@app/utils'
-import { Badge, Box, SimpleGrid, Table, Text } from '@chakra-ui/react'
+import { Box, SimpleGrid, Table, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import {
   LuBox,
@@ -30,12 +30,15 @@ export default function DashboardPage() {
   const tn = useTranslations('nav')
   const tc = useTranslations('common')
 
-  const { data: usersData, isLoading: loading } = useUsers(1, 5)
-  const { data: rolesData } = useRoles(1, 1)
-  const { data: permissionsData } = usePermissions(1, 1)
-  const { data: vendorsData } = useVendors(1, 1)
-  const { data: productsData } = useProducts({ page: 1, limit: 1 })
-  const { data: ordersData } = useOrders(1, 1)
+  const { data: usersData, isLoading: loading } = useGetUsers({
+    page: 1,
+    limit: 5,
+  })
+  const { data: rolesData } = useGetRoles({ page: 1, limit: 1 })
+  const { data: permissionsData } = useGetPermissions({ page: 1, limit: 1 })
+  const { data: vendorsData } = useGetVendors({ page: 1, limit: 1 })
+  const { data: productsData } = useGetProducts({ page: 1, limit: 1 })
+  const { data: ordersData } = useGetOrders({ page: 1, limit: 1 })
 
   const users: User[] = usersData?.items ?? []
 
@@ -88,7 +91,6 @@ export default function DashboardPage() {
               <Table.Row>
                 <Table.ColumnHeader>{tc('name')}</Table.ColumnHeader>
                 <Table.ColumnHeader>{tc('email')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{tn('roles')}</Table.ColumnHeader>
                 <Table.ColumnHeader>{tc('created')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
@@ -97,13 +99,6 @@ export default function DashboardPage() {
                 <Table.Row key={user.id}>
                   <Table.Cell fontWeight={'medium'}>{user.name}</Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>
-                    {user.userRoles?.map((ur) => (
-                      <Badge key={ur.role.id} mr={'1'} size={'sm'}>
-                        {ur.role.name}
-                      </Badge>
-                    )) ?? '-'}
-                  </Table.Cell>
                   <Table.Cell color={'fg.muted'}>
                     {formatDate(user.createdAt)}
                   </Table.Cell>

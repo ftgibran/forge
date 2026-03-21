@@ -22,7 +22,8 @@
     "prisma:migrate": "pnpm exec prisma migrate dev",
     "prisma:migrate:prod": "pnpm exec prisma migrate deploy",
     "prisma:seed": "pnpm exec prisma db seed",
-    "prisma:studio": "pnpm exec prisma studio"
+    "prisma:studio": "pnpm exec prisma studio",
+    "swagger:export": "nest build && node dist/scripts/export-swagger.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

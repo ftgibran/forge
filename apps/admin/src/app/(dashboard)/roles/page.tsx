@@ -1,7 +1,7 @@
 'use client'
 
 import type { Role } from '@app/sdk'
-import { useDeleteRole, useRoles } from '@app/sdk'
+import { useDeleteRole, useGetRoles } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -34,7 +34,7 @@ export default function RolesPage() {
 
   const limit = 10
 
-  const { data, isLoading } = useRoles(page, limit)
+  const { data, isLoading } = useGetRoles({ page, limit })
 
   const roles = data?.items ?? []
   const total = data?.total ?? 0
@@ -44,15 +44,18 @@ export default function RolesPage() {
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('roleDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('roleDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   const columns = [

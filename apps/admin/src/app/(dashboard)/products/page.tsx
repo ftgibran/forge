@@ -2,10 +2,10 @@
 
 import type { Product } from '@app/sdk'
 import {
-  useCategories,
   useDeleteProduct,
-  useProducts,
-  useVendors,
+  useGetCategories,
+  useGetProducts,
+  useGetVendors,
 } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
@@ -48,12 +48,13 @@ export default function ProductsPage() {
 
   const limit = 10
 
-  const { data: productsData, isLoading } = useProducts({ page, limit })
-  const { data: categories = [] } = useCategories()
-  const { data: vendorsData } = useVendors(1, 100)
+  const { data: productsData, isLoading } = useGetProducts({ page, limit })
+  const { data: rawCategories } = useGetCategories()
+  const { data: vendorsData } = useGetVendors({ page: 1, limit: 100 })
 
   const products = productsData?.items ?? []
   const total = productsData?.total ?? 0
+  const categories = rawCategories ?? []
   const vendors = vendorsData?.items ?? []
 
   const deleteMutation = useDeleteProduct()
@@ -61,15 +62,18 @@ export default function ProductsPage() {
   const handleDelete = () => {
     if (!deleteTarget) return
 
-    deleteMutation.mutate(deleteTarget.id, {
-      onSuccess: () => {
-        toaster.success({ title: t('productDeleted') })
-        setDeleteOpen(false)
+    deleteMutation.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toaster.success({ title: t('productDeleted') })
+          setDeleteOpen(false)
+        },
+        onError: () => {
+          toaster.error({ title: tc('deleteFailed') })
+        },
       },
-      onError: () => {
-        toaster.error({ title: tc('deleteFailed') })
-      },
-    })
+    )
   }
 
   const columns = [

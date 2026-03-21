@@ -52,7 +52,12 @@
       "Bash(node_modules/.bin/tsc --version)",
       "WebFetch(domain:www.npmjs.com)",
       "Bash(grep -rn \"from ''@/\" /Users/ftgibran/Dev/forge/packages/sdk/src/ --include=\"*.ts\" --include=\"*.tsx\")",
-      "Bash(grep -rn \"from ''@/\" /Users/ftgibran/Dev/forge/packages/utils/src/ --include=\"*.ts\" --include=\"*.tsx\")"
+      "Bash(grep -rn \"from ''@/\" /Users/ftgibran/Dev/forge/packages/utils/src/ --include=\"*.ts\" --include=\"*.tsx\")",
+      "Bash(find /Users/ftgibran/Dev/forge/apps/api/src/products/dto -name *.ts)",
+      "Bash(find /Users/ftgibran/Dev/forge/apps/api/src/common/filters -name *.ts)",
+      "Bash(tsx -r tsconfig-paths/register src/scripts/export-swagger.ts)",
+      "Bash(node node_modules/.bin/tsx --tsconfig tsconfig.json src/scripts/export-swagger.ts)",
+      "Bash(node:*)"
     ]
   }
 }

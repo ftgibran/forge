@@ -3,9 +3,9 @@
 import type { Role, User } from '@app/sdk'
 import {
   useAssignUserRole,
+  useGetRoles,
+  useGetUser,
   useRemoveUserRole,
-  useRoles,
-  useUser,
 } from '@app/sdk'
 import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -39,9 +39,12 @@ export function UserRolesDialog({
   const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set())
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
-  const { data: rolesData, isLoading } = useRoles(1, 100, { enabled: open })
-  const { data: freshUser } = useUser(user?.id ?? '', {
-    enabled: open && !!user?.id,
+  const { data: rolesData, isLoading } = useGetRoles(
+    { page: 1, limit: 100 },
+    { query: { enabled: open } },
+  )
+  const { data: freshUser } = useGetUser(user?.id ?? '', {
+    query: { enabled: open && !!user?.id },
   })
 
   const allRoles: Role[] = rolesData?.items ?? []
@@ -64,7 +67,7 @@ export function UserRolesDialog({
 
     if (assignedIds.has(roleId)) {
       removeRole.mutate(
-        { userId: user.id, roleId },
+        { id: user.id, roleId },
         {
           onSuccess: () => {
             setAssignedIds((prev) => {
@@ -85,7 +88,7 @@ export function UserRolesDialog({
       )
     } else {
       assignRole.mutate(
-        { userId: user.id, roleId },
+        { id: user.id, data: { roleId } },
         {
           onSuccess: () => {
             setAssignedIds((prev) => new Set(prev).add(roleId))

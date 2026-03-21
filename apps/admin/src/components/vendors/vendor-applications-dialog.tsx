@@ -1,7 +1,7 @@
 'use client'
 
 import type { VendorApplication } from '@app/sdk'
-import { useReviewVendorApplication, useVendorApplications } from '@app/sdk'
+import { useGetVendorApplications, useReviewVendorApplication } from '@app/sdk'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, Table, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -36,14 +36,17 @@ export function VendorApplicationsDialog({
   const t = useTranslations('vendors')
   const tc = useTranslations('common')
 
-  const { data, isLoading } = useVendorApplications(1, 50, { enabled: open })
-  const applications: VendorApplication[] = data?.items ?? []
+  const { data, isLoading } = useGetVendorApplications(
+    { page: 1, limit: 50 },
+    { query: { enabled: open } },
+  )
+  const applications = (data?.items ?? []) as unknown as VendorApplication[]
 
   const reviewApplication = useReviewVendorApplication()
 
   const handleReview = (id: string, status: 'APPROVED' | 'REJECTED') => {
     reviewApplication.mutate(
-      { id, status },
+      { id, data: { status } },
       {
         onSuccess: () => {
           toaster.success({ title: `Application ${status.toLowerCase()}` })
