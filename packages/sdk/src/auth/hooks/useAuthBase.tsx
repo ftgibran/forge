@@ -2,19 +2,20 @@ import { decodeJwt } from '@app/utils'
 import { useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 
-import { TOKEN_KEY } from '../constants'
 import type { AuthParams } from './useAuth'
 
 export type UseAuthBaseReturn = ReturnType<typeof useAuthBase>
 
-export function useAuthBase(params: AuthParams = {}) {
-  const [cookies, setCookie, removeCookie] = useCookies([TOKEN_KEY])
+export function useAuthBase(params: AuthParams) {
+  const { tokenKey } = params
+  const [cookies, setCookie, removeCookie] = useCookies([tokenKey])
 
-  const currentUser = useMemo(() => {
-    const token = cookies[TOKEN_KEY] as string | undefined
+  const token = useMemo(
+    () => (cookies[tokenKey] as string | undefined) ?? null,
+    [cookies, tokenKey],
+  )
 
-    return token ? decodeJwt(token) : null
-  }, [cookies])
+  const currentUser = useMemo(() => (token ? decodeJwt(token) : null), [token])
 
   return {
     ...params,
@@ -23,6 +24,7 @@ export function useAuthBase(params: AuthParams = {}) {
     setCookie,
     removeCookie,
 
+    token,
     currentUser,
   }
 }

@@ -16,11 +16,12 @@ export const [_AuthProvider, useAuth] = createContext<UseAuthReturn>({
 
 export type UseAuthReturn = ReturnType<typeof _useAuth>
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface AuthParams {}
+export interface AuthParams {
+  tokenKey: string
+}
 
 /* eslint-disable react-hooks/rules-of-hooks */
-export function _useAuth(params: AuthParams = {}) {
+export function _useAuth(params: AuthParams) {
   const base: UseAuthBaseReturn = useAuthBase(params)
   const controller: UseAuthControllerReturn = useAuthController(base)
 

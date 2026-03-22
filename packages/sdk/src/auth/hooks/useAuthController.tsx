@@ -5,18 +5,12 @@ import {
   login as apiLogin,
   register as apiRegister,
 } from '../../generated/auth/auth'
-import { TOKEN_KEY } from '../constants'
 import type { UseAuthBaseReturn } from './useAuthBase'
 
 export type UseAuthControllerReturn = ReturnType<typeof useAuthController>
 
 export function useAuthController(base: UseAuthBaseReturn) {
-  const { cookies, setCookie, removeCookie } = base
-
-  const getToken = useCallback(
-    () => (cookies[TOKEN_KEY] as string | undefined) ?? null,
-    [cookies],
-  )
+  const { tokenKey, setCookie, removeCookie } = base
 
   const applyAuth = useCallback(
     (accessToken: string) => {
@@ -25,18 +19,9 @@ export function useAuthController(base: UseAuthBaseReturn) {
         ? payload.exp - Math.floor(Date.now() / 1000)
         : undefined
 
-      setCookie(TOKEN_KEY, accessToken, { sameSite: 'lax', maxAge })
+      setCookie(tokenKey, accessToken, { sameSite: 'lax', maxAge })
     },
-    [setCookie],
-  )
-
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const res = await apiLogin({ email, password })
-
-      applyAuth(res.accessToken)
-    },
-    [applyAuth],
+    [setCookie, tokenKey],
   )
 
   const register = useCallback(
@@ -48,15 +33,23 @@ export function useAuthController(base: UseAuthBaseReturn) {
     [applyAuth],
   )
 
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const res = await apiLogin({ email, password })
+
+      applyAuth(res.accessToken)
+    },
+    [applyAuth],
+  )
+
   const logout = useCallback(() => {
-    removeCookie(TOKEN_KEY)
+    removeCookie(tokenKey)
     window.location.href = '/login'
-  }, [removeCookie])
+  }, [removeCookie, tokenKey])
 
   return {
-    getToken,
-    login,
     register,
+    login,
     logout,
   }
 }
