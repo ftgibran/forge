@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuth } from '@app/sdk'
-import { Box, Flex, Spinner } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -9,24 +9,16 @@ import { Header } from '@/components/header'
 import { Sidebar } from '@/components/sidebar'
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth()
+  const { currentUser } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!currentUser) {
       router.push('/login')
     }
-  }, [isLoading, user, router])
+  }, [currentUser, router])
 
-  if (isLoading) {
-    return (
-      <Flex h={'100vh'} align={'center'} justify={'center'}>
-        <Spinner size={'xl'} />
-      </Flex>
-    )
-  }
-
-  if (!user) return null
+  if (!currentUser) return null
 
   return (
     <Flex minH={'100vh'}>

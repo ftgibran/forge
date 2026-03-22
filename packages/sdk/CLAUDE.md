@@ -60,3 +60,138 @@ All domain models live in `src/types/index.ts`: `User`, `Role`, `Permission`, `V
   <App />
 </SdkProvider>
 ```
+
+## Context API Pattern
+
+Use this pattern whenever implementing a new React Context feature. The canonical reference is `src/auth/`.
+
+### Architecture
+
+```
+<XProvider>          ← public component: composes context, renders _XProvider + XConsumer
+  <XConsumer>        ← internal: runs side-effects (init, subscriptions) via useXSentinel
+    {children}       ← ReactNode OR (ctx: UseXReturn) => ReactNode
+```
+
+### Hook layers (inside `src/<domain>/hooks/`)
+
+| File | Role |
+|---|---|
+| `useX.tsx` | Creates context via `createContext`, composes base + controller, exports `[_XProvider, useX, UseXReturn]` |
+| `useXBase.tsx` | Raw state: `useState`, `useCookies`, etc. Accepts `XParams`, spreads them into return |
+| `useXController.tsx` | Actions/methods built from base state. Receives `UseXBaseReturn` as argument |
+| `useXSentinel.tsx` | Side-effects on mount (data fetching, subscriptions). Calls `useX()` internally |
+
+### File structure
+```
+src/<domain>/
+├── XProvider.tsx          # Public provider component
+├── XConsumer.tsx          # Internal consumer (runs sentinel)
+├── constants.ts           # Domain constants
+├── index.ts               # Barrel export
+└── hooks/
+    ├── useX.tsx           # Context creation + composition
+    ├── useXBase.tsx       # State layer
+    ├── useXController.tsx # Actions layer
+    └── useXSentinel.tsx   # Init/side-effect layer
+```
+
+### Implementation skeleton
+
+**`hooks/useX.tsx`**
+```tsx
+'use client'
+import { createContext } from '@app/utils'
+import { useXBase, type UseXBaseReturn } from './useXBase'
+import { useXController, type UseXControllerReturn } from './useXController'
+
+export const [_XProvider, useX] = createContext<UseXReturn>({ strict: true })
+export type UseXReturn = ReturnType<typeof _useX>
+export interface XParams {}
+
+export function _useX(params: XParams = {}) {
+  const base: UseXBaseReturn = useXBase(params)
+  const controller: UseXControllerReturn = useXController(base)
+  return { ...base, ...controller }
+}
+```
+
+**`hooks/useXBase.tsx`**
+```tsx
+import { useState } from 'react'
+import type { XParams } from './useX'
+
+export type UseXBaseReturn = ReturnType<typeof useXBase>
+
+export function useXBase(params: XParams = {}) {
+  const [value, setValue] = useState(null)
+  return { ...params, value, setValue }
+}
+```
+
+**`hooks/useXController.tsx`**
+```tsx
+import { useCallback } from 'react'
+import type { UseXBaseReturn } from './useXBase'
+
+export type UseXControllerReturn = ReturnType<typeof useXController>
+
+export function useXController(base: UseXBaseReturn) {
+  const doSomething = useCallback(() => { /* ... */ }, [])
+  return { doSomething }
+}
+```
+
+**`hooks/useXSentinel.tsx`**
+```tsx
+import { useEffect } from 'react'
+import { useX } from './useX'
+
+export function useXSentinel() {
+  const { setValue } = useX()
+  useEffect(() => {
+    // initialization logic
+  }, [setValue])
+}
+```
+
+**`XConsumer.tsx`**
+```tsx
+import { FC, PropsWithChildren } from 'react'
+import { useXSentinel } from './hooks/useXSentinel'
+
+export const XConsumer: FC<PropsWithChildren> = ({ children }) => {
+  useXSentinel()
+  return <>{children}</>
+}
+XConsumer.displayName = 'XConsumer'
+```
+
+**`XProvider.tsx`**
+```tsx
+'use client'
+import { type ChildrenWithContext, useChildrenWithContext } from '@app/utils'
+import { FC } from 'react'
+import { XConsumer } from './XConsumer'
+import { _XProvider, _useX, type XParams, type UseXReturn } from './hooks/useX'
+
+export interface XProviderProps extends XParams {
+  children: ChildrenWithContext<UseXReturn>
+}
+
+export const XProvider: FC<XProviderProps> = (props) => {
+  const { children, ...rest } = props
+  const context: UseXReturn = _useX(rest)
+  const childrenWithContext = useChildrenWithContext(children, context)
+  return (
+    <_XProvider value={context}>
+      <XConsumer>{childrenWithContext}</XConsumer>
+    </_XProvider>
+  )
+}
+```
+
+### Key utilities from `@app/utils`
+- `createContext<T>(options)` — returns `[Provider, useContext, Context]`; throws `ContextError` if used outside provider when `strict: true`
+- `ChildrenWithContext<T>` — type alias: `ReactNode | ((context: T) => ReactNode)`
+- `useChildrenWithContext(children, context, ContainerFallback?)` — if children is a function, calls it with context; otherwise passes through (optionally wrapping in ContainerFallback)

@@ -1,23 +1,35 @@
 'use client'
 
-import { FC, PropsWithChildren } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { FC, PropsWithChildren, useState } from 'react'
 import { CookiesProvider } from 'react-cookie'
 
 import { AuthProvider } from '../auth'
-import { ApiClientProvider } from '../client'
+import { configureAxios } from '../client/mutator'
 
 export type SdkProviderProps = PropsWithChildren<{
   apiUrl: string
 }>
 
-export const SdkProvider: FC<SdkProviderProps> = (props) => {
-  const { apiUrl, children } = props
+export const SdkProvider: FC<SdkProviderProps> = ({ apiUrl, children }) => {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { staleTime: 1000 * 30, retry: 1 },
+        },
+      }),
+  )
+
+  useState(() => configureAxios(apiUrl))
 
   return (
     <CookiesProvider defaultSetOptions={{ path: '/' }}>
-      <ApiClientProvider apiUrl={apiUrl}>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>{children}</AuthProvider>
-      </ApiClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </CookiesProvider>
   )
 }

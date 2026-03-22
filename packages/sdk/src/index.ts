@@ -6,10 +6,7 @@ export * from './generated/model'
 
 // Auth
 export * from './auth'
-
-// API Client
-export * from './client/context'
-export * from './client/createClient'
+export * from './generated/auth/auth'
 
 // Provider
 export * from './provider/SdkProvider'

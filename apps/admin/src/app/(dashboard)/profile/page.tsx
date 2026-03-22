@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@app/sdk'
+import { useGetProfile } from '@app/sdk'
 import { formatDate, formatPermission } from '@app/utils'
 import { Badge, Card, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 import { PageHeader } from '@/components/page-header'
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { data: user } = useGetProfile()
   const t = useTranslations('profile')
   const tc = useTranslations('common')
 

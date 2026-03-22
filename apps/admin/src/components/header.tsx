@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/menu'
 
 export function Header() {
-  const { user, logout } = useAuth()
+  const { currentUser, logout } = useAuth()
   const t = useTranslations('auth')
 
   return (
@@ -34,17 +34,17 @@ export function Header() {
       <MenuRoot>
         <MenuTrigger asChild>
           <button>
-            <Avatar size={'sm'} name={user?.name} cursor={'pointer'} />
+            <Avatar size={'sm'} name={currentUser?.name} cursor={'pointer'} />
           </button>
         </MenuTrigger>
         <MenuContent>
           <MenuItem value={'info'} disabled>
-            <Text fontWeight={'medium'}>{user?.name}</Text>
+            <Text fontWeight={'medium'}>{currentUser?.name}</Text>
           </MenuItem>
 
           <MenuItem value={'email'} disabled>
             <Text fontSize={'sm'} color={'fg.muted'}>
-              {user?.email}
+              {currentUser?.email}
             </Text>
           </MenuItem>
 

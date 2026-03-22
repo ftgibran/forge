@@ -1,17 +1,17 @@
 import { decodeJwt } from '@app/utils'
 import { useCallback } from 'react'
 
-import { useApiClient } from '../../client'
-import type { AuthResponse, User } from '../../types'
+import {
+  login as apiLogin,
+  register as apiRegister,
+} from '../../generated/auth/auth'
 import { TOKEN_KEY } from '../constants'
 import type { UseAuthBaseReturn } from './useAuthBase'
 
 export type UseAuthControllerReturn = ReturnType<typeof useAuthController>
 
 export function useAuthController(base: UseAuthBaseReturn) {
-  const client = useApiClient()
-
-  const { cookies, setCookie, removeCookie, setUser, setTokenPayload } = base
+  const { cookies, setCookie, removeCookie } = base
 
   const getToken = useCallback(
     () => (cookies[TOKEN_KEY] as string | undefined) ?? null,
@@ -19,50 +19,39 @@ export function useAuthController(base: UseAuthBaseReturn) {
   )
 
   const applyAuth = useCallback(
-    (res: AuthResponse) => {
-      const payload = decodeJwt(res.accessToken)
+    (accessToken: string) => {
+      const payload = decodeJwt(accessToken)
       const maxAge = payload
         ? payload.exp - Math.floor(Date.now() / 1000)
         : undefined
 
-      setCookie(TOKEN_KEY, res.accessToken, { sameSite: 'lax', maxAge })
-      setUser(res.user as unknown as User)
-      setTokenPayload(payload)
+      setCookie(TOKEN_KEY, accessToken, { sameSite: 'lax', maxAge })
     },
-    [setCookie, setTokenPayload, setUser],
+    [setCookie],
   )
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const res = await client.post<AuthResponse>('/auth/login', {
-        email,
-        password,
-      })
+      const res = await apiLogin({ email, password })
 
-      applyAuth(res)
+      applyAuth(res.accessToken)
     },
-    [client, applyAuth],
+    [applyAuth],
   )
 
   const register = useCallback(
     async (name: string, email: string, password: string) => {
-      const res = await client.post<AuthResponse>('/auth/register', {
-        name,
-        email,
-        password,
-      })
+      const res = await apiRegister({ name, email, password })
 
-      applyAuth(res)
+      applyAuth(res.accessToken)
     },
-    [client, applyAuth],
+    [applyAuth],
   )
 
   const logout = useCallback(() => {
     removeCookie(TOKEN_KEY)
-    setUser(null)
-    setTokenPayload(null)
     window.location.href = '/login'
-  }, [removeCookie, setTokenPayload, setUser])
+  }, [removeCookie])
 
   return {
     getToken,

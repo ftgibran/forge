@@ -2,7 +2,16 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
 
 import { TOKEN_KEY } from '../auth'
-import { ApiError } from './createClient'
+
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
 
 const axiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },

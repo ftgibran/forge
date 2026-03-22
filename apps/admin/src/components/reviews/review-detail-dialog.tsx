@@ -1,10 +1,9 @@
 'use client'
 
-import type { Review } from '@app/sdk'
-import { useApiClient } from '@app/sdk'
+import { useGetReview } from '@app/sdk'
 import { Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import {
   DialogBody,
@@ -28,17 +27,13 @@ export function ReviewDetailDialog({
   reviewId,
 }: ReviewDetailDialogProps) {
   const t = useTranslations('reviews')
-  const [review, setReview] = useState<Review | null>(null)
-  const client = useApiClient()
+  const { data: review, isError } = useGetReview(reviewId ?? '', {
+    query: { enabled: open && !!reviewId },
+  })
 
   useEffect(() => {
-    if (!open || !reviewId) return
-
-    client
-      .get<Review>(`/reviews/${reviewId}`)
-      .then(setReview)
-      .catch(() => toaster.error({ title: t('loadReviewFailed') }))
-  }, [open, reviewId, client, t])
+    if (isError) toaster.error({ title: t('loadReviewFailed') })
+  }, [isError, t])
 
   if (!review) return null
 
