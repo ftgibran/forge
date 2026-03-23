@@ -1,12 +1,14 @@
 import React, { FC, ReactNode, useMemo } from 'react'
 
-import { findElementByName } from '../react/findElementByName'
-import { getValidElements } from '../react/getValidElements'
+import { findElementByName } from '../react'
+import { getValidElements } from '../react'
 
 export type ChildrenWithContext<T> = ReactNode | ((context: T) => ReactNode)
 
 /**
- * Processes children with a given context, either utilizing a context-based function or falling back to a container component.
+ * Resolves children that may be a `ReactNode` or a render function `(context: T) => ReactNode`.
+ * When children is a function, it is called with the provided context.
+ * When a `ContainerFallback` component is given and no matching element is found in children, wraps children in it.
  */
 export function useChildrenWithContext<T>(
   children: ChildrenWithContext<T>,
