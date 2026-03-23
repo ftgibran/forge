@@ -1,5 +1,24 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
+export class CartProductImageDto {
+  @ApiProperty()
+  url!: string
+}
+
+export class CartProductDto {
+  @ApiProperty()
+  id!: string
+
+  @ApiProperty()
+  name!: string
+
+  @ApiProperty()
+  slug!: string
+
+  @ApiPropertyOptional({ type: () => CartProductImageDto, isArray: true })
+  images?: CartProductImageDto[]
+}
+
 export class CartVariantDto {
   @ApiProperty()
   id!: string
@@ -15,6 +34,9 @@ export class CartVariantDto {
 
   @ApiPropertyOptional()
   stock?: number
+
+  @ApiPropertyOptional({ type: () => CartProductDto })
+  product?: CartProductDto
 }
 
 export class CartItemDto {

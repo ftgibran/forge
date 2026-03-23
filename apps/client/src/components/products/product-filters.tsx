@@ -1,6 +1,6 @@
 'use client'
 
-import { useCategories } from '@app/sdk'
+import { useGetCategories } from '@app/sdk'
 import { HStack, Input, Stack } from '@chakra-ui/react'
 
 import {
@@ -31,7 +31,7 @@ export function ProductFilters({
   sortBy = 'newest',
   onFilterChange,
 }: ProductFiltersProps) {
-  const { data: categories = [] } = useCategories()
+  const { data: categories = [] } = useGetCategories()
 
   return (
     <Stack direction={{ base: 'column', md: 'row' }} gap={'4'} w={'full'}>

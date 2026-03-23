@@ -9,7 +9,7 @@ import { API_URL } from '@/config/constants'
 
 export function Providers({ children }: PropsWithChildren) {
   return (
-    <SdkProvider apiUrl={API_URL}>
+    <SdkProvider apiUrl={API_URL} tokenKey={'token'}>
       <DesignSystemProvider>
         {children}
 

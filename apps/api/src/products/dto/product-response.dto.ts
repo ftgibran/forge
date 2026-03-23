@@ -130,14 +130,23 @@ export class ProductListItemDto {
 
   @ApiPropertyOptional({ type: () => ProductCountDto })
   _count?: ProductCountDto
+
+  @ApiPropertyOptional()
+  averageRating?: number
+
+  @ApiPropertyOptional({ type: () => ProductImageDto, isArray: true })
+  images?: ProductImageDto[]
+
+  @ApiPropertyOptional({ type: () => ProductVariantDto, isArray: true })
+  variants?: ProductVariantDto[]
 }
 
 export class ProductDetailDto extends ProductListItemDto {
   @ApiProperty({ type: () => ProductVariantDto, isArray: true })
-  variants!: ProductVariantDto[]
+  declare variants: ProductVariantDto[]
 
   @ApiProperty({ type: () => ProductImageDto, isArray: true })
-  images!: ProductImageDto[]
+  declare images: ProductImageDto[]
 }
 
 export class ProductListResponseDto extends PaginatedResponseDto(

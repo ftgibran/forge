@@ -3,7 +3,7 @@
 import {
   useCreateVendor,
   useCreateVendorApplication,
-  useVendorMe,
+  useGetVendorMe,
 } from '@app/sdk'
 import {
   Button,
@@ -31,31 +31,41 @@ export default function SellPage() {
   })
   const [applicationMessage, setApplicationMessage] = useState('')
 
-  const { data: vendorMe } = useVendorMe({ enabled: step === 'application' })
+  const { data: vendorMe } = useGetVendorMe({
+    query: { enabled: step === 'application' },
+  })
 
   const createVendorMutation = useCreateVendor({
-    onSuccess: () => {
-      setStep('application')
-      toaster.success({ title: 'Vendor profile created!' })
-    },
-    onError: (err) => {
-      toaster.error({ title: err.message || 'Failed to create vendor profile' })
+    mutation: {
+      onSuccess: () => {
+        setStep('application')
+        toaster.success({ title: 'Vendor profile created!' })
+      },
+      onError: (err) => {
+        toaster.error({
+          title: (err as Error).message || 'Failed to create vendor profile',
+        })
+      },
     },
   })
 
   const applyMutation = useCreateVendorApplication({
-    onSuccess: () => {
-      setStep('done')
-      toaster.success({ title: 'Application submitted!' })
-    },
-    onError: (err) => {
-      toaster.error({ title: err.message || 'Failed to submit application' })
+    mutation: {
+      onSuccess: () => {
+        setStep('done')
+        toaster.success({ title: 'Application submitted!' })
+      },
+      onError: (err) => {
+        toaster.error({
+          title: (err as Error).message || 'Failed to submit application',
+        })
+      },
     },
   })
 
   const handleCreateVendor = (e: React.FormEvent) => {
     e.preventDefault()
-    createVendorMutation.mutate(vendor)
+    createVendorMutation.mutate({ data: vendor })
   }
 
   const handleSubmitApplication = (e: React.FormEvent) => {
@@ -63,7 +73,10 @@ export default function SellPage() {
 
     if (!vendorMe) return
 
-    applyMutation.mutate({ vendorId: vendorMe.id, message: applicationMessage })
+    applyMutation.mutate({
+      id: vendorMe.id,
+      data: { message: applicationMessage },
+    })
   }
 
   const generateSlug = (name: string) => {

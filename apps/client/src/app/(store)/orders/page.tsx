@@ -1,6 +1,6 @@
 'use client'
 
-import { useMyOrders } from '@app/sdk'
+import { useGetMyOrders } from '@app/sdk'
 import {
   Badge,
   Button,
@@ -30,7 +30,7 @@ const statusColor: Record<string, string> = {
 export default function OrdersPage() {
   const [page, setPage] = useState(1)
 
-  const { data, isLoading } = useMyOrders(page, 10)
+  const { data, isLoading } = useGetMyOrders({ page, limit: 10 })
 
   const orders = data?.items ?? []
   const totalPages = data?.totalPages ?? 1

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCategories, useProducts } from '@app/sdk'
+import { useGetCategories, useGetProducts } from '@app/sdk'
 
 import { CTASection } from '@/components/landing/cta-section'
 import { FeaturedCategories } from '@/components/landing/featured-categories'
@@ -9,9 +9,9 @@ import { HeroSection } from '@/components/landing/hero-section'
 import { Testimonials } from '@/components/landing/testimonials'
 
 export default function HomePage() {
-  const { data: productsData } = useProducts({ limit: 8, status: 'ACTIVE' })
+  const { data: productsData } = useGetProducts({ limit: 8, status: 'ACTIVE' })
 
-  const { data: categoriesData } = useCategories()
+  const { data: categoriesData } = useGetCategories()
 
   const products = productsData?.items ?? []
   const categories = categoriesData ?? []

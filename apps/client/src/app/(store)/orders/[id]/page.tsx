@@ -1,6 +1,6 @@
 'use client'
 
-import { useOrder } from '@app/sdk'
+import { useGetOrder } from '@app/sdk'
 import {
   Badge,
   Card,
@@ -29,7 +29,7 @@ const statusColor: Record<string, string> = {
 export default function OrderDetailPage() {
   const params = useParams<{ id: string }>()
 
-  const { data: order, isLoading } = useOrder(params.id)
+  const { data: order, isLoading } = useGetOrder(params.id)
 
   if (isLoading) {
     return (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart, useRemoveCartItem, useUpdateCartItem } from '@app/sdk'
+import { useGetCart, useRemoveCartItem, useUpdateCartItem } from '@app/sdk'
 import { Grid, GridItem, Heading, VStack } from '@chakra-ui/react'
 import { LuShoppingCart } from 'react-icons/lu'
 
@@ -12,13 +12,13 @@ import { PageContainer } from '@/components/page-container'
 import { toaster } from '@/components/ui/toaster'
 
 export default function CartPage() {
-  const { data: cart } = useCart()
+  const { data: cart } = useGetCart()
   const updateCartItemMutation = useUpdateCartItem()
   const removeCartItemMutation = useRemoveCartItem()
 
   const handleUpdateQuantity = async (itemId: string, quantity: number) => {
     try {
-      await updateCartItemMutation.mutateAsync({ itemId, quantity })
+      await updateCartItemMutation.mutateAsync({ itemId, data: { quantity } })
     } catch {
       toaster.error({ title: 'Failed to update quantity' })
     }
@@ -26,7 +26,7 @@ export default function CartPage() {
 
   const handleRemove = async (itemId: string) => {
     try {
-      await removeCartItemMutation.mutateAsync(itemId)
+      await removeCartItemMutation.mutateAsync({ itemId })
       toaster.success({ title: 'Item removed' })
     } catch {
       toaster.error({ title: 'Failed to remove item' })

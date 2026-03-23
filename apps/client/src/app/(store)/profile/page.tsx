@@ -1,13 +1,13 @@
 'use client'
 
-import { useAuth } from '@app/sdk'
+import { useGetProfile } from '@app/sdk'
 import { Card, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 
 import { AuthGuard } from '@/components/auth-guard'
 import { PageContainer } from '@/components/page-container'
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { data: user } = useGetProfile()
 
   return (
     <AuthGuard>

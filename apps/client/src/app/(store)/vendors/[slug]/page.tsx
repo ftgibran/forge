@@ -1,6 +1,6 @@
 'use client'
 
-import { useAddToCart, useProducts, useVendorBySlug } from '@app/sdk'
+import { useAddToCart, useGetProducts, useGetVendor } from '@app/sdk'
 import { useAuth } from '@app/sdk'
 import {
   Badge,
@@ -26,18 +26,16 @@ export default function VendorDetailPage() {
   const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
 
-  const { data: vendor, isLoading: vendorLoading } = useVendorBySlug(
-    params.slug,
-  )
+  const { data: vendor, isLoading: vendorLoading } = useGetVendor(params.slug)
 
-  const { data: productsData, isLoading: productsLoading } = useProducts(
+  const { data: productsData, isLoading: productsLoading } = useGetProducts(
     {
       vendorId: vendor?.id,
       status: 'ACTIVE',
       page,
       limit: 12,
     },
-    { enabled: !!vendor?.id },
+    { query: { enabled: !!vendor?.id } },
   )
 
   const products = productsData?.items ?? []
@@ -55,7 +53,7 @@ export default function VendorDetailPage() {
     }
 
     try {
-      await addToCartMutation.mutateAsync({ variantId })
+      await addToCartMutation.mutateAsync({ data: { variantId, quantity: 1 } })
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })

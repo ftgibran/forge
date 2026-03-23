@@ -38,10 +38,12 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
 
     try {
       await createReviewMutation.mutateAsync({
-        productId,
-        rating,
-        title: title || undefined,
-        comment: comment || undefined,
+        data: {
+          productId,
+          rating,
+          title: title || undefined,
+          comment: comment || undefined,
+        },
       })
       toaster.success({ title: 'Review submitted!' })
       setRating(0)

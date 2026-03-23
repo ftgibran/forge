@@ -1,6 +1,6 @@
 'use client'
 
-import { useCategories } from '@app/sdk'
+import { useGetCategories } from '@app/sdk'
 import { Card, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
 
@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
 
 export default function CategoriesPage() {
-  const { data: categories = [], isLoading } = useCategories()
+  const { data: categories = [], isLoading } = useGetCategories()
 
   return (
     <PageContainer>

@@ -6,6 +6,11 @@ import {
   VendorSnippetDto,
 } from '@/common'
 
+export class OrderCountDto {
+  @ApiProperty()
+  items!: number
+}
+
 export class ShippingAddressResponseDto {
   @ApiProperty()
   street!: string
@@ -104,6 +109,9 @@ export class OrderListItemDto {
 
   @ApiPropertyOptional({ type: () => VendorSnippetDto })
   vendor?: VendorSnippetDto
+
+  @ApiPropertyOptional({ type: () => OrderCountDto })
+  _count?: OrderCountDto
 }
 
 export class OrderDetailDto extends OrderListItemDto {

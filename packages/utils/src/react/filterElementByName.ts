@@ -1,4 +1,4 @@
-import type { ValidElement } from '../types/ValidElement'
+import type { ValidElement } from '../types'
 import { getValidElements } from './getValidElements'
 
 /**

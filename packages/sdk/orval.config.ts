@@ -13,8 +13,8 @@ export default defineConfig({
       httpClient: 'axios',
       override: {
         mutator: {
-          path: './src/client/mutator.ts',
-          name: 'apiMutator',
+          path: './src/http/request.ts',
+          name: 'httpRequest',
         },
         query: {
           useQuery: true,

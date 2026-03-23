@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart } from '@app/sdk'
+import { useGetCart } from '@app/sdk'
 import { useAuth } from '@app/sdk'
 import {
   Badge,
@@ -28,7 +28,7 @@ import {
 
 export function Navbar() {
   const { user, logout } = useAuth()
-  const { data: cart } = useCart()
+  const { data: cart } = useGetCart()
   const cartCount =
     cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
   const router = useRouter()

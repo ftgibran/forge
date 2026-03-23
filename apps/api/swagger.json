@@ -1,0 +1,4519 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "operationId": "register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Register a new user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Login and receive a JWT token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get the current authenticated user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new user",
+        "tags": [
+          "Users"
+        ]
+      },
+      "get": {
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all users",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get a user by ID",
+        "tags": [
+          "Users"
+        ]
+      },
+      "patch": {
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a user",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}/roles": {
+      "post": {
+        "operationId": "assignUserRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Assign a role to a user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}/roles/{roleId}": {
+      "delete": {
+        "operationId": "removeUserRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a role from a user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}/permissions": {
+      "post": {
+        "operationId": "assignUserPermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Assign a permission directly to a user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}/permissions/{permissionId}": {
+      "delete": {
+        "operationId": "removeUserPermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "permissionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a direct permission from a user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/roles": {
+      "post": {
+        "operationId": "createRole",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new role",
+        "tags": [
+          "Roles"
+        ]
+      },
+      "get": {
+        "operationId": "getRoles",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all roles",
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "operationId": "getRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get a role by ID",
+        "tags": [
+          "Roles"
+        ]
+      },
+      "patch": {
+        "operationId": "updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a role",
+        "tags": [
+          "Roles"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a role",
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/roles/{id}/permissions": {
+      "post": {
+        "operationId": "assignRolePermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Assign a permission to a role",
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/roles/{id}/permissions/{permissionId}": {
+      "delete": {
+        "operationId": "removeRolePermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "permissionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a permission from a role",
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/permissions": {
+      "post": {
+        "operationId": "createPermission",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new permission",
+        "tags": [
+          "Permissions"
+        ]
+      },
+      "get": {
+        "operationId": "getPermissions",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all permissions",
+        "tags": [
+          "Permissions"
+        ]
+      }
+    },
+    "/permissions/{id}": {
+      "get": {
+        "operationId": "getPermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get a permission by ID",
+        "tags": [
+          "Permissions"
+        ]
+      },
+      "patch": {
+        "operationId": "updatePermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a permission",
+        "tags": [
+          "Permissions"
+        ]
+      },
+      "delete": {
+        "operationId": "deletePermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a permission",
+        "tags": [
+          "Permissions"
+        ]
+      }
+    },
+    "/categories": {
+      "post": {
+        "operationId": "createCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new category",
+        "tags": [
+          "Categories"
+        ]
+      },
+      "get": {
+        "operationId": "getCategories",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List all categories",
+        "tags": [
+          "Categories"
+        ]
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "operationId": "getCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a category by ID",
+        "tags": [
+          "Categories"
+        ]
+      },
+      "patch": {
+        "operationId": "updateCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a category",
+        "tags": [
+          "Categories"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a category",
+        "tags": [
+          "Categories"
+        ]
+      }
+    },
+    "/vendors": {
+      "post": {
+        "operationId": "createVendor",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVendorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new vendor profile",
+        "tags": [
+          "Vendors"
+        ]
+      },
+      "get": {
+        "operationId": "getVendors",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all vendors",
+        "tags": [
+          "Vendors"
+        ]
+      }
+    },
+    "/vendors/me": {
+      "get": {
+        "operationId": "getVendorMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get the current user vendor profile",
+        "tags": [
+          "Vendors"
+        ]
+      }
+    },
+    "/vendors/{id}": {
+      "get": {
+        "operationId": "getVendor",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a vendor by ID",
+        "tags": [
+          "Vendors"
+        ]
+      },
+      "patch": {
+        "operationId": "updateVendor",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVendorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a vendor profile",
+        "tags": [
+          "Vendors"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteVendor",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a vendor",
+        "tags": [
+          "Vendors"
+        ]
+      }
+    },
+    "/vendors/{id}/applications": {
+      "post": {
+        "operationId": "createVendorApplication",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVendorApplicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit a vendor application",
+        "tags": [
+          "Vendors"
+        ]
+      }
+    },
+    "/vendor-applications": {
+      "get": {
+        "operationId": "getVendorApplications",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorApplicationListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all vendor applications",
+        "tags": [
+          "Vendors"
+        ]
+      }
+    },
+    "/vendor-applications/{id}/review": {
+      "patch": {
+        "operationId": "reviewVendorApplication",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewVendorApplicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review (approve/reject) a vendor application",
+        "tags": [
+          "Vendors"
+        ]
+      }
+    },
+    "/products": {
+      "post": {
+        "operationId": "createProduct",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new product",
+        "tags": [
+          "Products"
+        ]
+      },
+      "get": {
+        "operationId": "getProducts",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "dragon",
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "vendorId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "ACTIVE",
+                "ARCHIVED"
+              ]
+            }
+          },
+          {
+            "name": "filamentType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "PLA",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "createdAt",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List all products",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "operationId": "getProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a product by ID",
+        "tags": [
+          "Products"
+        ]
+      },
+      "patch": {
+        "operationId": "updateProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a product",
+        "tags": [
+          "Products"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a product",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}/variants": {
+      "post": {
+        "operationId": "addProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductVariantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add a variant to a product",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}/variants/{variantId}": {
+      "patch": {
+        "operationId": "updateProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductVariantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a product variant",
+        "tags": [
+          "Products"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a product variant",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}/images": {
+      "post": {
+        "operationId": "addProductImage",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductImageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add an image to a product",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}/images/{imageId}": {
+      "patch": {
+        "operationId": "updateProductImage",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductImageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a product image",
+        "tags": [
+          "Products"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProductImage",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a product image",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/cart": {
+      "get": {
+        "operationId": "getCart",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get the current user cart",
+        "tags": [
+          "Cart"
+        ]
+      },
+      "delete": {
+        "operationId": "clearCart",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Clear the entire cart",
+        "tags": [
+          "Cart"
+        ]
+      }
+    },
+    "/cart/items": {
+      "post": {
+        "operationId": "addToCart",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add an item to the cart",
+        "tags": [
+          "Cart"
+        ]
+      }
+    },
+    "/cart/items/{itemId}": {
+      "patch": {
+        "operationId": "updateCartItem",
+        "parameters": [
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCartItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update item quantity in the cart",
+        "tags": [
+          "Cart"
+        ]
+      },
+      "delete": {
+        "operationId": "removeCartItem",
+        "parameters": [
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove an item from the cart",
+        "tags": [
+          "Cart"
+        ]
+      }
+    },
+    "/orders/checkout": {
+      "post": {
+        "operationId": "checkout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Checkout and create an order from the cart",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders": {
+      "get": {
+        "operationId": "getOrders",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all orders",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders/my": {
+      "get": {
+        "operationId": "getMyOrders",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List the current user orders",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "operationId": "getOrder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get an order by ID",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders/{id}/status": {
+      "patch": {
+        "operationId": "updateOrderStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update order status",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/reviews": {
+      "post": {
+        "operationId": "createReview",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReviewDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a product review",
+        "tags": [
+          "Reviews"
+        ]
+      }
+    },
+    "/reviews/product/{productId}": {
+      "get": {
+        "operationId": "getProductReviews",
+        "parameters": [
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List reviews for a product",
+        "tags": [
+          "Reviews"
+        ]
+      }
+    },
+    "/reviews/{id}": {
+      "get": {
+        "operationId": "getReview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a review by ID",
+        "tags": [
+          "Reviews"
+        ]
+      },
+      "patch": {
+        "operationId": "updateReview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReviewDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a review",
+        "tags": [
+          "Reviews"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteReview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a review",
+        "tags": [
+          "Reviews"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Forge API",
+    "description": "NestJS API with JWT auth, Prisma, and RBAC",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "minLength": 6
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "name"
+        ]
+      },
+      "AuthUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/AuthUserDto"
+          }
+        },
+        "required": [
+          "accessToken",
+          "user"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "VendorSnippetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ]
+      },
+      "RoleSnippetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "UserRoleItemDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/RoleSnippetDto"
+          },
+          "assignedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "assignedAt"
+        ]
+      },
+      "PermissionSnippetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "action",
+          "resource"
+        ]
+      },
+      "UserPermissionItemDto": {
+        "type": "object",
+        "properties": {
+          "permission": {
+            "$ref": "#/components/schemas/PermissionSnippetDto"
+          },
+          "assignedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "permission",
+          "assignedAt"
+        ]
+      },
+      "ProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorSnippetDto"
+          },
+          "userRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRoleItemDto"
+            }
+          },
+          "userPermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserPermissionItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "minLength": 6
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "name"
+        ]
+      },
+      "UserItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UserListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserItemDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "UserDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "userRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRoleItemDto"
+            }
+          },
+          "userPermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserPermissionItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "createdAt",
+          "updatedAt",
+          "userRoles",
+          "userPermissions"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "newpassword123",
+            "minLength": 6
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          }
+        }
+      },
+      "AssignRoleDto": {
+        "type": "object",
+        "properties": {
+          "roleId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "roleId"
+        ]
+      },
+      "AssignPermissionDto": {
+        "type": "object",
+        "properties": {
+          "permissionId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "permissionId"
+        ]
+      },
+      "CreateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "admin"
+          },
+          "description": {
+            "type": "string",
+            "example": "Full access role"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "RolePermissionItemDto": {
+        "type": "object",
+        "properties": {
+          "permission": {
+            "$ref": "#/components/schemas/PermissionSnippetDto"
+          },
+          "assignedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "permission",
+          "assignedAt"
+        ]
+      },
+      "RoleItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "rolePermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RolePermissionItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RoleListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleItemDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "RoleDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "rolePermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RolePermissionItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "admin"
+          },
+          "description": {
+            "type": "string",
+            "example": "Full access role"
+          }
+        }
+      },
+      "CreatePermissionDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "create"
+          },
+          "resource": {
+            "type": "string",
+            "example": "product"
+          },
+          "description": {
+            "type": "string",
+            "example": "Allows creating products"
+          }
+        },
+        "required": [
+          "action",
+          "resource"
+        ]
+      },
+      "PermissionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "action",
+          "resource",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PermissionListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "UpdatePermissionDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "create"
+          },
+          "resource": {
+            "type": "string",
+            "example": "product"
+          },
+          "description": {
+            "type": "string",
+            "example": "Allows creating products"
+          }
+        }
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Electronics"
+          },
+          "slug": {
+            "type": "string",
+            "example": "electronics"
+          },
+          "description": {
+            "type": "string",
+            "example": "Electronic devices and accessories"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "name",
+          "slug"
+        ]
+      },
+      "CategoryCountDto": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "products"
+        ]
+      },
+      "CategoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryDto"
+            }
+          },
+          "_count": {
+            "$ref": "#/components/schemas/CategoryCountDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Electronics"
+          },
+          "slug": {
+            "type": "string",
+            "example": "electronics"
+          },
+          "description": {
+            "type": "string",
+            "example": "Electronic devices and accessories"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CreateVendorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dragon Prints Co."
+          },
+          "slug": {
+            "type": "string",
+            "example": "dragon-prints-co"
+          },
+          "description": {
+            "type": "string",
+            "example": "Specializing in fantasy 3D prints"
+          },
+          "logoUrl": {
+            "type": "string",
+            "example": "https://example.com/logo.png"
+          }
+        },
+        "required": [
+          "name",
+          "slug"
+        ]
+      },
+      "UserSnippetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name"
+        ]
+      },
+      "VendorCountDto": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "products"
+        ]
+      },
+      "VendorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/UserSnippetDto"
+          },
+          "_count": {
+            "$ref": "#/components/schemas/VendorCountDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "ownerId",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "VendorListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "UpdateVendorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dragon Prints Co."
+          },
+          "slug": {
+            "type": "string",
+            "example": "dragon-prints-co"
+          },
+          "description": {
+            "type": "string",
+            "example": "Specializing in fantasy 3D prints"
+          },
+          "logoUrl": {
+            "type": "string",
+            "example": "https://example.com/logo.png"
+          }
+        }
+      },
+      "CreateVendorApplicationDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "I would like to sell my 3D prints on this platform."
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "VendorApplicationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "vendorId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "reviewedById": {
+            "type": "string",
+            "nullable": true
+          },
+          "reviewedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorSnippetDto"
+          },
+          "reviewedBy": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserSnippetDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "vendorId",
+          "message",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "VendorApplicationListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorApplicationDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "ReviewVendorApplicationDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "REJECTED"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Articulated Dragon"
+          },
+          "slug": {
+            "type": "string",
+            "example": "articulated-dragon"
+          },
+          "description": {
+            "type": "string",
+            "example": "A detailed articulated dragon model"
+          },
+          "vendorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "ARCHIVED"
+            ]
+          },
+          "filamentType": {
+            "type": "string",
+            "example": "PLA"
+          },
+          "printTimeHours": {
+            "type": "number",
+            "example": 4.5
+          },
+          "dimensionX": {
+            "type": "number",
+            "example": 150
+          },
+          "dimensionY": {
+            "type": "number",
+            "example": 100
+          },
+          "dimensionZ": {
+            "type": "number",
+            "example": 80
+          },
+          "fileFormat": {
+            "type": "string",
+            "example": "STL"
+          },
+          "nozzleSize": {
+            "type": "number",
+            "example": 0.4
+          },
+          "infillPercentage": {
+            "type": "number",
+            "example": 20,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "supportsRequired": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "name",
+          "slug",
+          "vendorId"
+        ]
+      },
+      "CategorySnippetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ]
+      },
+      "ProductCountDto": {
+        "type": "object",
+        "properties": {
+          "reviews": {
+            "type": "number"
+          },
+          "variants": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "reviews",
+          "variants"
+        ]
+      },
+      "ProductImageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "altText": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "number"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "position",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ProductVariantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "compareAtPrice": {
+            "type": "number",
+            "nullable": true
+          },
+          "stock": {
+            "type": "number"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "sku",
+          "price",
+          "stock",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ProductListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "vendorId": {
+            "type": "string"
+          },
+          "categoryId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "filamentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "printTimeHours": {
+            "type": "number",
+            "nullable": true
+          },
+          "dimensionX": {
+            "type": "number",
+            "nullable": true
+          },
+          "dimensionY": {
+            "type": "number",
+            "nullable": true
+          },
+          "dimensionZ": {
+            "type": "number",
+            "nullable": true
+          },
+          "fileFormat": {
+            "type": "string",
+            "nullable": true
+          },
+          "nozzleSize": {
+            "type": "number",
+            "nullable": true
+          },
+          "infillPercentage": {
+            "type": "number",
+            "nullable": true
+          },
+          "supportsRequired": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorSnippetDto"
+          },
+          "category": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CategorySnippetDto"
+              }
+            ]
+          },
+          "_count": {
+            "$ref": "#/components/schemas/ProductCountDto"
+          },
+          "averageRating": {
+            "type": "number"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductImageDto"
+            }
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "vendorId",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ProductListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductListItemDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "ProductDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "vendorId": {
+            "type": "string"
+          },
+          "categoryId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "filamentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "printTimeHours": {
+            "type": "number",
+            "nullable": true
+          },
+          "dimensionX": {
+            "type": "number",
+            "nullable": true
+          },
+          "dimensionY": {
+            "type": "number",
+            "nullable": true
+          },
+          "dimensionZ": {
+            "type": "number",
+            "nullable": true
+          },
+          "fileFormat": {
+            "type": "string",
+            "nullable": true
+          },
+          "nozzleSize": {
+            "type": "number",
+            "nullable": true
+          },
+          "infillPercentage": {
+            "type": "number",
+            "nullable": true
+          },
+          "supportsRequired": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorSnippetDto"
+          },
+          "category": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CategorySnippetDto"
+              }
+            ]
+          },
+          "_count": {
+            "$ref": "#/components/schemas/ProductCountDto"
+          },
+          "averageRating": {
+            "type": "number"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductImageDto"
+            }
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "vendorId",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Articulated Dragon"
+          },
+          "slug": {
+            "type": "string",
+            "example": "articulated-dragon"
+          },
+          "description": {
+            "type": "string",
+            "example": "A detailed articulated dragon model"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "ARCHIVED"
+            ]
+          },
+          "filamentType": {
+            "type": "string",
+            "example": "PLA"
+          },
+          "printTimeHours": {
+            "type": "number",
+            "example": 4.5
+          },
+          "dimensionX": {
+            "type": "number",
+            "example": 150
+          },
+          "dimensionY": {
+            "type": "number",
+            "example": 100
+          },
+          "dimensionZ": {
+            "type": "number",
+            "example": 80
+          },
+          "fileFormat": {
+            "type": "string",
+            "example": "STL"
+          },
+          "nozzleSize": {
+            "type": "number",
+            "example": 0.4
+          },
+          "infillPercentage": {
+            "type": "number",
+            "example": 20,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "supportsRequired": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "CreateProductVariantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Standard"
+          },
+          "sku": {
+            "type": "string",
+            "example": "PROD-001-STD"
+          },
+          "price": {
+            "type": "number",
+            "example": 29.99,
+            "minimum": 0
+          },
+          "compareAtPrice": {
+            "type": "number",
+            "example": 39.99,
+            "minimum": 0
+          },
+          "stock": {
+            "type": "number",
+            "example": 100,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "sku",
+          "price"
+        ]
+      },
+      "UpdateProductVariantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Standard"
+          },
+          "sku": {
+            "type": "string",
+            "example": "PROD-001-STD"
+          },
+          "price": {
+            "type": "number",
+            "example": 29.99,
+            "minimum": 0
+          },
+          "compareAtPrice": {
+            "type": "number",
+            "example": 39.99,
+            "minimum": 0
+          },
+          "stock": {
+            "type": "number",
+            "example": 100,
+            "minimum": 0
+          }
+        }
+      },
+      "CreateProductImageDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://example.com/images/dragon.jpg"
+          },
+          "altText": {
+            "type": "string",
+            "example": "Articulated dragon side view"
+          },
+          "position": {
+            "type": "number",
+            "example": 0,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "CartProductImageDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "CartProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartProductImageDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ]
+      },
+      "CartVariantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "stock": {
+            "type": "number"
+          },
+          "product": {
+            "$ref": "#/components/schemas/CartProductDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "sku",
+          "price"
+        ]
+      },
+      "CartItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "variantId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/CartVariantDto"
+          }
+        },
+        "required": [
+          "id",
+          "variantId",
+          "quantity"
+        ]
+      },
+      "CartResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "items"
+        ]
+      },
+      "AddCartItemDto": {
+        "type": "object",
+        "properties": {
+          "variantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "example": 2,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "variantId",
+          "quantity"
+        ]
+      },
+      "UpdateCartItemDto": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number",
+            "example": 3,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "quantity"
+        ]
+      },
+      "ShippingAddressDto": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string",
+            "example": "123 Main St"
+          },
+          "city": {
+            "type": "string",
+            "example": "Springfield"
+          },
+          "state": {
+            "type": "string",
+            "example": "IL"
+          },
+          "zipCode": {
+            "type": "string",
+            "example": "62701"
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          }
+        },
+        "required": [
+          "street",
+          "city",
+          "state",
+          "zipCode",
+          "country"
+        ]
+      },
+      "CreateOrderDto": {
+        "type": "object",
+        "properties": {
+          "shippingAddress": {
+            "$ref": "#/components/schemas/ShippingAddressDto"
+          }
+        },
+        "required": [
+          "shippingAddress"
+        ]
+      },
+      "ShippingAddressResponseDto": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street",
+          "city",
+          "state",
+          "zipCode",
+          "country"
+        ]
+      },
+      "OrderCountDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "OrderListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "vendorId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "totalAmount": {
+            "type": "number"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/ShippingAddressResponseDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserSnippetDto"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorSnippetDto"
+          },
+          "_count": {
+            "$ref": "#/components/schemas/OrderCountDto"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "vendorId",
+          "status",
+          "totalAmount",
+          "shippingAddress",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "OrderListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderListItemDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "OrderItemVariantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "stock": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "sku",
+          "price",
+          "stock"
+        ]
+      },
+      "OrderItemProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ]
+      },
+      "OrderItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "variantId": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/OrderItemVariantDto"
+          },
+          "product": {
+            "$ref": "#/components/schemas/OrderItemProductDto"
+          }
+        },
+        "required": [
+          "id",
+          "variantId",
+          "productId",
+          "quantity",
+          "unitPrice"
+        ]
+      },
+      "OrderDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "vendorId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "totalAmount": {
+            "type": "number"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/ShippingAddressResponseDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserSnippetDto"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorSnippetDto"
+          },
+          "_count": {
+            "$ref": "#/components/schemas/OrderCountDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "vendorId",
+          "status",
+          "totalAmount",
+          "shippingAddress",
+          "createdAt",
+          "updatedAt",
+          "items"
+        ]
+      },
+      "UpdateOrderStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "CONFIRMED",
+              "PROCESSING",
+              "SHIPPED",
+              "DELIVERED",
+              "CANCELLED"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateReviewDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rating": {
+            "type": "number",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 5
+          },
+          "title": {
+            "type": "string",
+            "example": "Great print quality!"
+          },
+          "comment": {
+            "type": "string",
+            "example": "The details are amazing, printed perfectly."
+          }
+        },
+        "required": [
+          "productId",
+          "rating"
+        ]
+      },
+      "ReviewProductSnippetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ]
+      },
+      "ReviewDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserSnippetDto"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ReviewProductSnippetDto"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "productId",
+          "rating",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ReviewListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "UpdateReviewDto": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "example": 4,
+            "minimum": 1,
+            "maximum": 5
+          },
+          "title": {
+            "type": "string",
+            "example": "Updated: Great print quality!"
+          },
+          "comment": {
+            "type": "string",
+            "example": "Updated my review after reprinting."
+          }
+        }
+      }
+    }
+  }
+}

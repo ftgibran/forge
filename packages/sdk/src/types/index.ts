@@ -1,3 +1,4 @@
+export type { CartItemDto as CartItem } from '../generated/model/cartItemDto'
 export type { CategoryDto as Category } from '../generated/model/categoryDto'
 export type { OrderListItemDto as Order } from '../generated/model/orderListItemDto'
 export type { PermissionDto as Permission } from '../generated/model/permissionDto'

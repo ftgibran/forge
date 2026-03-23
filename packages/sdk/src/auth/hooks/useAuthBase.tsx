@@ -26,5 +26,7 @@ export function useAuthBase(params: AuthParams) {
 
     token,
     currentUser,
+    user: currentUser,
+    isLoading: false,
   }
 }

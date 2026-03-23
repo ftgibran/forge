@@ -1,6 +1,6 @@
 'use client'
 
-import { useAddToCart, useProducts } from '@app/sdk'
+import { useAddToCart, useGetProducts } from '@app/sdk'
 import { useAuth } from '@app/sdk'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { useSearchParams } from 'next/navigation'
@@ -25,7 +25,7 @@ function ProductsContent() {
     sortBy: searchParams.get('sortBy') || 'newest',
   })
 
-  const { data, isLoading } = useProducts({
+  const { data, isLoading } = useGetProducts({
     ...filters,
     status: 'ACTIVE',
     page,
@@ -51,7 +51,7 @@ function ProductsContent() {
     }
 
     try {
-      await addToCartMutation.mutateAsync({ variantId })
+      await addToCartMutation.mutateAsync({ data: { variantId, quantity: 1 } })
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })

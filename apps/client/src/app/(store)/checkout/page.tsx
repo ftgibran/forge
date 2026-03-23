@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart, useCheckout, useClearCart } from '@app/sdk'
+import { useCheckout, useClearCart, useGetCart } from '@app/sdk'
 import {
   Button,
   Card,
@@ -24,7 +24,7 @@ import { toaster } from '@/components/ui/toaster'
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { data: cart } = useCart()
+  const { data: cart } = useGetCart()
   const clearCartMutation = useClearCart()
   const [address, setAddress] = useState({
     street: '',
@@ -42,22 +42,24 @@ export default function CheckoutPage() {
     }, 0) ?? 0
 
   const checkoutMutation = useCheckout({
-    onSuccess: async () => {
-      await clearCartMutation.mutateAsync()
-      toaster.success({
-        title: 'Order placed!',
-        description: 'Your order has been placed successfully.',
-      })
-      router.push('/orders')
-    },
-    onError: () => {
-      toaster.error({ title: 'Checkout failed. Please try again.' })
+    mutation: {
+      onSuccess: async () => {
+        await clearCartMutation.mutateAsync()
+        toaster.success({
+          title: 'Order placed!',
+          description: 'Your order has been placed successfully.',
+        })
+        router.push('/orders')
+      },
+      onError: () => {
+        toaster.error({ title: 'Checkout failed. Please try again.' })
+      },
     },
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    checkoutMutation.mutate({ shippingAddress: address })
+    checkoutMutation.mutate({ data: { shippingAddress: address } })
   }
 
   return (

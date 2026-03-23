@@ -1,6 +1,6 @@
 'use client'
 
-import { useAddToCart, useCategoryBySlug, useProducts } from '@app/sdk'
+import { useAddToCart, useGetCategory, useGetProducts } from '@app/sdk'
 import { useAuth } from '@app/sdk'
 import {
   Button,
@@ -25,18 +25,18 @@ export default function CategoryDetailPage() {
   const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
 
-  const { data: category, isLoading: categoryLoading } = useCategoryBySlug(
+  const { data: category, isLoading: categoryLoading } = useGetCategory(
     params.slug,
   )
 
-  const { data: productsData, isLoading: productsLoading } = useProducts(
+  const { data: productsData, isLoading: productsLoading } = useGetProducts(
     {
       categoryId: category?.id,
       status: 'ACTIVE',
       page,
       limit: 12,
     },
-    { enabled: !!category?.id },
+    { query: { enabled: !!category?.id } },
   )
 
   const products = productsData?.items ?? []
@@ -54,7 +54,7 @@ export default function CategoryDetailPage() {
     }
 
     try {
-      await addToCartMutation.mutateAsync({ variantId })
+      await addToCartMutation.mutateAsync({ data: { variantId, quantity: 1 } })
       toaster.success({ title: 'Added to cart!' })
     } catch {
       toaster.error({ title: 'Failed to add to cart' })

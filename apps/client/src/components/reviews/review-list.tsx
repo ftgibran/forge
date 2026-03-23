@@ -1,6 +1,6 @@
 'use client'
 
-import { useProductReviews } from '@app/sdk'
+import { useGetProductReviews } from '@app/sdk'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
 import { LuStar } from 'react-icons/lu'
@@ -21,7 +21,7 @@ export function ReviewList({
 }: ReviewListProps) {
   const [page, setPage] = useState(1)
 
-  const { data } = useProductReviews(productId, page, 10)
+  const { data } = useGetProductReviews(productId, { page, limit: 10 })
   const reviews = data?.items ?? []
   const totalPages = data?.totalPages ?? 1
 
