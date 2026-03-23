@@ -3,8 +3,12 @@ import { DependencyList, useEffect, useRef } from 'react'
 declare const UNDEFINED_VOID_ONLY: unique symbol
 export type Destructor = () => void | { [UNDEFINED_VOID_ONLY]: never }
 
+type NonNullableItems<M extends readonly unknown[]> = {
+  [K in keyof M]: NonNullable<M[K]>
+}
+
 export type EventEffect<M extends readonly unknown[]> = [
-  effect?: (...args: Required<Partial<M>>) => void | Destructor,
+  effect?: (...args: NonNullableItems<M>) => void | Destructor,
   deps?: DependencyList,
 ]
 
@@ -101,7 +105,7 @@ export function useEventEffect<M extends readonly unknown[]>(
 
   useEffect(() => {
     if (memos.every((m) => m !== undefined && m !== null)) {
-      const current = callback?.(...(memos as Required<Partial<M>>))
+      const current = callback?.(...(memos as NonNullableItems<M>))
 
       if (current) {
         onReset.current = current
