@@ -41,12 +41,12 @@ services:
     build:
       context: .
       dockerfile: apps/admin/Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: forge-admin
     restart: unless-stopped
     ports:
       - '3000:3000'
+    env_file:
+      - ./apps/admin/.env
     depends_on:
       api:
         condition: service_healthy
@@ -55,12 +55,12 @@ services:
     build:
       context: .
       dockerfile: apps/client/Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: forge-client
     restart: unless-stopped
     ports:
       - '4000:4000'
+    env_file:
+      - ./apps/client/.env
     depends_on:
       api:
         condition: service_healthy

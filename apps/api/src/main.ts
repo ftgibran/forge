@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
@@ -48,5 +48,13 @@ async function bootstrap() {
   SwaggerModule.setup('', app, document)
 
   await app.listen(process.env.PORT ?? 8080)
+
+  const dbUrl = new URL(process.env.DATABASE_URL ?? '')
+
+  const dbLine = `  Database host: ${dbUrl.host}  `
+  const width = dbLine.length
+  const border = '═'.repeat(width)
+
+  Logger.log(`\n╔${border}╗\n║${dbLine}║\n╚${border}╝`, 'Bootstrap')
 }
 void bootstrap()
