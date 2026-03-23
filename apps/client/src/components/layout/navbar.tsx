@@ -17,8 +17,11 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuSearch, LuShoppingCart, LuStore } from 'react-icons/lu'
+
+import { LocaleSwitcher } from '@/components/locale-switcher'
 
 export function Navbar() {
   const { currentUser, logout } = useAuth()
@@ -27,6 +30,8 @@ export function Navbar() {
     cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
   const router = useRouter()
   const [search, setSearch] = useState('')
+  const tn = useTranslations('nav')
+  const t = useTranslations('navbar')
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,17 +56,17 @@ export function Navbar() {
             <HStack gap={'2'}>
               <LuStore size={24} />
               <Text fontWeight={'bold'} fontSize={'lg'} hideBelow={'md'}>
-                Marketplace
+                {tn('marketplace')}
               </Text>
             </HStack>
           </Link>
 
           <HStack gap={'4'} hideBelow={'md'}>
             <Button asChild variant={'ghost'} size={'sm'}>
-              <Link href={'/products'}>Products</Link>
+              <Link href={'/products'}>{tn('products')}</Link>
             </Button>
             <Button asChild variant={'ghost'} size={'sm'}>
-              <Link href={'/categories'}>Categories</Link>
+              <Link href={'/categories'}>{tn('categories')}</Link>
             </Button>
           </HStack>
 
@@ -69,14 +74,14 @@ export function Navbar() {
             <form onSubmit={handleSearch}>
               <HStack>
                 <Input
-                  placeholder={'Search products...'}
+                  placeholder={t('searchPlaceholder')}
                   size={'sm'}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <IconButton
                   type={'submit'}
-                  aria-label={'Search'}
+                  aria-label={t('searchAriaLabel')}
                   variant={'ghost'}
                   size={'sm'}
                 >
@@ -87,6 +92,7 @@ export function Navbar() {
           </Box>
 
           <HStack gap={'2'}>
+            <LocaleSwitcher />
             <ColorModeButton />
 
             {currentUser ? (
@@ -94,7 +100,7 @@ export function Navbar() {
                 <Box position={'relative'}>
                   <IconButton
                     asChild
-                    aria-label={'Cart'}
+                    aria-label={t('cartAriaLabel')}
                     variant={'ghost'}
                     size={'sm'}
                   >
@@ -124,16 +130,16 @@ export function Navbar() {
                   </MenuTrigger>
                   <MenuContent>
                     <MenuItem asChild value={'profile'}>
-                      <Link href={'/profile'}>Profile</Link>
+                      <Link href={'/profile'}>{tn('profile')}</Link>
                     </MenuItem>
                     <MenuItem asChild value={'orders'}>
-                      <Link href={'/orders'}>Orders</Link>
+                      <Link href={'/orders'}>{tn('orders')}</Link>
                     </MenuItem>
                     <MenuItem asChild value={'sell'}>
-                      <Link href={'/sell'}>Become a Seller</Link>
+                      <Link href={'/sell'}>{t('becomeASeller')}</Link>
                     </MenuItem>
                     <MenuItem value={'logout'} onClick={logout}>
-                      Sign out
+                      {t('signOut')}
                     </MenuItem>
                   </MenuContent>
                 </MenuRoot>
@@ -141,10 +147,10 @@ export function Navbar() {
             ) : (
               <HStack gap={'2'}>
                 <Button asChild variant={'ghost'} size={'sm'}>
-                  <Link href={'/login'}>Sign In</Link>
+                  <Link href={'/login'}>{t('signIn')}</Link>
                 </Button>
                 <Button asChild colorPalette={'blue'} size={'sm'}>
-                  <Link href={'/register'}>Sign Up</Link>
+                  <Link href={'/register'}>{t('signUp')}</Link>
                 </Button>
               </HStack>
             )}

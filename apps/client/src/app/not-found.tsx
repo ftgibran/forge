@@ -2,16 +2,19 @@
 
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 export default function NotFound() {
+  const t = useTranslations('notFound')
+
   return (
     <VStack minH={'100vh'} justify={'center'} gap={'4'}>
-      <Heading size={'4xl'}>404</Heading>
+      <Heading size={'4xl'}>{t('title')}</Heading>
       <Text color={'fg.muted'} fontSize={'lg'}>
-        Page not found
+        {t('description')}
       </Text>
       <Button asChild colorPalette={'blue'}>
-        <Link href={'/'}>Go to homepage</Link>
+        <Link href={'/'}>{t('goHome')}</Link>
       </Button>
     </VStack>
   )

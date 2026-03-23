@@ -3,6 +3,7 @@
 import type { Review } from '@app/sdk'
 import { Avatar } from '@app/theme'
 import { HStack, Text, VStack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { LuStar } from 'react-icons/lu'
 
 interface ReviewCardProps {
@@ -10,6 +11,8 @@ interface ReviewCardProps {
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {
+  const t = useTranslations('reviews')
+
   return (
     <VStack
       align={'flex-start'}
@@ -19,10 +22,10 @@ export function ReviewCard({ review }: ReviewCardProps) {
       borderRadius={'md'}
     >
       <HStack gap={'3'}>
-        <Avatar name={review.user?.name || 'User'} size={'sm'} />
+        <Avatar name={review.user?.name || t('user')} size={'sm'} />
         <VStack align={'flex-start'} gap={'0'}>
           <Text fontWeight={'medium'} fontSize={'sm'}>
-            {review.user?.name || 'Anonymous'}
+            {review.user?.name || t('anonymous')}
           </Text>
           <HStack gap={'1'}>
             {Array.from({ length: 5 }).map((_, i) => (

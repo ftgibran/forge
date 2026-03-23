@@ -3,6 +3,7 @@
 import { useGetCart, useRemoveCartItem, useUpdateCartItem } from '@app/sdk'
 import { toaster } from '@app/theme'
 import { Grid, GridItem, Heading, VStack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { LuShoppingCart } from 'react-icons/lu'
 
 import { AuthGuard } from '@/components/auth-guard'
@@ -15,21 +16,22 @@ export default function CartPage() {
   const { data: cart } = useGetCart()
   const updateCartItemMutation = useUpdateCartItem()
   const removeCartItemMutation = useRemoveCartItem()
+  const t = useTranslations('cart')
 
   const handleUpdateQuantity = async (itemId: string, quantity: number) => {
     try {
       await updateCartItemMutation.mutateAsync({ itemId, data: { quantity } })
     } catch {
-      toaster.error({ title: 'Failed to update quantity' })
+      toaster.error({ title: t('failedUpdateQuantity') })
     }
   }
 
   const handleRemove = async (itemId: string) => {
     try {
       await removeCartItemMutation.mutateAsync({ itemId })
-      toaster.success({ title: 'Item removed' })
+      toaster.success({ title: t('itemRemoved') })
     } catch {
-      toaster.error({ title: 'Failed to remove item' })
+      toaster.error({ title: t('failedRemoveItem') })
     }
   }
 
@@ -37,15 +39,15 @@ export default function CartPage() {
     <AuthGuard>
       <PageContainer>
         <Heading size={'xl'} mb={'6'}>
-          Shopping Cart
+          {t('heading')}
         </Heading>
 
         {!cart?.items || cart.items.length === 0 ? (
           <EmptyState
             icon={<LuShoppingCart size={48} />}
-            title={'Your cart is empty'}
-            description={'Browse our products and add items to your cart.'}
-            actionLabel={'Browse Products'}
+            title={t('emptyTitle')}
+            description={t('emptyDescription')}
+            actionLabel={t('browseProducts')}
             actionHref={'/products'}
           />
         ) : (

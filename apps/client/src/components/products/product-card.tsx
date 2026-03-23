@@ -11,6 +11,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { LuShoppingCart, LuStar } from 'react-icons/lu'
 
 import { PriceDisplay } from '@/components/price-display'
@@ -23,6 +24,7 @@ interface ProductCardProps {
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const firstImage = product.images?.[0]
   const firstVariant = product.variants?.[0]
+  const t = useTranslations('products')
 
   return (
     <Card.Root
@@ -50,7 +52,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           {product.vendor && (
             <Link href={`/vendors/${product.vendor.slug}`}>
               <Text fontSize={'xs'} color={'fg.muted'}>
-                by {product.vendor.name}
+                {t('byVendor', { name: product.vendor.name })}
               </Text>
             </Link>
           )}
@@ -93,7 +95,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             onClick={() => onAddToCart(firstVariant.id)}
           >
             <LuShoppingCart />
-            Add to Cart
+            {t('addToCart')}
           </Button>
         </Card.Footer>
       )}

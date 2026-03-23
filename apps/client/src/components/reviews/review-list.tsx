@@ -2,6 +2,7 @@
 
 import { useGetProductReviews } from '@app/sdk'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuStar } from 'react-icons/lu'
 
@@ -20,6 +21,8 @@ export function ReviewList({
   reviewCount,
 }: ReviewListProps) {
   const [page, setPage] = useState(1)
+  const t = useTranslations('reviews')
+  const tc = useTranslations('common')
 
   const { data } = useGetProductReviews(productId, { page, limit: 10 })
   const reviews = data?.items ?? []
@@ -28,7 +31,7 @@ export function ReviewList({
   return (
     <VStack align={'stretch'} gap={'4'}>
       <HStack gap={'4'}>
-        <Heading size={'md'}>Reviews</Heading>
+        <Heading size={'md'}>{t('heading')}</Heading>
         {averageRating !== undefined && averageRating > 0 && (
           <HStack gap={'1'}>
             <LuStar
@@ -41,7 +44,7 @@ export function ReviewList({
             </Text>
             {reviewCount !== undefined && (
               <Text color={'fg.muted'} fontSize={'sm'}>
-                ({reviewCount} reviews)
+                {t('reviewCount', { count: reviewCount })}
               </Text>
             )}
           </HStack>
@@ -49,7 +52,7 @@ export function ReviewList({
       </HStack>
 
       {reviews.length === 0 ? (
-        <Text color={'fg.muted'}>No reviews yet. Be the first to review!</Text>
+        <Text color={'fg.muted'}>{t('emptyMessage')}</Text>
       ) : (
         <>
           {reviews.map((review) => (
@@ -63,10 +66,10 @@ export function ReviewList({
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}
               >
-                Previous
+                {tc('previous')}
               </Button>
               <Text fontSize={'sm'} color={'fg.muted'}>
-                Page {page} of {totalPages}
+                {tc('pageOf', { page, totalPages })}
               </Text>
               <Button
                 size={'sm'}
@@ -74,7 +77,7 @@ export function ReviewList({
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => p + 1)}
               >
-                Next
+                {tc('next')}
               </Button>
             </HStack>
           )}

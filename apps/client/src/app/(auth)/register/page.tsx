@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 export default function RegisterPage() {
@@ -23,6 +24,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const t = useTranslations('auth')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,8 +34,8 @@ export default function RegisterPage() {
       router.push('/')
     } catch {
       toaster.error({
-        title: 'Registration failed',
-        description: 'Could not create account. Please try again.',
+        title: t('registrationFailed'),
+        description: t('registrationError'),
       })
     } finally {
       setLoading(false)
@@ -45,36 +47,36 @@ export default function RegisterPage() {
       <Card.Root>
         <Card.Header>
           <Heading size={'lg'} textAlign={'center'}>
-            Create Account
+            {t('registerHeading')}
           </Heading>
           <Text color={'fg.muted'} textAlign={'center'}>
-            Join the Marketplace
+            {t('registerSubtitle')}
           </Text>
         </Card.Header>
         <Card.Body>
           <form onSubmit={handleSubmit}>
             <Stack gap={'4'}>
-              <Field label={'Name'}>
+              <Field label={t('nameLabel')}>
                 <Input
-                  placeholder={'Your name'}
+                  placeholder={t('namePlaceholder')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Email'}>
+              <Field label={t('emailLabel')}>
                 <Input
                   type={'email'}
-                  placeholder={'you@example.com'}
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Password'}>
+              <Field label={t('passwordLabel')}>
                 <Input
                   type={'password'}
-                  placeholder={'Create a password'}
+                  placeholder={t('registerPasswordPlaceholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -82,17 +84,17 @@ export default function RegisterPage() {
                 />
               </Field>
               <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-                Sign up
+                {t('signUp')}
               </Button>
             </Stack>
           </form>
         </Card.Body>
         <Card.Footer justifyContent={'center'}>
           <Text fontSize={'sm'} color={'fg.muted'}>
-            Already have an account?{' '}
+            {t('hasAccount')}{' '}
             <Link href={'/login'}>
               <Text as={'span'} color={'blue.fg'} fontWeight={'medium'}>
-                Sign in
+                {t('signIn')}
               </Text>
             </Link>
           </Text>

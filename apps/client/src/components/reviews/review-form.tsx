@@ -11,6 +11,7 @@ import {
   Stack,
   Textarea,
 } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuStar } from 'react-icons/lu'
 
@@ -23,6 +24,7 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
   const [rating, setRating] = useState(0)
   const [title, setTitle] = useState('')
   const [comment, setComment] = useState('')
+  const t = useTranslations('reviews')
 
   const createReviewMutation = useCreateReview()
 
@@ -30,7 +32,7 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
     e.preventDefault()
 
     if (rating === 0) {
-      toaster.error({ title: 'Please select a rating' })
+      toaster.error({ title: t('ratingRequired') })
 
       return
     }
@@ -44,25 +46,25 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
           comment: comment || undefined,
         },
       })
-      toaster.success({ title: 'Review submitted!' })
+      toaster.success({ title: t('submitted') })
       setRating(0)
       setTitle('')
       setComment('')
       onSubmitted()
     } catch {
-      toaster.error({ title: 'Failed to submit review' })
+      toaster.error({ title: t('submitFailed') })
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap={'4'}>
-        <Field label={'Rating'}>
+        <Field label={t('ratingLabel')}>
           <HStack gap={'1'}>
             {Array.from({ length: 5 }).map((_, i) => (
               <IconButton
                 key={i}
-                aria-label={`Rate ${i + 1}`}
+                aria-label={t('rateAriaLabel', { rating: i + 1 })}
                 variant={'ghost'}
                 size={'sm'}
                 onClick={() => setRating(i + 1)}
@@ -80,16 +82,16 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
             ))}
           </HStack>
         </Field>
-        <Field label={'Title (optional)'}>
+        <Field label={t('titleLabel')}>
           <Input
-            placeholder={'Summary of your review'}
+            placeholder={t('titlePlaceholder')}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </Field>
-        <Field label={'Comment (optional)'}>
+        <Field label={t('commentLabel')}>
           <Textarea
-            placeholder={'Tell us more about your experience...'}
+            placeholder={t('commentPlaceholder')}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={3}
@@ -100,7 +102,7 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
           colorPalette={'blue'}
           loading={createReviewMutation.isPending}
         >
-          Submit Review
+          {t('submitButton')}
         </Button>
       </Stack>
     </form>

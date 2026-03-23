@@ -17,6 +17,7 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { AuthGuard } from '@/components/auth-guard'
@@ -30,6 +31,7 @@ export default function SellPage() {
     description: '',
   })
   const [applicationMessage, setApplicationMessage] = useState('')
+  const t = useTranslations('sell')
 
   const { data: vendorMe } = useGetVendorMe({
     query: { enabled: step === 'application' },
@@ -39,11 +41,11 @@ export default function SellPage() {
     mutation: {
       onSuccess: () => {
         setStep('application')
-        toaster.success({ title: 'Vendor profile created!' })
+        toaster.success({ title: t('vendorCreated') })
       },
       onError: (err) => {
         toaster.error({
-          title: (err as Error).message || 'Failed to create vendor profile',
+          title: (err as Error).message || t('vendorCreatedError'),
         })
       },
     },
@@ -53,11 +55,11 @@ export default function SellPage() {
     mutation: {
       onSuccess: () => {
         setStep('done')
-        toaster.success({ title: 'Application submitted!' })
+        toaster.success({ title: t('applicationSubmitted') })
       },
       onError: (err) => {
         toaster.error({
-          title: (err as Error).message || 'Failed to submit application',
+          title: (err as Error).message || t('applicationSubmittedError'),
         })
       },
     },
@@ -91,21 +93,19 @@ export default function SellPage() {
       <PageContainer>
         <VStack align={'stretch'} gap={'6'} maxW={'lg'} mx={'auto'}>
           <VStack gap={'2'} textAlign={'center'}>
-            <Heading size={'xl'}>Become a Seller</Heading>
-            <Text color={'fg.muted'}>
-              Create your vendor profile and start selling on the marketplace.
-            </Text>
+            <Heading size={'xl'}>{t('heading')}</Heading>
+            <Text color={'fg.muted'}>{t('subtitle')}</Text>
           </VStack>
 
           {step === 'form' && (
             <Card.Root>
               <Card.Header>
-                <Heading size={'md'}>Vendor Profile</Heading>
+                <Heading size={'md'}>{t('vendorProfileHeader')}</Heading>
               </Card.Header>
               <Card.Body>
                 <form onSubmit={handleCreateVendor}>
                   <Stack gap={'4'}>
-                    <Field label={'Business Name'}>
+                    <Field label={t('businessNameLabel')}>
                       <Input
                         value={vendor.name}
                         onChange={(e) => {
@@ -120,10 +120,7 @@ export default function SellPage() {
                         required
                       />
                     </Field>
-                    <Field
-                      label={'Slug'}
-                      helperText={'URL-friendly identifier'}
-                    >
+                    <Field label={t('slugLabel')} helperText={t('slugHelper')}>
                       <Input
                         value={vendor.slug}
                         onChange={(e) =>
@@ -132,7 +129,7 @@ export default function SellPage() {
                         required
                       />
                     </Field>
-                    <Field label={'Description (optional)'}>
+                    <Field label={t('descriptionLabel')}>
                       <Textarea
                         value={vendor.description}
                         onChange={(e) =>
@@ -149,7 +146,7 @@ export default function SellPage() {
                       colorPalette={'blue'}
                       loading={createVendorMutation.isPending}
                     >
-                      Create Vendor Profile
+                      {t('createVendorButton')}
                     </Button>
                   </Stack>
                 </form>
@@ -160,22 +157,20 @@ export default function SellPage() {
           {step === 'application' && (
             <Card.Root>
               <Card.Header>
-                <Heading size={'md'}>Submit Application</Heading>
+                <Heading size={'md'}>{t('submitApplicationHeader')}</Heading>
                 <Text color={'fg.muted'} fontSize={'sm'}>
-                  Tell us why you&apos;d like to sell on our marketplace.
+                  {t('applicationSubtitle')}
                 </Text>
               </Card.Header>
               <Card.Body>
                 <form onSubmit={handleSubmitApplication}>
                   <Stack gap={'4'}>
-                    <Field label={'Application Message'}>
+                    <Field label={t('applicationMessageLabel')}>
                       <Textarea
                         value={applicationMessage}
                         onChange={(e) => setApplicationMessage(e.target.value)}
                         rows={5}
-                        placeholder={
-                          'Describe your products, experience, and why you want to join...'
-                        }
+                        placeholder={t('applicationPlaceholder')}
                         required
                       />
                     </Field>
@@ -184,7 +179,7 @@ export default function SellPage() {
                       colorPalette={'blue'}
                       loading={applyMutation.isPending}
                     >
-                      Submit Application
+                      {t('submitButton')}
                     </Button>
                   </Stack>
                 </form>
@@ -196,11 +191,8 @@ export default function SellPage() {
             <Card.Root>
               <Card.Body>
                 <VStack gap={'4'} py={'8'} textAlign={'center'}>
-                  <Heading size={'lg'}>Application Submitted!</Heading>
-                  <Text color={'fg.muted'}>
-                    Thank you for applying. We&apos;ll review your application
-                    and get back to you soon.
-                  </Text>
+                  <Heading size={'lg'}>{t('successHeading')}</Heading>
+                  <Text color={'fg.muted'}>{t('successMessage')}</Text>
                 </VStack>
               </Card.Body>
             </Card.Root>

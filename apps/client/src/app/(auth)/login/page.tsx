@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 export default function LoginPage() {
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const t = useTranslations('auth')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,8 +33,8 @@ export default function LoginPage() {
       router.push('/')
     } catch {
       toaster.error({
-        title: 'Login failed',
-        description: 'Invalid credentials',
+        title: t('loginFailed'),
+        description: t('invalidCredentials'),
       })
     } finally {
       setLoading(false)
@@ -44,45 +46,45 @@ export default function LoginPage() {
       <Card.Root>
         <Card.Header>
           <Heading size={'lg'} textAlign={'center'}>
-            Marketplace
+            {t('loginHeading')}
           </Heading>
           <Text color={'fg.muted'} textAlign={'center'}>
-            Sign in to your account
+            {t('loginSubtitle')}
           </Text>
         </Card.Header>
         <Card.Body>
           <form onSubmit={handleSubmit}>
             <Stack gap={'4'}>
-              <Field label={'Email'}>
+              <Field label={t('emailLabel')}>
                 <Input
                   type={'email'}
-                  placeholder={'you@example.com'}
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
-              <Field label={'Password'}>
+              <Field label={t('passwordLabel')}>
                 <Input
                   type={'password'}
-                  placeholder={'Enter your password'}
+                  placeholder={t('loginPasswordPlaceholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Field>
               <Button type={'submit'} colorPalette={'blue'} loading={loading}>
-                Sign in
+                {t('signIn')}
               </Button>
             </Stack>
           </form>
         </Card.Body>
         <Card.Footer justifyContent={'center'}>
           <Text fontSize={'sm'} color={'fg.muted'}>
-            Don&apos;t have an account?{' '}
+            {t('noAccount')}{' '}
             <Link href={'/register'}>
               <Text as={'span'} color={'blue.fg'} fontWeight={'medium'}>
-                Sign up
+                {t('signUp')}
               </Text>
             </Link>
           </Text>

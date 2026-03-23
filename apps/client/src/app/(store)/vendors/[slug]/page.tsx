@@ -13,6 +13,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { EmptyState } from '@/components/empty-state'
@@ -25,6 +26,8 @@ export default function VendorDetailPage() {
   const { currentUser } = useAuth()
   const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
+  const t = useTranslations('vendors')
+  const tc = useTranslations('common')
 
   const { data: vendor, isLoading: vendorLoading } = useGetVendor(params.slug)
 
@@ -45,8 +48,8 @@ export default function VendorDetailPage() {
   const handleAddToCart = async (variantId: string) => {
     if (!currentUser) {
       toaster.error({
-        title: 'Please sign in',
-        description: 'You need to be signed in to add items to your cart.',
+        title: tc('signInRequired'),
+        description: tc('signInDescription'),
       })
 
       return
@@ -54,9 +57,9 @@ export default function VendorDetailPage() {
 
     try {
       await addToCartMutation.mutateAsync({ data: { variantId, quantity: 1 } })
-      toaster.success({ title: 'Added to cart!' })
+      toaster.success({ title: tc('addedToCart') })
     } catch {
-      toaster.error({ title: 'Failed to add to cart' })
+      toaster.error({ title: tc('failedToAddToCart') })
     }
   }
 
@@ -75,7 +78,7 @@ export default function VendorDetailPage() {
           <HStack gap={'3'}>
             <Heading size={'xl'}>{vendor?.name}</Heading>
             {vendor?.status === 'ACTIVE' && (
-              <Badge colorPalette={'green'}>Verified Seller</Badge>
+              <Badge colorPalette={'green'}>{t('verifiedSeller')}</Badge>
             )}
           </HStack>
           {vendor?.description && (
@@ -83,7 +86,7 @@ export default function VendorDetailPage() {
           )}
           {vendor?._count && (
             <Text fontSize={'sm'} color={'fg.muted'}>
-              {vendor._count.products} products
+              {t('productsCount', { count: vendor._count.products })}
             </Text>
           )}
         </VStack>
@@ -92,8 +95,8 @@ export default function VendorDetailPage() {
           <ProductSkeleton count={12} />
         ) : products.length === 0 ? (
           <EmptyState
-            title={'No products yet'}
-            description={"This vendor hasn't listed any products yet."}
+            title={t('noProductsTitle')}
+            description={t('noProductsDescription')}
           />
         ) : (
           <>
@@ -105,17 +108,17 @@ export default function VendorDetailPage() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Previous
+                  {tc('previous')}
                 </Button>
                 <Text color={'fg.muted'}>
-                  Page {page} of {totalPages}
+                  {tc('pageOf', { page, totalPages })}
                 </Text>
                 <Button
                   variant={'outline'}
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Next
+                  {tc('next')}
                 </Button>
               </HStack>
             )}

@@ -3,6 +3,7 @@
 import type { CartItem } from '@app/sdk'
 import { Button, Card, HStack, Separator, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 interface CartSummaryProps {
   items: CartItem[]
@@ -15,22 +16,24 @@ export function CartSummary({ items }: CartSummaryProps) {
     return sum + price * item.quantity
   }, 0)
 
+  const t = useTranslations('cart')
+
   return (
     <Card.Root>
       <Card.Header>
         <Text fontWeight={'bold'} fontSize={'lg'}>
-          Order Summary
+          {t('orderSummary')}
         </Text>
       </Card.Header>
       <Card.Body>
         <VStack gap={'3'} align={'stretch'}>
           <HStack justify={'space-between'}>
-            <Text color={'fg.muted'}>Subtotal</Text>
+            <Text color={'fg.muted'}>{t('subtotal')}</Text>
             <Text>${subtotal.toFixed(2)}</Text>
           </HStack>
           <Separator />
           <HStack justify={'space-between'}>
-            <Text fontWeight={'bold'}>Total</Text>
+            <Text fontWeight={'bold'}>{t('total')}</Text>
             <Text fontWeight={'bold'} fontSize={'lg'}>
               ${subtotal.toFixed(2)}
             </Text>
@@ -39,7 +42,7 @@ export function CartSummary({ items }: CartSummaryProps) {
       </Card.Body>
       <Card.Footer>
         <Button asChild colorPalette={'blue'} w={'full'}>
-          <Link href={'/checkout'}>Proceed to Checkout</Link>
+          <Link href={'/checkout'}>{t('proceedToCheckout')}</Link>
         </Button>
       </Card.Footer>
     </Card.Root>

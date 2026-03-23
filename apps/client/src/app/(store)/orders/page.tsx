@@ -11,6 +11,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuPackage } from 'react-icons/lu'
 
@@ -29,6 +30,8 @@ const statusColor: Record<string, string> = {
 
 export default function OrdersPage() {
   const [page, setPage] = useState(1)
+  const t = useTranslations('orders')
+  const tc = useTranslations('common')
 
   const { data, isLoading } = useGetMyOrders({ page, limit: 10 })
 
@@ -39,15 +42,15 @@ export default function OrdersPage() {
     <AuthGuard>
       <PageContainer>
         <Heading size={'xl'} mb={'6'}>
-          My Orders
+          {t('heading')}
         </Heading>
 
         {!isLoading && orders.length === 0 ? (
           <EmptyState
             icon={<LuPackage size={48} />}
-            title={'No orders yet'}
-            description={'Start shopping to see your orders here.'}
-            actionLabel={'Browse Products'}
+            title={t('emptyTitle')}
+            description={t('emptyDescription')}
+            actionLabel={t('browseProducts')}
             actionHref={'/products'}
           />
         ) : (
@@ -67,7 +70,7 @@ export default function OrdersPage() {
                     >
                       <VStack align={'flex-start'} gap={'1'}>
                         <Text fontWeight={'medium'}>
-                          Order #{order.id.slice(0, 8)}
+                          {t('orderNumber', { id: order.id.slice(0, 8) })}
                         </Text>
                         <Text fontSize={'sm'} color={'fg.muted'}>
                           {new Date(order.createdAt).toLocaleDateString()}
@@ -84,7 +87,7 @@ export default function OrdersPage() {
                         </Text>
                         {order._count && (
                           <Text fontSize={'sm'} color={'fg.muted'}>
-                            {order._count.items} items
+                            {t('itemsCount', { count: order._count.items })}
                           </Text>
                         )}
                       </HStack>
@@ -101,17 +104,17 @@ export default function OrdersPage() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Previous
+                  {tc('previous')}
                 </Button>
                 <Text color={'fg.muted'}>
-                  Page {page} of {totalPages}
+                  {tc('pageOf', { page, totalPages })}
                 </Text>
                 <Button
                   variant={'outline'}
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Next
+                  {tc('next')}
                 </Button>
               </HStack>
             )}

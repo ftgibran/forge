@@ -2,19 +2,21 @@
 
 import { Box, Button, Container, Heading, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 export function CTASection() {
+  const t = useTranslations('landing')
+
   return (
     <Box bg={'blue.subtle'} py={'16'}>
       <Container maxW={'4xl'}>
         <VStack gap={'6'} textAlign={'center'}>
-          <Heading size={'2xl'}>Ready to Start Selling?</Heading>
+          <Heading size={'2xl'}>{t('ctaHeading')}</Heading>
           <Text fontSize={'lg'} color={'fg.muted'} maxW={'xl'}>
-            Join our community of 3D printing creators and reach customers
-            worldwide. Set up your shop in minutes.
+            {t('ctaDescription')}
           </Text>
           <Button asChild colorPalette={'blue'} size={'lg'}>
-            <Link href={'/sell'}>Apply as a Seller</Link>
+            <Link href={'/sell'}>{t('ctaButton')}</Link>
           </Button>
         </VStack>
       </Container>

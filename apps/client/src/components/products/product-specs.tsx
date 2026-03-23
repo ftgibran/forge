@@ -2,41 +2,55 @@
 
 import type { Product } from '@app/sdk'
 import { Table } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 
 interface ProductSpecsProps {
   product: Product
 }
 
 export function ProductSpecs({ product }: ProductSpecsProps) {
+  const t = useTranslations('products')
+  const tc = useTranslations('common')
+
   const specs = [
-    { label: 'Filament Type', value: product.filamentType },
+    { label: t('specFilamentType'), value: product.filamentType },
     {
-      label: 'Print Time',
-      value: product.printTimeHours ? `${product.printTimeHours} hours` : null,
+      label: t('specPrintTime'),
+      value: product.printTimeHours
+        ? t('specHours', { value: product.printTimeHours })
+        : null,
     },
     {
-      label: 'Dimensions',
+      label: t('specDimensions'),
       value:
         product.dimensionX && product.dimensionY && product.dimensionZ
-          ? `${product.dimensionX} x ${product.dimensionY} x ${product.dimensionZ} mm`
+          ? t('specDimensionsMm', {
+              x: product.dimensionX,
+              y: product.dimensionY,
+              z: product.dimensionZ,
+            })
           : null,
     },
-    { label: 'File Format', value: product.fileFormat },
+    { label: t('specFileFormat'), value: product.fileFormat },
     {
-      label: 'Nozzle Size',
-      value: product.nozzleSize ? `${product.nozzleSize}mm` : null,
+      label: t('specNozzleSize'),
+      value: product.nozzleSize
+        ? t('specNozzleMm', { value: product.nozzleSize })
+        : null,
     },
     {
-      label: 'Infill',
-      value: product.infillPercentage ? `${product.infillPercentage}%` : null,
+      label: t('specInfill'),
+      value: product.infillPercentage
+        ? t('specInfillPercent', { value: product.infillPercentage })
+        : null,
     },
     {
-      label: 'Supports Required',
+      label: t('specSupportsRequired'),
       value:
         product.supportsRequired !== null
           ? product.supportsRequired
-            ? 'Yes'
-            : 'No'
+            ? tc('yes')
+            : tc('no')
           : null,
     },
   ].filter((spec) => spec.value)

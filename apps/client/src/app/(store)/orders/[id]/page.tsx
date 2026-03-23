@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 import { AuthGuard } from '@/components/auth-guard'
 import { PageContainer } from '@/components/page-container'
@@ -28,6 +29,8 @@ const statusColor: Record<string, string> = {
 
 export default function OrderDetailPage() {
   const params = useParams<{ id: string }>()
+  const t = useTranslations('orders')
+  const tc = useTranslations('common')
 
   const { data: order, isLoading } = useGetOrder(params.id)
 
@@ -45,7 +48,7 @@ export default function OrderDetailPage() {
     return (
       <AuthGuard>
         <PageContainer>
-          <Text>Order not found.</Text>
+          <Text>{t('notFound')}</Text>
         </PageContainer>
       </AuthGuard>
     )
@@ -57,9 +60,13 @@ export default function OrderDetailPage() {
         <VStack align={'stretch'} gap={'6'}>
           <HStack justify={'space-between'} flexWrap={'wrap'} gap={'4'}>
             <VStack align={'flex-start'} gap={'1'}>
-              <Heading size={'xl'}>Order #{order.id.slice(0, 8)}</Heading>
+              <Heading size={'xl'}>
+                {t('orderNumber', { id: order.id.slice(0, 8) })}
+              </Heading>
               <Text color={'fg.muted'}>
-                Placed on {new Date(order.createdAt).toLocaleDateString()}
+                {t('placedOn', {
+                  date: new Date(order.createdAt).toLocaleDateString(),
+                })}
               </Text>
             </VStack>
             <Badge
@@ -72,22 +79,26 @@ export default function OrderDetailPage() {
 
           <Card.Root>
             <Card.Header>
-              <Heading size={'md'}>Items</Heading>
+              <Heading size={'md'}>{t('itemsHeader')}</Heading>
             </Card.Header>
             <Card.Body p={'0'}>
               <Table.Root>
                 <Table.Header>
                   <Table.Row>
-                    <Table.ColumnHeader>Product</Table.ColumnHeader>
-                    <Table.ColumnHeader>Variant</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign={'right'}>
-                      Qty
+                    <Table.ColumnHeader>
+                      {t('productColumn')}
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader>
+                      {t('variantColumn')}
                     </Table.ColumnHeader>
                     <Table.ColumnHeader textAlign={'right'}>
-                      Price
+                      {t('qtyColumn')}
                     </Table.ColumnHeader>
                     <Table.ColumnHeader textAlign={'right'}>
-                      Subtotal
+                      {t('priceColumn')}
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign={'right'}>
+                      {t('subtotalColumn')}
                     </Table.ColumnHeader>
                   </Table.Row>
                 </Table.Header>
@@ -105,7 +116,7 @@ export default function OrderDetailPage() {
                             </Text>
                           </Link>
                         ) : (
-                          'Product'
+                          tc('product')
                         )}
                       </Table.Cell>
                       <Table.Cell>{item.variant?.name || '—'}</Table.Cell>
@@ -126,7 +137,7 @@ export default function OrderDetailPage() {
             <Card.Footer>
               <HStack justify={'flex-end'} w={'full'}>
                 <Text fontWeight={'bold'} fontSize={'lg'}>
-                  Total: ${Number(order.totalAmount).toFixed(2)}
+                  {t('totalLabel')} ${Number(order.totalAmount).toFixed(2)}
                 </Text>
               </HStack>
             </Card.Footer>
@@ -134,7 +145,7 @@ export default function OrderDetailPage() {
 
           <Card.Root>
             <Card.Header>
-              <Heading size={'md'}>Shipping Address</Heading>
+              <Heading size={'md'}>{t('shippingAddress')}</Heading>
             </Card.Header>
             <Card.Body>
               <Text>{order.shippingAddress.street}</Text>

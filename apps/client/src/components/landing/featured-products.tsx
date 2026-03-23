@@ -3,6 +3,7 @@
 import type { Product } from '@app/sdk'
 import { Button, Container, Heading, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 import { ProductGrid } from '@/components/products/product-grid'
 
@@ -11,20 +12,20 @@ interface FeaturedProductsProps {
 }
 
 export function FeaturedProducts({ products }: FeaturedProductsProps) {
+  const t = useTranslations('landing')
+
   if (products.length === 0) return null
 
   return (
     <Container maxW={'7xl'} py={'16'} px={'4'}>
       <VStack gap={'8'}>
         <VStack gap={'2'} textAlign={'center'}>
-          <Heading size={'2xl'}>Featured Products</Heading>
-          <Text color={'fg.muted'}>
-            Check out our latest and most popular items
-          </Text>
+          <Heading size={'2xl'}>{t('featuredHeading')}</Heading>
+          <Text color={'fg.muted'}>{t('featuredDescription')}</Text>
         </VStack>
         <ProductGrid products={products} />
         <Button asChild variant={'outline'} size={'lg'}>
-          <Link href={'/products'}>View All Products</Link>
+          <Link href={'/products'}>{t('featuredViewAll')}</Link>
         </Button>
       </VStack>
     </Container>

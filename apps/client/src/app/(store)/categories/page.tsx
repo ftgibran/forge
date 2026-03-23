@@ -3,22 +3,24 @@
 import { useGetCategories } from '@app/sdk'
 import { Card, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
 
 export default function CategoriesPage() {
   const { data: categories = [], isLoading } = useGetCategories()
+  const t = useTranslations('categories')
 
   return (
     <PageContainer>
       <VStack align={'stretch'} gap={'6'}>
-        <Heading size={'xl'}>Categories</Heading>
+        <Heading size={'xl'}>{t('heading')}</Heading>
 
         {!isLoading && categories.length === 0 ? (
           <EmptyState
-            title={'No categories yet'}
-            description={'Check back later for new categories.'}
+            title={t('emptyTitle')}
+            description={t('emptyDescription')}
           />
         ) : (
           <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={'6'}>
@@ -45,7 +47,9 @@ export default function CategoriesPage() {
                       )}
                       {category._count && (
                         <Text color={'fg.muted'} fontSize={'sm'}>
-                          {category._count.products} products
+                          {t('productsCount', {
+                            count: category._count.products,
+                          })}
                         </Text>
                       )}
                     </VStack>
@@ -53,7 +57,9 @@ export default function CategoriesPage() {
                   {category.children && category.children.length > 0 && (
                     <Card.Footer>
                       <Text fontSize={'xs'} color={'fg.muted'}>
-                        {category.children.length} subcategories
+                        {t('subcategoriesCount', {
+                          count: category.children.length,
+                        })}
                       </Text>
                     </Card.Footer>
                   )}

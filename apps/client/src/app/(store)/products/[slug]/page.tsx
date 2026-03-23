@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { PageContainer } from '@/components/page-container'
@@ -33,6 +34,8 @@ export default function ProductDetailPage() {
   const addToCartMutation = useAddToCart()
   const [addingToCart, setAddingToCart] = useState(false)
   const [reviewRefreshKey, setReviewRefreshKey] = useState(0)
+  const t = useTranslations('products')
+  const tc = useTranslations('common')
 
   const { data: product, isLoading } = useGetProduct(params.slug)
 
@@ -51,8 +54,8 @@ export default function ProductDetailPage() {
   const handleAddToCart = async () => {
     if (!currentUser) {
       toaster.error({
-        title: 'Please sign in',
-        description: 'You need to be signed in to add items to your cart.',
+        title: tc('signInRequired'),
+        description: tc('signInDescription'),
       })
 
       return
@@ -65,9 +68,9 @@ export default function ProductDetailPage() {
       await addToCartMutation.mutateAsync({
         data: { variantId: effectiveVariantId, quantity: 1 },
       })
-      toaster.success({ title: 'Added to cart!' })
+      toaster.success({ title: tc('addedToCart') })
     } catch {
-      toaster.error({ title: 'Failed to add to cart' })
+      toaster.error({ title: tc('failedToAddToCart') })
     } finally {
       setAddingToCart(false)
     }
@@ -84,7 +87,7 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <PageContainer>
-        <Text>Product not found.</Text>
+        <Text>{t('notFound')}</Text>
       </PageContainer>
     )
   }
@@ -113,7 +116,9 @@ export default function ProductDetailPage() {
 
             {product.vendor && (
               <Link href={`/vendors/${product.vendor.slug}`}>
-                <Text color={'fg.muted'}>by {product.vendor.name}</Text>
+                <Text color={'fg.muted'}>
+                  {t('byVendor', { name: product.vendor.name })}
+                </Text>
               </Link>
             )}
 
@@ -138,7 +143,7 @@ export default function ProductDetailPage() {
                   {product.variants.map((variant) => (
                     <option key={variant.id} value={variant.id}>
                       {variant.name} — ${Number(variant.price).toFixed(2)}
-                      {variant.stock <= 0 ? ' (Out of stock)' : ''}
+                      {variant.stock <= 0 ? ` (${t('outOfStock')})` : ''}
                     </option>
                   ))}
                 </NativeSelectField>
@@ -148,8 +153,8 @@ export default function ProductDetailPage() {
             {selectedVariant && (
               <Text fontSize={'sm'} color={'fg.muted'}>
                 {selectedVariant.stock > 0
-                  ? `${selectedVariant.stock} in stock`
-                  : 'Out of stock'}
+                  ? t('inStock', { count: selectedVariant.stock })
+                  : t('outOfStock')}
               </Text>
             )}
 
@@ -160,14 +165,14 @@ export default function ProductDetailPage() {
               loading={addingToCart}
               disabled={!selectedVariant || selectedVariant.stock <= 0}
             >
-              Add to Cart
+              {t('addToCart')}
             </Button>
 
             <Separator />
 
             <Box>
               <Heading size={'md'} mb={'3'}>
-                Specifications
+                {t('specificationsHeading')}
               </Heading>
               <ProductSpecs product={product} />
             </Box>
@@ -188,7 +193,7 @@ export default function ProductDetailPage() {
         {currentUser && (
           <Box maxW={'lg'}>
             <Heading size={'md'} mb={'4'}>
-              Write a Review
+              {t('writeReview')}
             </Heading>
             <ReviewForm
               productId={product.id}

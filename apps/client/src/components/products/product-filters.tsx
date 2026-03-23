@@ -3,6 +3,7 @@
 import { useGetCategories } from '@app/sdk'
 import { NativeSelectField, NativeSelectRoot } from '@app/theme'
 import { HStack, Input, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 
 interface ProductFiltersProps {
   search?: string
@@ -14,12 +15,6 @@ interface ProductFiltersProps {
 
 const FILAMENT_TYPES = ['PLA', 'ABS', 'PETG', 'TPU', 'Nylon', 'Resin', 'Other']
 
-const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'name', label: 'Name (A-Z)' },
-]
-
 export function ProductFilters({
   search = '',
   categoryId = '',
@@ -28,11 +23,18 @@ export function ProductFilters({
   onFilterChange,
 }: ProductFiltersProps) {
   const { data: categories = [] } = useGetCategories()
+  const t = useTranslations('products')
+
+  const sortOptions = [
+    { value: 'newest', label: t('sortNewest') },
+    { value: 'oldest', label: t('sortOldest') },
+    { value: 'name', label: t('sortName') },
+  ]
 
   return (
     <Stack direction={{ base: 'column', md: 'row' }} gap={'4'} w={'full'}>
       <Input
-        placeholder={'Search products...'}
+        placeholder={t('searchPlaceholder')}
         defaultValue={search}
         onChange={(e) => onFilterChange({ search: e.target.value })}
       />
@@ -42,7 +44,7 @@ export function ProductFilters({
             value={categoryId}
             onChange={(e) => onFilterChange({ categoryId: e.target.value })}
           >
-            <option value={''}>All Categories</option>
+            <option value={''}>{t('allCategories')}</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -56,7 +58,7 @@ export function ProductFilters({
             value={filamentType}
             onChange={(e) => onFilterChange({ filamentType: e.target.value })}
           >
-            <option value={''}>All Materials</option>
+            <option value={''}>{t('allMaterials')}</option>
             {FILAMENT_TYPES.map((type) => (
               <option key={type} value={type}>
                 {type}
@@ -70,7 +72,7 @@ export function ProductFilters({
             value={sortBy}
             onChange={(e) => onFilterChange({ sortBy: e.target.value })}
           >
-            {SORT_OPTIONS.map((opt) => (
+            {sortOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>

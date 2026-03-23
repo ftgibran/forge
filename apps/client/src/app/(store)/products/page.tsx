@@ -5,6 +5,7 @@ import { useAuth } from '@app/sdk'
 import { toaster } from '@app/theme'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Suspense, useState } from 'react'
 
 import { EmptyState } from '@/components/empty-state'
@@ -18,6 +19,8 @@ function ProductsContent() {
   const { currentUser } = useAuth()
   const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
+  const t = useTranslations('products')
+  const tc = useTranslations('common')
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
     categoryId: searchParams.get('categoryId') || '',
@@ -43,8 +46,8 @@ function ProductsContent() {
   const handleAddToCart = async (variantId: string) => {
     if (!currentUser) {
       toaster.error({
-        title: 'Please sign in',
-        description: 'You need to be signed in to add items to your cart.',
+        title: tc('signInRequired'),
+        description: tc('signInDescription'),
       })
 
       return
@@ -52,16 +55,16 @@ function ProductsContent() {
 
     try {
       await addToCartMutation.mutateAsync({ data: { variantId, quantity: 1 } })
-      toaster.success({ title: 'Added to cart!' })
+      toaster.success({ title: tc('addedToCart') })
     } catch {
-      toaster.error({ title: 'Failed to add to cart' })
+      toaster.error({ title: tc('failedToAddToCart') })
     }
   }
 
   return (
     <PageContainer>
       <VStack align={'stretch'} gap={'6'}>
-        <Heading size={'xl'}>Products</Heading>
+        <Heading size={'xl'}>{t('heading')}</Heading>
         <ProductFilters
           search={filters.search}
           categoryId={filters.categoryId}
@@ -74,8 +77,8 @@ function ProductsContent() {
           <ProductSkeleton count={12} />
         ) : products.length === 0 ? (
           <EmptyState
-            title={'No products found'}
-            description={'Try adjusting your filters or search query.'}
+            title={t('emptyTitle')}
+            description={t('emptyDescription')}
           />
         ) : (
           <>
@@ -87,17 +90,17 @@ function ProductsContent() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Previous
+                  {tc('previous')}
                 </Button>
                 <Text color={'fg.muted'}>
-                  Page {page} of {totalPages}
+                  {tc('pageOf', { page, totalPages })}
                 </Text>
                 <Button
                   variant={'outline'}
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Next
+                  {tc('next')}
                 </Button>
               </HStack>
             )}

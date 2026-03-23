@@ -17,6 +17,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { AuthGuard } from '@/components/auth-guard'
@@ -26,6 +27,8 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { data: cart } = useGetCart()
   const clearCartMutation = useClearCart()
+  const t = useTranslations('checkout')
+  const tc = useTranslations('common')
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -46,13 +49,13 @@ export default function CheckoutPage() {
       onSuccess: async () => {
         await clearCartMutation.mutateAsync()
         toaster.success({
-          title: 'Order placed!',
-          description: 'Your order has been placed successfully.',
+          title: t('orderPlaced'),
+          description: t('orderPlacedDescription'),
         })
         router.push('/orders')
       },
       onError: () => {
-        toaster.error({ title: 'Checkout failed. Please try again.' })
+        toaster.error({ title: t('checkoutFailed') })
       },
     },
   })
@@ -66,7 +69,7 @@ export default function CheckoutPage() {
     <AuthGuard>
       <PageContainer>
         <Heading size={'xl'} mb={'6'}>
-          Checkout
+          {t('heading')}
         </Heading>
 
         <form onSubmit={handleSubmit}>
@@ -74,11 +77,11 @@ export default function CheckoutPage() {
             <GridItem>
               <Card.Root>
                 <Card.Header>
-                  <Heading size={'md'}>Shipping Address</Heading>
+                  <Heading size={'md'}>{t('shippingAddress')}</Heading>
                 </Card.Header>
                 <Card.Body>
                   <Stack gap={'4'}>
-                    <Field label={'Street'}>
+                    <Field label={t('streetLabel')}>
                       <Input
                         value={address.street}
                         onChange={(e) =>
@@ -88,7 +91,7 @@ export default function CheckoutPage() {
                       />
                     </Field>
                     <HStack gap={'4'}>
-                      <Field label={'City'}>
+                      <Field label={t('cityLabel')}>
                         <Input
                           value={address.city}
                           onChange={(e) =>
@@ -97,7 +100,7 @@ export default function CheckoutPage() {
                           required
                         />
                       </Field>
-                      <Field label={'State'}>
+                      <Field label={t('stateLabel')}>
                         <Input
                           value={address.state}
                           onChange={(e) =>
@@ -111,7 +114,7 @@ export default function CheckoutPage() {
                       </Field>
                     </HStack>
                     <HStack gap={'4'}>
-                      <Field label={'Zip Code'}>
+                      <Field label={t('zipCodeLabel')}>
                         <Input
                           value={address.zipCode}
                           onChange={(e) =>
@@ -123,7 +126,7 @@ export default function CheckoutPage() {
                           required
                         />
                       </Field>
-                      <Field label={'Country'}>
+                      <Field label={t('countryLabel')}>
                         <Input
                           value={address.country}
                           onChange={(e) =>
@@ -144,14 +147,14 @@ export default function CheckoutPage() {
             <GridItem>
               <Card.Root>
                 <Card.Header>
-                  <Heading size={'md'}>Order Summary</Heading>
+                  <Heading size={'md'}>{t('orderSummary')}</Heading>
                 </Card.Header>
                 <Card.Body>
                   <VStack align={'stretch'} gap={'3'}>
                     {cart?.items?.map((item) => (
                       <HStack key={item.id} justify={'space-between'}>
                         <Text fontSize={'sm'} lineClamp={1} flex={'1'}>
-                          {item.variant?.product?.name || 'Product'} x{' '}
+                          {item.variant?.product?.name || tc('product')} x{' '}
                           {item.quantity}
                         </Text>
                         <Text fontSize={'sm'} fontWeight={'medium'}>
@@ -164,7 +167,7 @@ export default function CheckoutPage() {
                     ))}
                     <Separator />
                     <HStack justify={'space-between'}>
-                      <Text fontWeight={'bold'}>Total</Text>
+                      <Text fontWeight={'bold'}>{t('total')}</Text>
                       <Text fontWeight={'bold'} fontSize={'lg'}>
                         ${subtotal.toFixed(2)}
                       </Text>
@@ -179,7 +182,7 @@ export default function CheckoutPage() {
                     loading={checkoutMutation.isPending}
                     disabled={!cart?.items?.length}
                   >
-                    Place Order
+                    {t('placeOrder')}
                   </Button>
                 </Card.Footer>
               </Card.Root>
