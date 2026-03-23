@@ -59,6 +59,7 @@ export default tseslint.config(
       // React Compiler (not used in this package)
       'react-hooks/react-compiler': 'off',
       'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/set-state-in-effect': 'off',
 
       // React
       'react/react-in-jsx-scope': 'off',

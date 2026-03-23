@@ -1,16 +1,17 @@
 'use client'
 
-import { useGetProfile } from '@app/sdk'
+import { AuthGateway, useGetProfile } from '@app/sdk'
 import { Card, Heading, HStack, Text, VStack } from '@chakra-ui/react'
+import { useRouter } from 'next/navigation'
 
-import { AuthGuard } from '@/components/auth-guard'
 import { PageContainer } from '@/components/page-container'
 
 export default function ProfilePage() {
   const { data: user } = useGetProfile()
+  const router = useRouter()
 
   return (
-    <AuthGuard>
+    <AuthGateway onReject={() => router.push('/login')}>
       <PageContainer>
         <Heading size={'xl'} mb={'6'}>
           Profile
@@ -39,6 +40,6 @@ export default function ProfilePage() {
           </Card.Body>
         </Card.Root>
       </PageContainer>
-    </AuthGuard>
+    </AuthGateway>
   )
 }

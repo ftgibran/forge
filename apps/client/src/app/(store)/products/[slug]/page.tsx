@@ -32,7 +32,7 @@ import { toaster } from '@/components/ui/toaster'
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>()
-  const { user } = useAuth()
+  const { currentUser } = useAuth()
   const addToCartMutation = useAddToCart()
   const [addingToCart, setAddingToCart] = useState(false)
   const [reviewRefreshKey, setReviewRefreshKey] = useState(0)
@@ -52,7 +52,7 @@ export default function ProductDetailPage() {
   )
 
   const handleAddToCart = async () => {
-    if (!user) {
+    if (!currentUser) {
       toaster.error({
         title: 'Please sign in',
         description: 'You need to be signed in to add items to your cart.',
@@ -188,7 +188,7 @@ export default function ProductDetailPage() {
           refreshKey={reviewRefreshKey}
         />
 
-        {user && (
+        {currentUser && (
           <Box maxW={'lg'}>
             <Heading size={'md'} mb={'4'}>
               Write a Review

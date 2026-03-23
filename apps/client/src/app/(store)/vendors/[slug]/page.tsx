@@ -22,7 +22,7 @@ import { toaster } from '@/components/ui/toaster'
 
 export default function VendorDetailPage() {
   const params = useParams<{ slug: string }>()
-  const { user } = useAuth()
+  const { currentUser } = useAuth()
   const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
 
@@ -43,7 +43,7 @@ export default function VendorDetailPage() {
   const loading = vendorLoading || productsLoading
 
   const handleAddToCart = async (variantId: string) => {
-    if (!user) {
+    if (!currentUser) {
       toaster.error({
         title: 'Please sign in',
         description: 'You need to be signed in to add items to your cart.',

@@ -27,6 +27,9 @@ pnpm prisma:generate # Regenerate Prisma client
 pnpm prisma:studio  # Open Prisma Studio
 ```
 
+## Code Quality
+- **Always run `pnpm lint` after making changes** to verify and fix ESLint errors before considering a task complete.
+
 ## Architecture
 
 ### Module Structure (`src/`)

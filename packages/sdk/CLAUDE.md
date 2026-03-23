@@ -28,6 +28,9 @@ src/
 └── index.ts               # Barrel export
 ```
 
+## Code Quality
+- **Always run `pnpm --filter @app/sdk run lint` after making changes** to verify and fix ESLint errors before considering a task complete.
+
 ## Key Conventions
 
 ### Adding a new hook

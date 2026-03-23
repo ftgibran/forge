@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/menu'
 
 export function Navbar() {
-  const { user, logout } = useAuth()
+  const { currentUser, logout } = useAuth()
   const { data: cart } = useGetCart()
   const cartCount =
     cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
@@ -95,7 +95,7 @@ export function Navbar() {
           <HStack gap={'2'}>
             <ColorModeButton />
 
-            {user ? (
+            {currentUser ? (
               <>
                 <Box position={'relative'}>
                   <IconButton
@@ -125,7 +125,7 @@ export function Navbar() {
                 <MenuRoot>
                   <MenuTrigger asChild>
                     <Button variant={'ghost'} size={'sm'}>
-                      {user.name}
+                      {currentUser.name}
                     </Button>
                   </MenuTrigger>
                   <MenuContent>

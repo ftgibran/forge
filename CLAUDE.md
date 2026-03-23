@@ -50,6 +50,9 @@ pnpm --filter @app/utils run <script>
 - **Prettier:** singleQuote, jsxSingleQuote, no semicolons
 - **Linting:** Each app has its own ESLint flat config
 
+## Code Quality
+- **Always run `pnpm lint` after making changes** to verify and fix ESLint errors before considering a task complete.
+
 ## Key Conventions
 - Each app has its own `CLAUDE.md` with app-specific guidance — refer to those for details.
 - Shared types and utilities go in `packages/utils`.

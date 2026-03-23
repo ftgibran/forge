@@ -15,7 +15,7 @@ import { toaster } from '@/components/ui/toaster'
 
 function ProductsContent() {
   const searchParams = useSearchParams()
-  const { user } = useAuth()
+  const { currentUser } = useAuth()
   const addToCartMutation = useAddToCart()
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState({
@@ -41,7 +41,7 @@ function ProductsContent() {
   }
 
   const handleAddToCart = async (variantId: string) => {
-    if (!user) {
+    if (!currentUser) {
       toaster.error({
         title: 'Please sign in',
         description: 'You need to be signed in to add items to your cart.',

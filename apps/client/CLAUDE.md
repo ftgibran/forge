@@ -12,6 +12,9 @@ pnpm --filter @app/client run start      # Production server on :4000
 pnpm --filter @app/client run lint       # ESLint
 ```
 
+## Code Quality
+- **Always run `pnpm --filter @app/client run lint` after making changes** to verify and fix ESLint errors before considering a task complete.
+
 ## Architecture
 
 ### Route Groups
