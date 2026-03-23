@@ -9,6 +9,7 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/admin/package.json apps/admin/package.json
 COPY apps/client/package.json apps/client/package.json
 COPY packages/sdk/package.json packages/sdk/package.json
+COPY packages/theme/package.json packages/theme/package.json
 COPY packages/utils/package.json packages/utils/package.json
 
 RUN pnpm install --frozen-lockfile
@@ -28,10 +29,12 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/admin/package.json apps/admin/package.json
 COPY apps/client/package.json apps/client/package.json
 COPY packages/sdk/package.json packages/sdk/package.json
+COPY packages/theme/package.json packages/theme/package.json
 COPY packages/utils/package.json packages/utils/package.json
 COPY apps/api/swagger.json apps/api/swagger.json
 COPY apps/client/ apps/client/
 COPY packages/sdk/ packages/sdk/
+COPY packages/theme/ packages/theme/
 COPY packages/utils/ packages/utils/
 
 RUN pnpm install --frozen-lockfile --prefer-offline
