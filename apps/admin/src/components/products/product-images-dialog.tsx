@@ -7,6 +7,16 @@ import {
   useGetProduct,
 } from '@app/sdk'
 import {
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+} from '@app/theme'
+import { Field } from '@app/theme'
+import { toaster } from '@app/theme'
+import {
   Button,
   HStack,
   IconButton,
@@ -17,17 +27,6 @@ import {
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
-
-import {
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { Field } from '@/components/ui/field'
-import { toaster } from '@/components/ui/toaster'
 
 interface ProductImagesDialogProps {
   open: boolean

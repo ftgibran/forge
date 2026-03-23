@@ -2,10 +2,6 @@
 
 import type { VendorApplication } from '@app/sdk'
 import { useGetVendorApplications, useReviewVendorApplication } from '@app/sdk'
-import { formatDate } from '@app/utils'
-import { Badge, Button, HStack, Table, Text } from '@chakra-ui/react'
-import { useTranslations } from 'next-intl'
-
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -13,8 +9,11 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { toaster } from '@/components/ui/toaster'
+} from '@app/theme'
+import { toaster } from '@app/theme'
+import { formatDate } from '@app/utils'
+import { Badge, Button, HStack, Table, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 
 interface VendorApplicationsDialogProps {
   open: boolean

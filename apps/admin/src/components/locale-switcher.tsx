@@ -1,17 +1,11 @@
 'use client'
 
+import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from '@app/theme'
 import { IconButton } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback } from 'react'
 import { LuGlobe } from 'react-icons/lu'
-
-import {
-  MenuContent,
-  MenuItem,
-  MenuRoot,
-  MenuTrigger,
-} from '@/components/ui/menu'
 
 const locales = ['en', 'pt-BR'] as const
 

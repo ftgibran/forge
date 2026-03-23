@@ -1,6 +1,8 @@
 'use client'
 
 import { useAuth } from '@app/sdk'
+import { Field } from '@app/theme'
+import { toaster } from '@app/theme'
 import {
   Box,
   Button,
@@ -13,9 +15,6 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-
-import { Field } from '@/components/ui/field'
-import { toaster } from '@/components/ui/toaster'
 
 export default function RegisterPage() {
   const router = useRouter()

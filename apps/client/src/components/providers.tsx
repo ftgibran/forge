@@ -1,10 +1,10 @@
 'use client'
 
 import { SdkProvider } from '@app/sdk'
+import { DesignSystemProvider } from '@app/theme'
+import { Toaster } from '@app/theme'
 import type { PropsWithChildren } from 'react'
 
-import { DesignSystemProvider } from '@/components/ui/design-system-provider'
-import { Toaster } from '@/components/ui/toaster'
 import { API_URL } from '@/config/constants'
 
 export function Providers({ children }: PropsWithChildren) {

@@ -1,6 +1,7 @@
 'use client'
 
 import { useGetCart, useRemoveCartItem, useUpdateCartItem } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { Grid, GridItem, Heading, VStack } from '@chakra-ui/react'
 import { LuShoppingCart } from 'react-icons/lu'
 
@@ -9,7 +10,6 @@ import { CartItem } from '@/components/cart/cart-item'
 import { CartSummary } from '@/components/cart/cart-summary'
 import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
-import { toaster } from '@/components/ui/toaster'
 
 export default function CartPage() {
   const { data: cart } = useGetCart()

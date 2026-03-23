@@ -7,11 +7,6 @@ import {
   useGetUser,
   useRemoveUserPermission,
 } from '@app/sdk'
-import { formatPermission } from '@app/utils'
-import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
-import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
-
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -19,8 +14,12 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { toaster } from '@/components/ui/toaster'
+} from '@app/theme'
+import { toaster } from '@app/theme'
+import { formatPermission } from '@app/utils'
+import { Badge, Button, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 interface UserPermissionsDialogProps {
   open: boolean

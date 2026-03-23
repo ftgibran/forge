@@ -1,10 +1,6 @@
 'use client'
 
 import { useGetReview } from '@app/sdk'
-import { Stack, Text } from '@chakra-ui/react'
-import { useTranslations } from 'next-intl'
-import { useEffect } from 'react'
-
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -12,8 +8,11 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { toaster } from '@/components/ui/toaster'
+} from '@app/theme'
+import { toaster } from '@app/theme'
+import { Stack, Text } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
+import { useEffect } from 'react'
 
 interface ReviewDetailDialogProps {
   open: boolean

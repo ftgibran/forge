@@ -2,6 +2,8 @@
 
 import { useAddToCart, useGetProduct } from '@app/sdk'
 import { useAuth } from '@app/sdk'
+import { NativeSelectField, NativeSelectRoot } from '@app/theme'
+import { toaster } from '@app/theme'
 import {
   Badge,
   Box,
@@ -24,11 +26,6 @@ import { ProductImages } from '@/components/products/product-images'
 import { ProductSpecs } from '@/components/products/product-specs'
 import { ReviewForm } from '@/components/reviews/review-form'
 import { ReviewList } from '@/components/reviews/review-list'
-import {
-  NativeSelectField,
-  NativeSelectRoot,
-} from '@/components/ui/native-select'
-import { toaster } from '@/components/ui/toaster'
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>()

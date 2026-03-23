@@ -1,6 +1,8 @@
 'use client'
 
 import { useCheckout, useClearCart, useGetCart } from '@app/sdk'
+import { Field } from '@app/theme'
+import { toaster } from '@app/theme'
 import {
   Button,
   Card,
@@ -19,8 +21,6 @@ import { useState } from 'react'
 
 import { AuthGuard } from '@/components/auth-guard'
 import { PageContainer } from '@/components/page-container'
-import { Field } from '@/components/ui/field'
-import { toaster } from '@/components/ui/toaster'
 
 export default function CheckoutPage() {
   const router = useRouter()

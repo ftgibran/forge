@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "prebuild": "pnpm --filter @app/sdk run generate",
+    "prebuild": "pnpm --filter @app/sdk run generate && pnpm --filter @app/theme run generate",
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "eslint 'src/**/*.{ts,tsx}' --fix && prettier --write \"src/**/*.{ts,tsx}\"",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@app/sdk": "workspace:*",
+    "@app/theme": "workspace:*",
     "@app/utils": "workspace:*",
     "@chakra-ui/react": "^3.21.0",
     "@emotion/react": "^11.14.0",

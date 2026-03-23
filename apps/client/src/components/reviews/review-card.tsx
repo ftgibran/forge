@@ -1,10 +1,9 @@
 'use client'
 
 import type { Review } from '@app/sdk'
+import { Avatar } from '@app/theme'
 import { HStack, Text, VStack } from '@chakra-ui/react'
 import { LuStar } from 'react-icons/lu'
-
-import { Avatar } from '@/components/ui/avatar'
 
 interface ReviewCardProps {
   review: Review

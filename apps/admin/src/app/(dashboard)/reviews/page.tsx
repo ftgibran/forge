@@ -2,6 +2,7 @@
 
 import type { Review } from '@app/sdk'
 import { useDeleteReview, useGetProductReviews, useGetProducts } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { formatDate } from '@app/utils'
 import { HStack, IconButton, Input } from '@chakra-ui/react'
 import { Box, Table, Text } from '@chakra-ui/react'
@@ -13,7 +14,6 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PageHeader } from '@/components/page-header'
 import { ReviewDetailDialog } from '@/components/reviews/review-detail-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { toaster } from '@/components/ui/toaster'
 
 export default function ReviewsPage() {
   const t = useTranslations('reviews')

@@ -1,18 +1,13 @@
 'use client'
 
 import { useAuth } from '@app/sdk'
+import { Avatar } from '@app/theme'
+import { ColorModeButton } from '@app/theme'
+import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from '@app/theme'
 import { Flex, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 
 import { LocaleSwitcher } from '@/components/locale-switcher'
-import { Avatar } from '@/components/ui/avatar'
-import { ColorModeButton } from '@/components/ui/color-mode'
-import {
-  MenuContent,
-  MenuItem,
-  MenuRoot,
-  MenuTrigger,
-} from '@/components/ui/menu'
 
 export function Header() {
   const { currentUser, logout } = useAuth()

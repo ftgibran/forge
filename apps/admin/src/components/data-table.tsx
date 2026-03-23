@@ -1,13 +1,12 @@
 'use client'
 
-import { Box, HStack, Table } from '@chakra-ui/react'
-
 import {
   PaginationItems,
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from '@/components/ui/pagination'
+} from '@app/theme'
+import { Box, HStack, Table } from '@chakra-ui/react'
 
 interface Column<T> {
   header: string

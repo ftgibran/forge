@@ -1,8 +1,7 @@
 'use client'
 
+import { Skeleton, SkeletonText } from '@app/theme'
 import { Card, SimpleGrid, VStack } from '@chakra-ui/react'
-
-import { Skeleton, SkeletonText } from '@/components/ui/skeleton'
 
 interface ProductSkeletonProps {
   count?: number

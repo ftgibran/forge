@@ -2,10 +2,6 @@
 
 import type { Category } from '@app/sdk'
 import { useCreateCategory, useUpdateCategory } from '@app/sdk'
-import { Button, Input, Stack } from '@chakra-ui/react'
-import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
-
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -14,13 +10,13 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Field } from '@/components/ui/field'
-import {
-  NativeSelectField,
-  NativeSelectRoot,
-} from '@/components/ui/native-select'
-import { toaster } from '@/components/ui/toaster'
+} from '@app/theme'
+import { Field } from '@app/theme'
+import { NativeSelectField, NativeSelectRoot } from '@app/theme'
+import { toaster } from '@app/theme'
+import { Button, Input, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 interface CategoryFormDialogProps {
   open: boolean

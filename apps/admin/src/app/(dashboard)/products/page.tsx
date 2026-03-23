@@ -7,6 +7,7 @@ import {
   useGetProducts,
   useGetVendors,
 } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -20,7 +21,6 @@ import { ProductFormDialog } from '@/components/products/product-form-dialog'
 import { ProductImagesDialog } from '@/components/products/product-images-dialog'
 import { ProductVariantsDialog } from '@/components/products/product-variants-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { toaster } from '@/components/ui/toaster'
 
 const statusColor: Record<string, string> = {
   DRAFT: 'gray',

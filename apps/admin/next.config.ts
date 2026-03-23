@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  transpilePackages: ['@app/utils', '@app/sdk'],
+  transpilePackages: ['@app/utils', '@app/sdk', '@app/theme'],
   experimental: {
     optimizePackageImports: ['@chakra-ui/react'],
   },

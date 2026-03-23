@@ -1,8 +1,5 @@
 'use client'
 
-import { Button, Stack } from '@chakra-ui/react'
-import { useTranslations } from 'next-intl'
-
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -11,7 +8,9 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@app/theme'
+import { Button, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
 
 interface ConfirmDialogProps {
   open: boolean

@@ -2,6 +2,8 @@
 
 import { useGetCart } from '@app/sdk'
 import { useAuth } from '@app/sdk'
+import { ColorModeButton } from '@app/theme'
+import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from '@app/theme'
 import {
   Badge,
   Box,
@@ -17,14 +19,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { LuSearch, LuShoppingCart, LuStore } from 'react-icons/lu'
-
-import { ColorModeButton } from '@/components/ui/color-mode'
-import {
-  MenuContent,
-  MenuItem,
-  MenuRoot,
-  MenuTrigger,
-} from '@/components/ui/menu'
 
 export function Navbar() {
   const { currentUser, logout } = useAuth()

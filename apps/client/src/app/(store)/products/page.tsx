@@ -2,6 +2,7 @@
 
 import { useAddToCart, useGetProducts } from '@app/sdk'
 import { useAuth } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
@@ -11,7 +12,6 @@ import { PageContainer } from '@/components/page-container'
 import { ProductSkeleton } from '@/components/product-skeleton'
 import { ProductFilters } from '@/components/products/product-filters'
 import { ProductGrid } from '@/components/products/product-grid'
-import { toaster } from '@/components/ui/toaster'
 
 function ProductsContent() {
   const searchParams = useSearchParams()

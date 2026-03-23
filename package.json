@@ -15,7 +15,7 @@
     "test:e2e": "pnpm --filter @app/api run test:e2e",
     "lint": "pnpm -r run lint && prettier --write \"**/*.{ts,tsx}\"",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "generate": "pnpm --filter @app/api run swagger:export && pnpm --filter @app/sdk run generate",
+    "generate": "pnpm --filter @app/api run swagger:export && pnpm --filter @app/sdk run generate && pnpm --filter @app/theme run generate",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -32,6 +32,10 @@
       "prettier --write"
     ],
     "packages/sdk/**/*.{ts,tsx}": [
+      "eslint --flag unstable_config_lookup_from_file --fix",
+      "prettier --write"
+    ],
+    "packages/theme/**/*.{ts,tsx}": [
       "eslint --flag unstable_config_lookup_from_file --fix",
       "prettier --write"
     ],

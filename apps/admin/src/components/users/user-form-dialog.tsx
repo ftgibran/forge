@@ -2,10 +2,6 @@
 
 import type { User } from '@app/sdk'
 import { useCreateUser, useUpdateUser } from '@app/sdk'
-import { Button, Input, Stack } from '@chakra-ui/react'
-import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
-
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -14,9 +10,12 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Field } from '@/components/ui/field'
-import { toaster } from '@/components/ui/toaster'
+} from '@app/theme'
+import { Field } from '@app/theme'
+import { toaster } from '@app/theme'
+import { Button, Input, Stack } from '@chakra-ui/react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 interface UserFormDialogProps {
   open: boolean

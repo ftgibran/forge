@@ -1,6 +1,8 @@
 'use client'
 
 import { useCreateReview } from '@app/sdk'
+import { Field } from '@app/theme'
+import { toaster } from '@app/theme'
 import {
   Button,
   HStack,
@@ -11,9 +13,6 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { LuStar } from 'react-icons/lu'
-
-import { Field } from '@/components/ui/field'
-import { toaster } from '@/components/ui/toaster'
 
 interface ReviewFormProps {
   productId: string

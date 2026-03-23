@@ -2,6 +2,7 @@
 
 import type { Role } from '@app/sdk'
 import { useDeleteRole, useGetRoles } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -14,7 +15,6 @@ import { PageHeader } from '@/components/page-header'
 import { RoleFormDialog } from '@/components/roles/role-form-dialog'
 import { RolePermissionsDialog } from '@/components/roles/role-permissions-dialog'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { toaster } from '@/components/ui/toaster'
 
 export default function RolesPage() {
   const t = useTranslations('roles')

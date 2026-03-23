@@ -1,9 +1,8 @@
 'use client'
 
+import { StatLabel, StatRoot, StatValueText } from '@app/theme'
 import { Card, Icon } from '@chakra-ui/react'
 import type { IconType } from 'react-icons'
-
-import { StatLabel, StatRoot, StatValueText } from '@/components/ui/stat'
 
 interface StatCardProps {
   label: string

@@ -1,12 +1,8 @@
 'use client'
 
 import { useGetCategories } from '@app/sdk'
+import { NativeSelectField, NativeSelectRoot } from '@app/theme'
 import { HStack, Input, Stack } from '@chakra-ui/react'
-
-import {
-  NativeSelectField,
-  NativeSelectRoot,
-} from '@/components/ui/native-select'
 
 interface ProductFiltersProps {
   search?: string

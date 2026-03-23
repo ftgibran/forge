@@ -2,6 +2,7 @@
 
 import { useAddToCart, useGetProducts, useGetVendor } from '@app/sdk'
 import { useAuth } from '@app/sdk'
+import { toaster } from '@app/theme'
 import {
   Badge,
   Button,
@@ -18,7 +19,6 @@ import { EmptyState } from '@/components/empty-state'
 import { PageContainer } from '@/components/page-container'
 import { ProductSkeleton } from '@/components/product-skeleton'
 import { ProductGrid } from '@/components/products/product-grid'
-import { toaster } from '@/components/ui/toaster'
 
 export default function VendorDetailPage() {
   const params = useParams<{ slug: string }>()

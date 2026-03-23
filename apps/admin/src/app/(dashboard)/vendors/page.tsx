@@ -2,6 +2,7 @@
 
 import type { Vendor } from '@app/sdk'
 import { useDeleteVendor, useGetVendors } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
@@ -12,7 +13,6 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { DataTable } from '@/components/data-table'
 import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { toaster } from '@/components/ui/toaster'
 import { VendorApplicationsDialog } from '@/components/vendors/vendor-applications-dialog'
 import { VendorFormDialog } from '@/components/vendors/vendor-form-dialog'
 

@@ -1,8 +1,7 @@
 'use client'
 
+import { Skeleton } from '@app/theme'
 import { Stack } from '@chakra-ui/react'
-
-import { Skeleton } from '@/components/ui/skeleton'
 
 interface TableSkeletonProps {
   rows?: number

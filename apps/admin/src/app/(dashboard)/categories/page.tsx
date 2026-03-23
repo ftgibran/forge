@@ -2,6 +2,7 @@
 
 import type { Category } from '@app/sdk'
 import { useDeleteCategory, useGetCategories } from '@app/sdk'
+import { toaster } from '@app/theme'
 import { formatDate } from '@app/utils'
 import { Badge, Button, HStack, IconButton } from '@chakra-ui/react'
 import { Box, Table } from '@chakra-ui/react'
@@ -13,7 +14,6 @@ import { CategoryFormDialog } from '@/components/categories/category-form-dialog
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/table-skeleton'
-import { toaster } from '@/components/ui/toaster'
 
 export default function CategoriesPage() {
   const t = useTranslations('categories')

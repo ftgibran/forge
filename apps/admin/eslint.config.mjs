@@ -74,19 +74,5 @@ export default tseslint.config(
       ],
     },
   },
-  {
-    files: ['src/components/ui/**/*.tsx'],
-    rules: {
-      '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      'unused-imports/no-unused-imports': 'off',
-      'unused-imports/no-unused-vars': 'off',
-      'simple-import-sort/imports': 'off',
-      'simple-import-sort/exports': 'off',
-      'react/jsx-curly-brace-presence': 'off',
-      'padding-line-between-statements': 'off',
-    },
-  },
   eslintConfigPrettier,
 )
