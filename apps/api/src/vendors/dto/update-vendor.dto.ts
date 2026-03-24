@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
-import { IsOptional, IsString } from 'class-validator'
+import { Type } from 'class-transformer'
+import { IsInt, IsOptional, IsString } from 'class-validator'
 
 export class UpdateVendorDto {
   @ApiPropertyOptional({ example: 'Dragon Prints Co.' })
@@ -17,8 +18,9 @@ export class UpdateVendorDto {
   @IsString()
   description?: string
 
-  @ApiPropertyOptional({ example: 'https://example.com/logo.png' })
+  @ApiPropertyOptional({ example: 1 })
   @IsOptional()
-  @IsString()
-  logoUrl?: string
+  @Type(() => Number)
+  @IsInt()
+  logoMediaId?: number
 }

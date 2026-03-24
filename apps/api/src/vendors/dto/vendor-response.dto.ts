@@ -5,6 +5,7 @@ import {
   UserSnippetDto,
   VendorSnippetDto,
 } from '@/common'
+import { MediaDto } from '@/upload/dto'
 
 export class VendorCountDto {
   @ApiProperty()
@@ -24,8 +25,11 @@ export class VendorDto {
   @ApiPropertyOptional({ type: String, nullable: true })
   description?: string | null
 
-  @ApiPropertyOptional({ type: String, nullable: true })
-  logoUrl?: string | null
+  @ApiPropertyOptional({ type: Number, nullable: true })
+  logoMediaId?: number | null
+
+  @ApiPropertyOptional({ type: () => MediaDto, nullable: true })
+  logoMedia?: MediaDto | null
 
   @ApiProperty()
   ownerId!: string

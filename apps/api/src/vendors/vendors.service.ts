@@ -16,6 +16,10 @@ import {
 } from './dto'
 
 const ownerSelect = { id: true, email: true, name: true } as const
+const vendorInclude = {
+  owner: { select: ownerSelect },
+  logoMedia: true,
+} as const
 
 @Injectable()
 export class VendorsService {
@@ -40,7 +44,7 @@ export class VendorsService {
 
     return this.prisma.vendor.create({
       data: { ...dto, ownerId: userId },
-      include: { owner: { select: ownerSelect } },
+      include: vendorInclude,
     })
   }
 
@@ -52,7 +56,7 @@ export class VendorsService {
         skip: query.skip,
         take: query.limit,
         include: {
-          owner: { select: ownerSelect },
+          ...vendorInclude,
           _count: { select: { products: true } },
         },
         orderBy: { createdAt: 'desc' },
@@ -73,6 +77,7 @@ export class VendorsService {
     const vendor = await this.prisma.vendor.findUnique({
       where: { ownerId: userId },
       include: {
+        ...vendorInclude,
         _count: { select: { products: true, orders: true } },
       },
     })
@@ -91,7 +96,7 @@ export class VendorsService {
       )
 
     const include = {
-      owner: { select: ownerSelect },
+      ...vendorInclude,
       _count: { select: { products: true } },
     }
 
@@ -132,7 +137,7 @@ export class VendorsService {
     return this.prisma.vendor.update({
       where: { id },
       data: dto,
-      include: { owner: { select: ownerSelect } },
+      include: vendorInclude,
     })
   }
 

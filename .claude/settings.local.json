@@ -57,7 +57,12 @@
       "Bash(find /Users/ftgibran/Dev/forge/apps/api/src/common/filters -name *.ts)",
       "Bash(tsx -r tsconfig-paths/register src/scripts/export-swagger.ts)",
       "Bash(node node_modules/.bin/tsx --tsconfig tsconfig.json src/scripts/export-swagger.ts)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(for dir:*)",
+      "Bash(do echo:*)",
+      "Read(//Users/ftgibran/Dev/forge/apps/api/src/**)",
+      "Bash(done)",
+      "Bash(python3 -m json.tool)"
     ]
   }
 }

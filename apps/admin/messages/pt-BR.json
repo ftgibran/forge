@@ -123,7 +123,7 @@
     "vendorUpdated": "Fornecedor atualizado",
     "loadFailed": "Falha ao carregar fornecedores",
     "owner": "Proprietário",
-    "logoUrl": "URL do Logo",
+    "logoMedia": "Imagem do Logo",
     "applications": "Solicitações",
     "vendorApplications": "Solicitações de Fornecedores",
     "noApplications": "Nenhuma solicitação encontrada.",
@@ -195,7 +195,7 @@
     "url": "URL",
     "altText": "Texto Alt",
     "position": "Posição",
-    "imageUrl": "URL da Imagem",
+    "selectImage": "Selecionar Imagem",
     "filamentPlaceholder": "PLA, ABS, PETG...",
     "fileFormatPlaceholder": "STL, OBJ..."
   },
@@ -240,6 +240,17 @@
     "memberSince": "Membro desde",
     "roles": "Papéis",
     "directPermissions": "Permissões Diretas"
+  },
+  "mediaUpload": {
+    "dropzoneLabel": "Clique ou arraste para enviar imagem",
+    "dropzoneDescription": "PNG, JPEG, WebP até 10MB",
+    "cropTitle": "Recortar Imagem",
+    "confirmCrop": "Confirmar Recorte",
+    "change": "Alterar",
+    "remove": "Remover",
+    "uploading": "Enviando...",
+    "uploadFailed": "Falha no envio",
+    "dragToCrop": "Desenhe uma seleção para recortar a imagem"
   },
   "localeSwitcher": {
     "label": "Idioma",

@@ -1,6 +1,6 @@
 'use client'
 
-import type { Vendor } from '@app/sdk'
+import type { MediaDto, Vendor } from '@app/sdk'
 import { useCreateVendor, useUpdateVendor } from '@app/sdk'
 import {
   DialogBody,
@@ -16,6 +16,8 @@ import { toaster } from '@app/theme'
 import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
+
+import { MediaUpload } from '../media-upload'
 
 interface VendorFormDialogProps {
   open: boolean
@@ -35,7 +37,7 @@ export function VendorFormDialog({
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
-  const [logoUrl, setLogoUrl] = useState('')
+  const [logoMedia, setLogoMedia] = useState<MediaDto | null>(null)
 
   const createVendor = useCreateVendor()
   const updateVendor = useUpdateVendor()
@@ -47,12 +49,12 @@ export function VendorFormDialog({
       setName(vendor.name)
       setSlug(vendor.slug)
       setDescription(vendor.description ?? '')
-      setLogoUrl(vendor.logoUrl ?? '')
+      setLogoMedia((vendor.logoMedia as MediaDto) ?? null)
     } else {
       setName('')
       setSlug('')
       setDescription('')
-      setLogoUrl('')
+      setLogoMedia(null)
     }
   }, [vendor, open])
 
@@ -62,7 +64,7 @@ export function VendorFormDialog({
       name,
       slug,
       description: description || undefined,
-      logoUrl: logoUrl || undefined,
+      logoMediaId: logoMedia?.id ?? undefined,
     }
 
     if (vendor) {
@@ -127,10 +129,11 @@ export function VendorFormDialog({
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Field>
-              <Field label={t('logoUrl')}>
-                <Input
-                  value={logoUrl}
-                  onChange={(e) => setLogoUrl(e.target.value)}
+              <Field label={t('logoMedia')}>
+                <MediaUpload
+                  value={logoMedia}
+                  onChange={setLogoMedia}
+                  aspectRatio={1}
                 />
               </Field>
             </Stack>

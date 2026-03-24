@@ -37,3 +37,9 @@ export * from './generated/reviews/reviews'
 
 // Generated hooks — Cart
 export * from './generated/cart/cart'
+
+// Generated hooks — Upload
+export * from './generated/upload/upload'
+
+// HTTP utilities (needed for direct multipart upload calls)
+export { axiosInstance } from './http'

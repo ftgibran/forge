@@ -1,6 +1,6 @@
 'use client'
 
-import type { Product, ProductImage } from '@app/sdk'
+import type { MediaDto, Product, ProductImage } from '@app/sdk'
 import {
   useAddProductImage,
   useDeleteProductImage,
@@ -28,6 +28,8 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
+import { MediaUpload } from '../media-upload'
+
 interface ProductImagesDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -44,7 +46,7 @@ export function ProductImagesDialog({
   const t = useTranslations('products')
   const tc = useTranslations('common')
   const [showForm, setShowForm] = useState(false)
-  const [url, setUrl] = useState('')
+  const [media, setMedia] = useState<MediaDto | null>(null)
   const [altText, setAltText] = useState('')
   const [position, setPosition] = useState('0')
 
@@ -64,13 +66,13 @@ export function ProductImagesDialog({
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!product) return
+    if (!product || !media) return
 
     addImage.mutate(
       {
         id: product.id,
         data: {
-          url,
+          mediaId: media.id,
           altText: altText || undefined,
           position: parseInt(position),
         },
@@ -79,7 +81,7 @@ export function ProductImagesDialog({
         onSuccess: () => {
           toaster.success({ title: t('imageAdded') })
           setShowForm(false)
-          setUrl('')
+          setMedia(null)
           setAltText('')
           setPosition('0')
           refetch()
@@ -126,45 +128,62 @@ export function ProductImagesDialog({
           <Table.Root size={'sm'} variant={'outline'}>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>{t('url')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('selectImage')}</Table.ColumnHeader>
                 <Table.ColumnHeader>{t('altText')}</Table.ColumnHeader>
                 <Table.ColumnHeader>{t('position')}</Table.ColumnHeader>
                 <Table.ColumnHeader>{tc('actions')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {images.map((img) => (
-                <Table.Row key={img.id}>
-                  <Table.Cell maxW={'300px'} truncate>
-                    {img.url}
-                  </Table.Cell>
-                  <Table.Cell>{img.altText ?? '-'}</Table.Cell>
-                  <Table.Cell>{img.position}</Table.Cell>
-                  <Table.Cell>
-                    <IconButton
-                      aria-label={tc('delete')}
-                      size={'xs'}
-                      variant={'ghost'}
-                      colorPalette={'red'}
-                      onClick={() => handleDelete(img.id)}
-                    >
-                      <LuTrash2 />
-                    </IconButton>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              {images.map((img) => {
+                const sizes = img.media?.sizes as
+                  | Record<string, { url?: string | null }>
+                  | undefined
+                const thumbUrl = sizes?.['thumbnail']?.url ?? img.media?.url
+
+                return (
+                  <Table.Row key={img.id}>
+                    <Table.Cell>
+                      {thumbUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={thumbUrl}
+                          alt={img.altText ?? ''}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            objectFit: 'cover',
+                            borderRadius: 4,
+                          }}
+                        />
+                      ) : (
+                        '-'
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>{img.altText ?? '-'}</Table.Cell>
+                    <Table.Cell>{img.position}</Table.Cell>
+                    <Table.Cell>
+                      <IconButton
+                        aria-label={tc('delete')}
+                        size={'xs'}
+                        variant={'ghost'}
+                        colorPalette={'red'}
+                        onClick={() => handleDelete(img.id)}
+                      >
+                        <LuTrash2 />
+                      </IconButton>
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })}
             </Table.Body>
           </Table.Root>
 
           {showForm ? (
             <form onSubmit={handleAdd}>
               <Stack gap={'3'} mt={'4'}>
-                <Field label={t('imageUrl')}>
-                  <Input
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    required
-                  />
+                <Field label={t('selectImage')}>
+                  <MediaUpload value={media} onChange={setMedia} />
                 </Field>
                 <HStack gap={'3'}>
                   <Field label={t('altText')}>
@@ -187,6 +206,7 @@ export function ProductImagesDialog({
                     colorPalette={'blue'}
                     size={'sm'}
                     loading={addImage.isPending}
+                    disabled={!media}
                   >
                     {t('addImage')}
                   </Button>

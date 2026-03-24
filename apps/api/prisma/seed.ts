@@ -326,14 +326,26 @@ async function main() {
     })
   }
 
-  // Add image for product 1
+  // Add placeholder media and image for product 1
+  const media1 = await prisma.media.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      id: 1,
+      url: 'https://placehold.co/400x400?text=PLA+Filament',
+      filename: 'pla-filament.jpg',
+      mimeType: 'image/jpeg',
+      alt: 'PLA Filament spool',
+    },
+  })
+
   await prisma.productImage.upsert({
     where: { id: 'img-pla-1' },
     update: {},
     create: {
       id: 'img-pla-1',
       productId: product1.id,
-      url: 'https://placehold.co/400x400?text=PLA+Filament',
+      mediaId: media1.id,
       altText: 'PLA Filament spool',
       position: 0,
     },
@@ -382,14 +394,26 @@ async function main() {
     })
   }
 
-  // Add image for product 2
+  // Add placeholder media and image for product 2
+  const media2 = await prisma.media.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+      id: 2,
+      url: 'https://placehold.co/400x400?text=PETG+Filament',
+      filename: 'petg-filament.jpg',
+      mimeType: 'image/jpeg',
+      alt: 'PETG Filament spool',
+    },
+  })
+
   await prisma.productImage.upsert({
     where: { id: 'img-petg-1' },
     update: {},
     create: {
       id: 'img-petg-1',
       productId: product2.id,
-      url: 'https://placehold.co/400x400?text=PETG+Filament',
+      mediaId: media2.id,
       altText: 'PETG Filament spool',
       position: 0,
     },

@@ -2320,6 +2320,36 @@
           "Reviews"
         ]
       }
+    },
+    "/upload": {
+      "post": {
+        "operationId": "uploadMedia",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Upload an image and generate all configured sizes",
+        "tags": [
+          "Upload"
+        ]
+      }
     }
   },
   "info": {
@@ -3081,14 +3111,129 @@
             "type": "string",
             "example": "Specializing in fantasy 3D prints"
           },
-          "logoUrl": {
-            "type": "string",
-            "example": "https://example.com/logo.png"
+          "logoMediaId": {
+            "type": "number",
+            "example": 1
           }
         },
         "required": [
           "name",
           "slug"
+        ]
+      },
+      "MediaSizeDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "nullable": true
+          },
+          "mimeType": {
+            "type": "string",
+            "nullable": true
+          },
+          "filesize": {
+            "type": "number",
+            "nullable": true
+          },
+          "filename": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MediaSizesDto": {
+        "type": "object",
+        "properties": {
+          "thumbnail": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "square": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "small": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "medium": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "large": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "xlarge": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "og": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          },
+          "google": {
+            "$ref": "#/components/schemas/MediaSizeDto"
+          }
+        }
+      },
+      "MediaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "alt": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "filename": {
+            "type": "string",
+            "nullable": true
+          },
+          "mimeType": {
+            "type": "string",
+            "nullable": true
+          },
+          "filesize": {
+            "type": "number",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "nullable": true
+          },
+          "sizes": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaSizesDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "UserSnippetDto": {
@@ -3137,9 +3282,17 @@
             "type": "string",
             "nullable": true
           },
-          "logoUrl": {
-            "type": "string",
+          "logoMediaId": {
+            "type": "number",
             "nullable": true
+          },
+          "logoMedia": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            ]
           },
           "ownerId": {
             "type": "string"
@@ -3217,9 +3370,9 @@
             "type": "string",
             "example": "Specializing in fantasy 3D prints"
           },
-          "logoUrl": {
-            "type": "string",
-            "example": "https://example.com/logo.png"
+          "logoMediaId": {
+            "type": "number",
+            "example": 1
           }
         }
       },
@@ -3449,8 +3602,16 @@
           "id": {
             "type": "string"
           },
-          "url": {
-            "type": "string"
+          "mediaId": {
+            "type": "number"
+          },
+          "media": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            ]
           },
           "altText": {
             "type": "string",
@@ -3470,7 +3631,7 @@
         },
         "required": [
           "id",
-          "url",
+          "mediaId",
           "position",
           "createdAt",
           "updatedAt"
@@ -3898,9 +4059,9 @@
       "CreateProductImageDto": {
         "type": "object",
         "properties": {
-          "url": {
-            "type": "string",
-            "example": "https://example.com/images/dragon.jpg"
+          "mediaId": {
+            "type": "number",
+            "example": 1
           },
           "altText": {
             "type": "string",
@@ -3913,7 +4074,7 @@
           }
         },
         "required": [
-          "url"
+          "mediaId"
         ]
       },
       "CartProductImageDto": {
@@ -4513,6 +4674,21 @@
             "example": "Updated my review after reprinting."
           }
         }
+      },
+      "UploadFileDto": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary"
+          },
+          "alt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ]
       }
     }
   }

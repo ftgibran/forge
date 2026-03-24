@@ -123,7 +123,7 @@
     "vendorUpdated": "Vendor updated",
     "loadFailed": "Failed to load vendors",
     "owner": "Owner",
-    "logoUrl": "Logo URL",
+    "logoMedia": "Logo Image",
     "applications": "Applications",
     "vendorApplications": "Vendor Applications",
     "noApplications": "No applications found.",
@@ -195,7 +195,7 @@
     "url": "URL",
     "altText": "Alt Text",
     "position": "Position",
-    "imageUrl": "Image URL",
+    "selectImage": "Select Image",
     "filamentPlaceholder": "PLA, ABS, PETG...",
     "fileFormatPlaceholder": "STL, OBJ..."
   },
@@ -240,6 +240,17 @@
     "memberSince": "Member since",
     "roles": "Roles",
     "directPermissions": "Direct Permissions"
+  },
+  "mediaUpload": {
+    "dropzoneLabel": "Click or drag to upload image",
+    "dropzoneDescription": "PNG, JPEG, WebP up to 10MB",
+    "cropTitle": "Crop Image",
+    "confirmCrop": "Confirm Crop",
+    "change": "Change",
+    "remove": "Remove",
+    "uploading": "Uploading...",
+    "uploadFailed": "Upload failed",
+    "dragToCrop": "Draw a selection to crop the image"
   },
   "localeSwitcher": {
     "label": "Language",

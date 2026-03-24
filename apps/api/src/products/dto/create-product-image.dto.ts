@@ -1,12 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator'
+import { IsInt, IsOptional, IsString, Min } from 'class-validator'
 
 export class CreateProductImageDto {
-  @ApiProperty({ example: 'https://example.com/images/dragon.jpg' })
-  @IsString()
-  @IsNotEmpty()
-  url!: string
+  @ApiProperty({ example: 1 })
+  @Type(() => Number)
+  @IsInt()
+  mediaId!: number
 
   @ApiPropertyOptional({ example: 'Articulated dragon side view' })
   @IsOptional()

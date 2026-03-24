@@ -35,7 +35,7 @@ export class ProductsService {
         vendor: { select: { id: true, name: true, slug: true } },
         category: true,
         variants: true,
-        images: { orderBy: { position: 'asc' } },
+        images: { orderBy: { position: 'asc' }, include: { media: true } },
       },
     })
   }
@@ -75,7 +75,11 @@ export class ProductsService {
           vendor: { select: { id: true, name: true, slug: true } },
           category: true,
           variants: true,
-          images: { orderBy: { position: 'asc' }, take: 1 },
+          images: {
+            orderBy: { position: 'asc' },
+            take: 1,
+            include: { media: true },
+          },
           _count: { select: { reviews: true, variants: true } },
         },
         orderBy,
@@ -102,7 +106,10 @@ export class ProductsService {
       vendor: { select: { id: true, name: true, slug: true } },
       category: true,
       variants: { orderBy: { createdAt: 'asc' } as const },
-      images: { orderBy: { position: 'asc' } as const },
+      images: {
+        orderBy: { position: 'asc' } as const,
+        include: { media: true },
+      },
       reviews: {
         include: {
           user: { select: { id: true, name: true } },
@@ -155,7 +162,7 @@ export class ProductsService {
         vendor: { select: { id: true, name: true, slug: true } },
         category: true,
         variants: true,
-        images: { orderBy: { position: 'asc' } },
+        images: { orderBy: { position: 'asc' }, include: { media: true } },
       },
     })
   }
@@ -229,6 +236,7 @@ export class ProductsService {
 
     return this.prisma.productImage.create({
       data: { ...dto, productId },
+      include: { media: true },
     })
   }
 
@@ -248,6 +256,7 @@ export class ProductsService {
     return this.prisma.productImage.update({
       where: { id: imageId },
       data: dto,
+      include: { media: true },
     })
   }
 

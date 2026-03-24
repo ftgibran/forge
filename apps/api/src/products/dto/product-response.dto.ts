@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 import { PaginatedResponseDto, VendorSnippetDto } from '@/common'
+import { MediaDto } from '@/upload/dto'
 
 export class ProductVariantDto {
   @ApiProperty()
@@ -33,7 +34,10 @@ export class ProductImageDto {
   id!: string
 
   @ApiProperty()
-  url!: string
+  mediaId!: number
+
+  @ApiPropertyOptional({ type: () => MediaDto, nullable: true })
+  media?: MediaDto | null
 
   @ApiPropertyOptional({ type: String, nullable: true })
   altText?: string | null
