@@ -2,8 +2,7 @@
 
 import 'react-image-crop/dist/ReactCrop.css'
 
-import type { MediaDto } from '@app/sdk'
-import { axiosInstance } from '@app/sdk'
+import { type MediaDto, useUploadMedia } from '@app/sdk'
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -40,12 +39,12 @@ export function MediaUpload({
   const t = useTranslations('mediaUpload')
   const tc = useTranslations('common')
 
+  const { mutateAsync: uploadMedia, isPending: uploading } = useUploadMedia()
+
   const [cropOpen, setCropOpen] = useState(false)
   const [srcUrl, setSrcUrl] = useState<string | null>(null)
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
-  const [uploading, setUploading] = useState(false)
-
   const imgRef = useRef<HTMLImageElement>(null)
 
   const handleFileAccept = useCallback((details: { files: File[] }) => {
@@ -118,31 +117,21 @@ export function MediaUpload({
       async (blob) => {
         if (!blob) return
 
-        setUploading(true)
         try {
-          const formData = new FormData()
+          const media = await uploadMedia({ data: { file: blob } })
 
-          formData.append('file', blob, 'upload.jpg')
-
-          const response = await axiosInstance.post<{ data: MediaDto }>(
-            '/upload',
-            formData,
-          )
-
-          onChange(response.data.data)
+          onChange(media)
           setCropOpen(false)
           URL.revokeObjectURL(srcUrl)
           setSrcUrl(null)
         } catch {
           toaster.error({ title: t('uploadFailed') })
-        } finally {
-          setUploading(false)
         }
       },
       'image/jpeg',
       0.92,
     )
-  }, [completedCrop, srcUrl, onChange, t])
+  }, [completedCrop, srcUrl, onChange, t, uploadMedia])
 
   const handleClose = useCallback(() => {
     if (srcUrl) {

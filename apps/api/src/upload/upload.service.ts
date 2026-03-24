@@ -1,5 +1,9 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { Injectable } from '@nestjs/common'
+import {
+  DeleteObjectsCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
@@ -14,20 +18,29 @@ export class UploadService {
   private readonly s3: S3Client
   private readonly bucket: string
   private readonly publicUrl: string
+  private readonly folder: string
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
   ) {
+    const endpoint = this.config.get<string>('AWS_S3_ENDPOINT')
+    const bucket = this.config.get<string>('AWS_S3_BUCKET')
+    const publicUrl = this.config.get<string>('AWS_S3_PUBLIC_URL')
+
     this.s3 = new S3Client({
       region: this.config.get<string>('AWS_REGION'),
       credentials: {
         accessKeyId: this.config.get<string>('AWS_ACCESS_KEY_ID')!,
         secretAccessKey: this.config.get<string>('AWS_SECRET_ACCESS_KEY')!,
       },
+      ...(endpoint ? { endpoint, forcePathStyle: true } : {}),
     })
-    this.bucket = this.config.get<string>('AWS_S3_BUCKET')!
-    this.publicUrl = this.config.get<string>('AWS_S3_PUBLIC_URL')!
+
+    this.bucket = bucket!
+    this.publicUrl = `${publicUrl!}/${bucket!}`
+    this.folder =
+      this.config.get<string>('AWS_S3_FOLDER') ?? '__UNDEFINED_SOURCE'
   }
 
   async processAndUpload(
@@ -35,7 +48,7 @@ export class UploadService {
     alt?: string,
   ): Promise<MediaDto> {
     const uuid = uuidv4()
-    const prefix = `uploads/${uuid}`
+    const prefix = `${this.folder}/${uuid}`
     const { format, options } = uploadConfig.formatOptions
 
     // Get original metadata
@@ -124,6 +137,42 @@ export class UploadService {
     return pipeline
       .toFormat(format, options ?? {})
       .toBuffer({ resolveWithObject: true })
+  }
+
+  async deleteMedia(id: number): Promise<void> {
+    const media = await this.prisma.media.findUnique({ where: { id } })
+
+    if (!media) {
+      throw new NotFoundException(`Media ${id} not found`)
+    }
+
+    const keys: string[] = []
+    const prefix = `${this.publicUrl}/`
+
+    if (media.url?.startsWith(prefix)) {
+      keys.push(media.url.slice(prefix.length))
+    }
+
+    const sizes = media.sizes as Record<string, { url?: string | null }> | null
+
+    if (sizes) {
+      for (const size of Object.values(sizes)) {
+        if (size.url?.startsWith(prefix)) {
+          keys.push(size.url.slice(prefix.length))
+        }
+      }
+    }
+
+    if (keys.length > 0) {
+      await this.s3.send(
+        new DeleteObjectsCommand({
+          Bucket: this.bucket,
+          Delete: { Objects: keys.map((Key) => ({ Key })) },
+        }),
+      )
+    }
+
+    await this.prisma.media.delete({ where: { id } })
   }
 
   private async uploadToS3(
