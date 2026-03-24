@@ -27,7 +27,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
   return (
     <VStack gap={'4'}>
       <Image
-        src={selectedImage?.url}
+        src={selectedImage?.media?.url ?? undefined}
         alt={selectedImage?.altText || productName}
         w={'full'}
         maxH={'500px'}
@@ -49,7 +49,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
               onClick={() => setSelectedIndex(index)}
             >
               <Image
-                src={image.url}
+                src={image.media?.url ?? undefined}
                 alt={image.altText || `${productName} ${index + 1}`}
                 w={'80px'}
                 h={'80px'}

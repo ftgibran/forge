@@ -34,7 +34,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     >
       <Link href={`/products/${product.slug}`}>
         <Image
-          src={firstImage?.url || '/placeholder.svg'}
+          src={firstImage?.media?.url || '/placeholder.svg'}
           alt={firstImage?.altText || product.name}
           w={'full'}
           h={'200px'}
