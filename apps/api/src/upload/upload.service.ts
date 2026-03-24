@@ -122,10 +122,10 @@ export class UploadService {
     const { format, options } = sizeConfig.formatOptions
     let pipeline = sharp(buffer).rotate()
 
-    if (sizeConfig.height !== undefined && sizeConfig.crop) {
+    if (sizeConfig.height !== undefined) {
       pipeline = pipeline.resize(sizeConfig.width, sizeConfig.height, {
         fit: 'cover',
-        position: sizeConfig.crop,
+        position: sizeConfig.crop ?? 'center',
       })
     } else {
       pipeline = pipeline.resize(sizeConfig.width, undefined, {
