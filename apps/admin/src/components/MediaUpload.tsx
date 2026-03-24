@@ -18,7 +18,7 @@ import { Box, Button, HStack, Image, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import ReactCrop from 'react-image-crop'
 
-import { useMediaUpload } from '../hooks/use-media-upload'
+import { useMediaUpload } from '../hooks/useMediaUpload'
 
 interface MediaUploadProps {
   value: MediaDto | null

@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { type PropsWithChildren } from 'react'
 
-import { Providers } from '@/components/providers'
+import { AppProviders } from '@/components/AppProviders'
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   const locale = await getLocale()
@@ -13,7 +13,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     <html lang={locale} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Providers>{children}</Providers>
+          <AppProviders>{children}</AppProviders>
         </NextIntlClientProvider>
       </body>
     </html>

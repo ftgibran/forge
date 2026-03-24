@@ -7,9 +7,9 @@ import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from '@app/theme'
 import { Flex, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 
-import { LocaleSwitcher } from '@/components/locale-switcher'
+import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 
-export function Header() {
+export function AppHeader() {
   const { currentUser, logout } = useAuth()
   const t = useTranslations('auth')
 

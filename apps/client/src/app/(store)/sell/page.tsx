@@ -20,8 +20,8 @@ import {
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
-import { AuthGuard } from '@/components/auth-guard'
-import { PageContainer } from '@/components/page-container'
+import { AuthGuard } from '@/components/AuthGuard'
+import { PageContainer } from '@/components/PageContainer'
 
 export default function SellPage() {
   const [step, setStep] = useState<'form' | 'application' | 'done'>('form')

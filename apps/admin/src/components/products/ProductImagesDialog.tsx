@@ -28,7 +28,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
-import { MediaUpload } from '../media-upload'
+import { MediaUpload } from '../MediaUpload'
 
 interface ProductImagesDialogProps {
   open: boolean

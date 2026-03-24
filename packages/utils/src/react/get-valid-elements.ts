@@ -1,6 +1,6 @@
 import { Children, isValidElement, type ReactNode } from 'react'
 
-import type { ValidElement } from '../types/ValidElement'
+import type { ValidElement } from '../types/valid-element'
 
 /**
  * Filters and returns only the valid React elements from the provided children.

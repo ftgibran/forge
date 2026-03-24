@@ -5,7 +5,7 @@ import { Button, Container, Heading, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 
-import { ProductGrid } from '@/components/products/product-grid'
+import { ProductGrid } from '@/components/products/ProductGrid'
 
 interface FeaturedProductsProps {
   products: Product[]

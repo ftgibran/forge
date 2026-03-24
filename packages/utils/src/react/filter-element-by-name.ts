@@ -1,5 +1,5 @@
 import type { ValidElement } from '../types'
-import { getValidElements } from './getValidElements'
+import { getValidElements } from './get-valid-elements'
 
 /**
  * Filters an array of elements by their `displayName` property. Searches through

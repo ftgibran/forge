@@ -16,10 +16,10 @@ import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
-import { EmptyState } from '@/components/empty-state'
-import { PageContainer } from '@/components/page-container'
-import { ProductSkeleton } from '@/components/product-skeleton'
-import { ProductGrid } from '@/components/products/product-grid'
+import { EmptyState } from '@/components/EmptyState'
+import { PageContainer } from '@/components/PageContainer'
+import { ProductGrid } from '@/components/products/ProductGrid'
+import { ProductSkeleton } from '@/components/ProductSkeleton'
 
 export default function VendorDetailPage() {
   const params = useParams<{ slug: string }>()

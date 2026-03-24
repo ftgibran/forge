@@ -21,12 +21,12 @@ import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
-import { PageContainer } from '@/components/page-container'
-import { PriceDisplay } from '@/components/price-display'
-import { ProductImages } from '@/components/products/product-images'
-import { ProductSpecs } from '@/components/products/product-specs'
-import { ReviewForm } from '@/components/reviews/review-form'
-import { ReviewList } from '@/components/reviews/review-list'
+import { PageContainer } from '@/components/PageContainer'
+import { PriceDisplay } from '@/components/PriceDisplay'
+import { ProductImages } from '@/components/products/ProductImages'
+import { ProductSpecs } from '@/components/products/ProductSpecs'
+import { ReviewForm } from '@/components/reviews/ReviewForm'
+import { ReviewList } from '@/components/reviews/ReviewList'
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>()

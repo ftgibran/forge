@@ -14,13 +14,13 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuImage, LuLayers, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { DataTable } from '@/components/data-table'
-import { PageHeader } from '@/components/page-header'
-import { ProductFormDialog } from '@/components/products/product-form-dialog'
-import { ProductImagesDialog } from '@/components/products/product-images-dialog'
-import { ProductVariantsDialog } from '@/components/products/product-variants-dialog'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { DataTable } from '@/components/DataTable'
+import { PageHeader } from '@/components/PageHeader'
+import { ProductFormDialog } from '@/components/products/ProductFormDialog'
+import { ProductImagesDialog } from '@/components/products/ProductImagesDialog'
+import { ProductVariantsDialog } from '@/components/products/ProductVariantsDialog'
+import { TableSkeleton } from '@/components/TableSkeleton'
 
 const statusColor: Record<string, string> = {
   DRAFT: 'gray',

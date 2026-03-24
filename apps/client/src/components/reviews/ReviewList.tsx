@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuStar } from 'react-icons/lu'
 
-import { ReviewCard } from './review-card'
+import { ReviewCard } from './ReviewCard'
 
 interface ReviewListProps {
   productId: string

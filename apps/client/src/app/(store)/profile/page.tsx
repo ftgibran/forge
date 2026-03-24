@@ -5,7 +5,7 @@ import { Card, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
-import { PageContainer } from '@/components/page-container'
+import { PageContainer } from '@/components/PageContainer'
 
 export default function ProfilePage() {
   const { data: user } = useGetProfile()

@@ -10,10 +10,10 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
-import { CategoryFormDialog } from '@/components/categories/category-form-dialog'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { PageHeader } from '@/components/page-header'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { CategoryFormDialog } from '@/components/categories/CategoryFormDialog'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { PageHeader } from '@/components/PageHeader'
+import { TableSkeleton } from '@/components/TableSkeleton'
 
 export default function CategoriesPage() {
   const t = useTranslations('categories')

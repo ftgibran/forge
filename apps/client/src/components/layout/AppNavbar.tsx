@@ -21,9 +21,9 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuSearch, LuShoppingCart, LuStore } from 'react-icons/lu'
 
-import { LocaleSwitcher } from '@/components/locale-switcher'
+import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 
-export function Navbar() {
+export function AppNavbar() {
   const { currentUser, logout } = useAuth()
   const { data: cart } = useGetCart()
   const cartCount =

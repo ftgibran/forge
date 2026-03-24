@@ -5,8 +5,8 @@ import { Card, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 
-import { EmptyState } from '@/components/empty-state'
-import { PageContainer } from '@/components/page-container'
+import { EmptyState } from '@/components/EmptyState'
+import { PageContainer } from '@/components/PageContainer'
 
 export default function CategoriesPage() {
   const { data: categories = [], isLoading } = useGetCategories()

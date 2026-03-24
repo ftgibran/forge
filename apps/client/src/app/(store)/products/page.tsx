@@ -8,11 +8,11 @@ import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Suspense, useState } from 'react'
 
-import { EmptyState } from '@/components/empty-state'
-import { PageContainer } from '@/components/page-container'
-import { ProductSkeleton } from '@/components/product-skeleton'
-import { ProductFilters } from '@/components/products/product-filters'
-import { ProductGrid } from '@/components/products/product-grid'
+import { EmptyState } from '@/components/EmptyState'
+import { PageContainer } from '@/components/PageContainer'
+import { ProductFilters } from '@/components/products/ProductFilters'
+import { ProductGrid } from '@/components/products/ProductGrid'
+import { ProductSkeleton } from '@/components/ProductSkeleton'
 
 function ProductsContent() {
   const searchParams = useSearchParams()

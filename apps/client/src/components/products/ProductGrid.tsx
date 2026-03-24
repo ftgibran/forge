@@ -3,7 +3,7 @@
 import type { Product } from '@app/sdk'
 import { SimpleGrid } from '@chakra-ui/react'
 
-import { ProductCard } from './product-card'
+import { ProductCard } from './ProductCard'
 
 interface ProductGridProps {
   products: Product[]

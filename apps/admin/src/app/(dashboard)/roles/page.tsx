@@ -9,12 +9,12 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu'
 
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { DataTable } from '@/components/data-table'
-import { PageHeader } from '@/components/page-header'
-import { RoleFormDialog } from '@/components/roles/role-form-dialog'
-import { RolePermissionsDialog } from '@/components/roles/role-permissions-dialog'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { DataTable } from '@/components/DataTable'
+import { PageHeader } from '@/components/PageHeader'
+import { RoleFormDialog } from '@/components/roles/RoleFormDialog'
+import { RolePermissionsDialog } from '@/components/roles/RolePermissionsDialog'
+import { TableSkeleton } from '@/components/TableSkeleton'
 
 export default function RolesPage() {
   const t = useTranslations('roles')

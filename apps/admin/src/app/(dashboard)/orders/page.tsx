@@ -8,10 +8,10 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuEye } from 'react-icons/lu'
 
-import { DataTable } from '@/components/data-table'
-import { OrderDetailDialog } from '@/components/orders/order-detail-dialog'
-import { PageHeader } from '@/components/page-header'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { DataTable } from '@/components/DataTable'
+import { OrderDetailDialog } from '@/components/orders/OrderDetailDialog'
+import { PageHeader } from '@/components/PageHeader'
+import { TableSkeleton } from '@/components/TableSkeleton'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',

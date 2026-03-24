@@ -12,7 +12,7 @@ import {
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 
-export function Footer() {
+export function AppFooter() {
   const t = useTranslations('footer')
 
   return (

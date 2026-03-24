@@ -1,1 +1,1 @@
-export * from './ValidElement'
+export * from './valid-element'

@@ -9,12 +9,12 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuClipboardList, LuPencil, LuTrash2 } from 'react-icons/lu'
 
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { DataTable } from '@/components/data-table'
-import { PageHeader } from '@/components/page-header'
-import { TableSkeleton } from '@/components/table-skeleton'
-import { VendorApplicationsDialog } from '@/components/vendors/vendor-applications-dialog'
-import { VendorFormDialog } from '@/components/vendors/vendor-form-dialog'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { DataTable } from '@/components/DataTable'
+import { PageHeader } from '@/components/PageHeader'
+import { TableSkeleton } from '@/components/TableSkeleton'
+import { VendorApplicationsDialog } from '@/components/vendors/VendorApplicationsDialog'
+import { VendorFormDialog } from '@/components/vendors/VendorFormDialog'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',

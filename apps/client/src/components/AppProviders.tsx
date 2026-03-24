@@ -7,7 +7,7 @@ import type { PropsWithChildren } from 'react'
 
 import { API_URL } from '@/config/constants'
 
-export function Providers({ children }: PropsWithChildren) {
+export function AppProviders({ children }: PropsWithChildren) {
   return (
     <SdkProvider apiUrl={API_URL} tokenKey={'token'}>
       <DesignSystemProvider>

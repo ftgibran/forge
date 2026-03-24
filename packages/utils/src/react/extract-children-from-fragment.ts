@@ -1,6 +1,6 @@
 import { Children, isValidElement, type ReactNode } from 'react'
 
-import { isFragmentChild } from './isFragmentChild'
+import { isFragmentChild } from './is-fragment-child'
 
 /**
  * Extracts the children from a React fragment node if the provided children is a valid React fragment.

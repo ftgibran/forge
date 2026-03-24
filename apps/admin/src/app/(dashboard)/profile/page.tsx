@@ -5,7 +5,7 @@ import { formatDate, formatPermission } from '@app/utils'
 import { Badge, Card, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 
-import { PageHeader } from '@/components/page-header'
+import { PageHeader } from '@/components/PageHeader'
 
 export default function ProfilePage() {
   const { data: user } = useGetProfile()

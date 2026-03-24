@@ -58,3 +58,4 @@ pnpm --filter @app/utils run <script>
 - Shared types and utilities go in `packages/utils`.
 - All API responses are wrapped in `{ data: ... }`.
 - **i18n:** The admin app uses `next-intl` with cookie-based locale selection (en + pt-BR). All UI strings must be registered in `apps/admin/messages/{locale}.json` — never hardcode text in components.
+- **File naming:** Frontend components use PascalCase, hooks use camelCase (`use` prefix), contexts use PascalCase + `Context` suffix, utilities use kebab-case. See `apps/admin/CLAUDE.md` for full rules.

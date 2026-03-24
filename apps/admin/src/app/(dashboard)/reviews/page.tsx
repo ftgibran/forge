@@ -10,10 +10,10 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuEye, LuTrash2 } from 'react-icons/lu'
 
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { PageHeader } from '@/components/page-header'
-import { ReviewDetailDialog } from '@/components/reviews/review-detail-dialog'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { PageHeader } from '@/components/PageHeader'
+import { ReviewDetailDialog } from '@/components/reviews/ReviewDetailDialog'
+import { TableSkeleton } from '@/components/TableSkeleton'
 
 export default function ReviewsPage() {
   const t = useTranslations('reviews')

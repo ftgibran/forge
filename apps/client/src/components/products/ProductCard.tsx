@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { LuShoppingCart, LuStar } from 'react-icons/lu'
 
-import { PriceDisplay } from '@/components/price-display'
+import { PriceDisplay } from '@/components/PriceDisplay'
 
 interface ProductCardProps {
   product: Product

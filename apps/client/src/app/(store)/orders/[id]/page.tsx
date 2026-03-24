@@ -15,8 +15,8 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
-import { AuthGuard } from '@/components/auth-guard'
-import { PageContainer } from '@/components/page-container'
+import { AuthGuard } from '@/components/AuthGuard'
+import { PageContainer } from '@/components/PageContainer'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',

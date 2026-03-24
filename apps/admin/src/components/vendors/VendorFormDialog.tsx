@@ -17,7 +17,7 @@ import { Button, Input, Stack, Textarea } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
-import { MediaUpload } from '../media-upload'
+import { MediaUpload } from '../MediaUpload'
 
 interface VendorFormDialogProps {
   open: boolean

@@ -21,9 +21,9 @@ import {
   LuUsers,
 } from 'react-icons/lu'
 
-import { PageHeader } from '@/components/page-header'
-import { StatCard } from '@/components/stat-card'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { PageHeader } from '@/components/PageHeader'
+import { StatCard } from '@/components/StatCard'
+import { TableSkeleton } from '@/components/TableSkeleton'
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard')

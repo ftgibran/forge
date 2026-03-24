@@ -2,7 +2,7 @@
 
 import { Box, Flex } from '@chakra-ui/react'
 
-import { LocaleSwitcher } from '@/components/locale-switcher'
+import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 
 export default function AuthLayout({
   children,

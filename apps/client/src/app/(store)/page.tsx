@@ -2,11 +2,11 @@
 
 import { useGetCategories, useGetProducts } from '@app/sdk'
 
-import { CTASection } from '@/components/landing/cta-section'
-import { FeaturedCategories } from '@/components/landing/featured-categories'
-import { FeaturedProducts } from '@/components/landing/featured-products'
-import { HeroSection } from '@/components/landing/hero-section'
-import { Testimonials } from '@/components/landing/testimonials'
+import { CTASection } from '@/components/landing/CtaSection'
+import { FeaturedCategories } from '@/components/landing/FeaturedCategories'
+import { FeaturedProducts } from '@/components/landing/FeaturedProducts'
+import { HeroSection } from '@/components/landing/HeroSection'
+import { Testimonials } from '@/components/landing/Testimonials'
 
 export default function HomePage() {
   const { data: productsData } = useGetProducts({ limit: 8, status: 'ACTIVE' })

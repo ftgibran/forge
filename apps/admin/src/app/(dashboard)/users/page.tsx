@@ -9,13 +9,13 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuKey, LuPencil, LuPlus, LuShield, LuTrash2 } from 'react-icons/lu'
 
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { DataTable } from '@/components/data-table'
-import { PageHeader } from '@/components/page-header'
-import { TableSkeleton } from '@/components/table-skeleton'
-import { UserFormDialog } from '@/components/users/user-form-dialog'
-import { UserPermissionsDialog } from '@/components/users/user-permissions-dialog'
-import { UserRolesDialog } from '@/components/users/user-roles-dialog'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { DataTable } from '@/components/DataTable'
+import { PageHeader } from '@/components/PageHeader'
+import { TableSkeleton } from '@/components/TableSkeleton'
+import { UserFormDialog } from '@/components/users/UserFormDialog'
+import { UserPermissionsDialog } from '@/components/users/UserPermissionsDialog'
+import { UserRolesDialog } from '@/components/users/UserRolesDialog'
 
 export default function UsersPage() {
   const t = useTranslations('users')

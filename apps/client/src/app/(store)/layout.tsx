@@ -2,8 +2,8 @@
 
 import { Box } from '@chakra-ui/react'
 
-import { Footer } from '@/components/layout/footer'
-import { Navbar } from '@/components/layout/navbar'
+import { AppFooter } from '@/components/layout/AppFooter'
+import { AppNavbar } from '@/components/layout/AppNavbar'
 
 export default function StoreLayout({
   children,
@@ -12,11 +12,11 @@ export default function StoreLayout({
 }) {
   return (
     <>
-      <Navbar />
+      <AppNavbar />
       <Box as={'main'} minH={'calc(100vh - 64px)'}>
         {children}
       </Box>
-      <Footer />
+      <AppFooter />
     </>
   )
 }

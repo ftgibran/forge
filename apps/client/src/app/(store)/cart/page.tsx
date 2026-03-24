@@ -6,11 +6,11 @@ import { Grid, GridItem, Heading, VStack } from '@chakra-ui/react'
 import { useTranslations } from 'next-intl'
 import { LuShoppingCart } from 'react-icons/lu'
 
-import { AuthGuard } from '@/components/auth-guard'
-import { CartItem } from '@/components/cart/cart-item'
-import { CartSummary } from '@/components/cart/cart-summary'
-import { EmptyState } from '@/components/empty-state'
-import { PageContainer } from '@/components/page-container'
+import { AuthGuard } from '@/components/AuthGuard'
+import { CartItem } from '@/components/cart/CartItem'
+import { CartSummary } from '@/components/cart/CartSummary'
+import { EmptyState } from '@/components/EmptyState'
+import { PageContainer } from '@/components/PageContainer'
 
 export default function CartPage() {
   const { data: cart } = useGetCart()

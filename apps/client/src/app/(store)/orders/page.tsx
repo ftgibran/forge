@@ -15,9 +15,9 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { LuPackage } from 'react-icons/lu'
 
-import { AuthGuard } from '@/components/auth-guard'
-import { EmptyState } from '@/components/empty-state'
-import { PageContainer } from '@/components/page-container'
+import { AuthGuard } from '@/components/AuthGuard'
+import { EmptyState } from '@/components/EmptyState'
+import { PageContainer } from '@/components/PageContainer'
 
 const statusColor: Record<string, string> = {
   PENDING: 'yellow',

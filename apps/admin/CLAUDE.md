@@ -26,7 +26,7 @@ pnpm --filter @app/admin run lint       # ESLint
 
 ### Authentication Flow
 1. Login/register calls API, receives JWT `accessToken` + user object
-2. Token stored in `localStorage`, injected via `Authorization: Bearer` header
+2. Token stored in `Cookies`, injected via `Authorization: Bearer` header
 3. `AuthProvider` (React Context in `lib/auth-context.tsx`) checks token on mount via `/auth/me`
 4. Dashboard layout reads `useAuth()` — redirects to `/login` if no user after loading
 5. API client (`lib/api-client.ts`) auto-handles 401 by clearing token and redirecting
@@ -53,6 +53,42 @@ Every dashboard page follows the same pattern:
 ### Shared Package
 - `@app/utils` provides `formatDate`, `formatPermission`, and pagination types
 - Must be listed in `next.config.ts` `transpilePackages`
+
+## File Naming Conventions
+
+### Components
+- **PascalCase** — file name must match the exported component name exactly
+- Examples: `UserCard.tsx`, `LoginForm.tsx`, `Navbar.tsx`
+
+### Hooks
+- **camelCase**, must start with `use`
+- Examples: `useAuth.ts`, `useUser.ts`, `useDebounce.ts`
+
+### Contexts
+- **PascalCase**, suffix with `Context`
+- Examples: `AuthContext.tsx`, `ThemeContext.tsx`
+
+### Utility / Helper Functions
+- **kebab-case**, descriptive action-based names
+- Examples: `format-date.ts`, `parse-currency.ts`, `validate-email.ts`
+
+### CSS Modules
+- **kebab-case**, must include `.module.css`
+- Examples: `user-card.module.css`, `login-form.module.css`
+
+### Folder Structure
+- Group a component and its related files (styles, tests) in a folder named after the component
+  ```
+  components/
+    UserCard/
+      UserCard.tsx
+      user-card.module.css
+  ```
+
+### General Rules
+- Be consistent — do not mix conventions
+- Avoid generic names: `utils.ts`, `helpers.ts`, `index.ts` (unless needed for barrel exports)
+- Invalid: `userCard.tsx`, `user_card.tsx`, `User-card.tsx`
 
 ## Key Conventions
 
