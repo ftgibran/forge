@@ -1,7 +1,7 @@
 'use client'
 
 import { Combobox as ChakraCombobox, Portal } from '@chakra-ui/react'
-import { CloseButton } from './close-button'
+import { CloseButton } from './CloseButton'
 import * as React from 'react'
 
 interface ComboboxControlProps extends ChakraCombobox.ControlProps {
