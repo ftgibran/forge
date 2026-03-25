@@ -2321,7 +2321,49 @@
         ]
       }
     },
-    "/upload": {
+    "/media": {
+      "get": {
+        "operationId": "getMediaList",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all media",
+        "tags": [
+          "Media"
+        ]
+      },
       "post": {
         "operationId": "uploadMedia",
         "parameters": [],
@@ -2354,11 +2396,89 @@
         ],
         "summary": "Upload an image and generate all configured sizes",
         "tags": [
-          "Upload"
+          "Media"
         ]
       }
     },
-    "/upload/{id}": {
+    "/media/{id}": {
+      "get": {
+        "operationId": "getMedia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get media by ID",
+        "tags": [
+          "Media"
+        ]
+      },
+      "patch": {
+        "operationId": "updateMedia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMediaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update media alt text",
+        "tags": [
+          "Media"
+        ]
+      },
       "delete": {
         "operationId": "deleteMedia",
         "parameters": [
@@ -2383,7 +2503,7 @@
         ],
         "summary": "Delete a media record and its S3 objects",
         "tags": [
-          "Upload"
+          "Media"
         ]
       }
     }
@@ -4708,6 +4828,41 @@
           "comment": {
             "type": "string",
             "example": "Updated my review after reprinting."
+          }
+        }
+      },
+      "MediaListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit"
+        ]
+      },
+      "UpdateMediaDto": {
+        "type": "object",
+        "properties": {
+          "alt": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
