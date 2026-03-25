@@ -36,13 +36,13 @@ import {
   UpdateMediaDto,
   UploadFileDto,
 } from './dto'
-import { UploadService } from './upload.service'
+import { MediaService } from './media.service'
 
-@ApiTags('Upload')
+@ApiTags('Media')
 @ApiBearerAuth()
-@Controller('upload')
-export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+@Controller('media')
+export class MediaController {
+  constructor(private readonly mediaService: MediaService) {}
 
   @Get()
   @ApiOperation({
@@ -53,7 +53,7 @@ export class UploadController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   findAll(@Query() query: GetMediaParamsDto): Promise<MediaListResponseDto> {
-    return this.uploadService.findAll(query)
+    return this.mediaService.findAll(query)
   }
 
   @Get(':id')
@@ -64,7 +64,7 @@ export class UploadController {
   @ApiOkResponse({ type: MediaDto })
   @ApiParam({ name: 'id', type: Number })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<MediaDto> {
-    return this.uploadService.findOne(id)
+    return this.mediaService.findOne(id)
   }
 
   @Patch(':id')
@@ -78,7 +78,7 @@ export class UploadController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateMediaDto,
   ): Promise<MediaDto> {
-    return this.uploadService.update(id, dto)
+    return this.mediaService.update(id, dto)
   }
 
   @Post()
@@ -102,7 +102,7 @@ export class UploadController {
     file: Express.Multer.File,
     @Body('alt') alt?: string,
   ): Promise<MediaDto> {
-    return this.uploadService.processAndUpload(file, alt)
+    return this.mediaService.processAndUpload(file, alt)
   }
 
   @Delete(':id')
@@ -113,6 +113,6 @@ export class UploadController {
   })
   @ApiParam({ name: 'id', type: Number })
   delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.uploadService.deleteMedia(id)
+    return this.mediaService.deleteMedia(id)
   }
 }

@@ -16,10 +16,10 @@ import {
   MediaListResponseDto,
   UpdateMediaDto,
 } from './dto'
-import { ImageSizeConfig, uploadConfig } from './upload.config'
+import { ImageSizeConfig, mediaConfig } from './media.config'
 
 @Injectable()
-export class UploadService {
+export class MediaService {
   private readonly s3: S3Client
   private readonly bucket: string
   private readonly publicUrl: string
@@ -54,7 +54,7 @@ export class UploadService {
   ): Promise<MediaDto> {
     const uuid = uuidv4()
     const prefix = `${this.folder}/${uuid}`
-    const { format, options } = uploadConfig.formatOptions
+    const { format, options } = mediaConfig.formatOptions
 
     // Get original metadata
     const metadata = await sharp(file.buffer).metadata()
@@ -79,7 +79,7 @@ export class UploadService {
     const sizesRecord: Record<string, object> = {}
 
     await Promise.all(
-      uploadConfig.imageSizes.map(async (sizeConfig: ImageSizeConfig) => {
+      mediaConfig.imageSizes.map(async (sizeConfig: ImageSizeConfig) => {
         const sizeBuffer = await this.processSize(file.buffer, sizeConfig)
         const sizeName = sizeConfig.name
         const sizeFilename = `${sizeName}.${sizeConfig.formatOptions.format}`

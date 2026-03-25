@@ -11,7 +11,7 @@ export type ImageSizeConfig = {
   formatOptions: ImageFormatOptions
 }
 
-export const uploadConfig = {
+export const mediaConfig = {
   formatOptions: {
     format: 'webp' as const,
     options: { quality: 90 },

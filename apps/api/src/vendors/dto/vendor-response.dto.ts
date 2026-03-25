@@ -5,7 +5,7 @@ import {
   UserSnippetDto,
   VendorSnippetDto,
 } from '@/common'
-import { MediaDto } from '@/upload/dto'
+import { MediaDto } from '@/media/dto'
 
 export class VendorCountDto {
   @ApiProperty()

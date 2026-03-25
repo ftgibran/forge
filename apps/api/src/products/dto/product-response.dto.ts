@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 import { PaginatedResponseDto, VendorSnippetDto } from '@/common'
-import { MediaDto } from '@/upload/dto'
+import { MediaDto } from '@/media/dto'
 
 export class ProductVariantDto {
   @ApiProperty()
