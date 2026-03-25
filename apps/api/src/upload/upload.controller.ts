@@ -3,13 +3,16 @@ import {
   Controller,
   Delete,
   FileTypeValidator,
+  Get,
   HttpCode,
   HttpStatus,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
   ParseIntPipe,
+  Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -19,12 +22,20 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 
-import { MediaDto, UploadFileDto } from './dto'
+import {
+  GetMediaParamsDto,
+  MediaDto,
+  MediaListResponseDto,
+  UpdateMediaDto,
+  UploadFileDto,
+} from './dto'
 import { UploadService } from './upload.service'
 
 @ApiTags('Upload')
@@ -32,6 +43,43 @@ import { UploadService } from './upload.service'
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'List all media',
+    operationId: 'getMediaList',
+  })
+  @ApiOkResponse({ type: MediaListResponseDto })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  findAll(@Query() query: GetMediaParamsDto): Promise<MediaListResponseDto> {
+    return this.uploadService.findAll(query)
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get media by ID',
+    operationId: 'getMedia',
+  })
+  @ApiOkResponse({ type: MediaDto })
+  @ApiParam({ name: 'id', type: Number })
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<MediaDto> {
+    return this.uploadService.findOne(id)
+  }
+
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Update media alt text',
+    operationId: 'updateMedia',
+  })
+  @ApiOkResponse({ type: MediaDto })
+  @ApiParam({ name: 'id', type: Number })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateMediaDto,
+  ): Promise<MediaDto> {
+    return this.uploadService.update(id, dto)
+  }
 
   @Post()
   @ApiOperation({

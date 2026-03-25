@@ -35,9 +35,6 @@ if [ "$NEEDS_SEED" = true ]; then
 fi
 
 step "Starting dev servers"
-info "API        → http://localhost:3000"
-info "Admin      → http://localhost:3001"
-info "Client     → http://localhost:3002"
 pnpm --filter @app/api run start:dev &
 pnpm --filter @app/admin run dev &
 pnpm --filter @app/client run dev &

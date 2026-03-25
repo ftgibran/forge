@@ -10,7 +10,12 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { PrismaService } from '@/prisma'
 
-import { MediaDto } from './dto'
+import {
+  GetMediaParamsDto,
+  MediaDto,
+  MediaListResponseDto,
+  UpdateMediaDto,
+} from './dto'
 import { ImageSizeConfig, uploadConfig } from './upload.config'
 
 @Injectable()
@@ -137,6 +142,48 @@ export class UploadService {
     return pipeline
       .toFormat(format, options ?? {})
       .toBuffer({ resolveWithObject: true })
+  }
+
+  async findAll(query: GetMediaParamsDto): Promise<MediaListResponseDto> {
+    const page = query.page ?? 1
+    const limit = query.limit ?? 20
+    const skip = (page - 1) * limit
+
+    const [items, total] = await Promise.all([
+      this.prisma.media.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.media.count(),
+    ])
+
+    return { items: items as MediaDto[], total, page, limit }
+  }
+
+  async findOne(id: number): Promise<MediaDto> {
+    const media = await this.prisma.media.findUnique({ where: { id } })
+
+    if (!media) {
+      throw new NotFoundException(`Media ${id} not found`)
+    }
+
+    return media as MediaDto
+  }
+
+  async update(id: number, dto: UpdateMediaDto): Promise<MediaDto> {
+    const media = await this.prisma.media.findUnique({ where: { id } })
+
+    if (!media) {
+      throw new NotFoundException(`Media ${id} not found`)
+    }
+
+    const alt = dto.alt
+
+    return this.prisma.media.update({
+      where: { id },
+      data: { alt },
+    }) as Promise<MediaDto>
   }
 
   async deleteMedia(id: number): Promise<void> {

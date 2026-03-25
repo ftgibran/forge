@@ -37,6 +37,7 @@
     "products": "Products",
     "orders": "Orders",
     "reviews": "Reviews",
+    "media": "Media",
     "profile": "Profile"
   },
   "auth": {
@@ -240,6 +241,22 @@
     "memberSince": "Member since",
     "roles": "Roles",
     "directPermissions": "Direct Permissions"
+  },
+  "media": {
+    "title": "Media",
+    "uploadMedia": "Upload Media",
+    "editMedia": "Edit Media",
+    "deleteMedia": "Delete Media",
+    "mediaDeleted": "Media deleted",
+    "mediaUpdated": "Media updated",
+    "loadFailed": "Failed to load media",
+    "thumbnail": "Thumbnail",
+    "filename": "Filename",
+    "dimensions": "Dimensions",
+    "fileSize": "File Size",
+    "altText": "Alt Text",
+    "altTextPlaceholder": "Describe the image...",
+    "noAlt": "—"
   },
   "mediaUpload": {
     "dropzoneLabel": "Click or drag to upload image",

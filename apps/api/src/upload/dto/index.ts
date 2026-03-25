@@ -1,2 +1,5 @@
+export * from './get-media-params.dto'
+export * from './media-list-response.dto'
 export * from './media-response.dto'
+export * from './update-media.dto'
 export * from './upload-file.dto'

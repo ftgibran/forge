@@ -37,6 +37,7 @@
     "products": "Produtos",
     "orders": "Pedidos",
     "reviews": "Avaliações",
+    "media": "Mídia",
     "profile": "Perfil"
   },
   "auth": {
@@ -240,6 +241,22 @@
     "memberSince": "Membro desde",
     "roles": "Papéis",
     "directPermissions": "Permissões Diretas"
+  },
+  "media": {
+    "title": "Mídia",
+    "uploadMedia": "Enviar Mídia",
+    "editMedia": "Editar Mídia",
+    "deleteMedia": "Excluir Mídia",
+    "mediaDeleted": "Mídia excluída",
+    "mediaUpdated": "Mídia atualizada",
+    "loadFailed": "Falha ao carregar mídias",
+    "thumbnail": "Miniatura",
+    "filename": "Nome do arquivo",
+    "dimensions": "Dimensões",
+    "fileSize": "Tamanho",
+    "altText": "Texto Alt",
+    "altTextPlaceholder": "Descreva a imagem...",
+    "noAlt": "—"
   },
   "mediaUpload": {
     "dropzoneLabel": "Clique ou arraste para enviar imagem",

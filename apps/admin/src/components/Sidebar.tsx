@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import {
   LuBox,
   LuFolderTree,
+  LuImage,
   LuKey,
   LuLayoutDashboard,
   LuShield,
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/products', labelKey: 'products', icon: LuBox },
   { href: '/orders', labelKey: 'orders', icon: LuShoppingCart },
   { href: '/reviews', labelKey: 'reviews', icon: LuStar },
+  { href: '/media', labelKey: 'media', icon: LuImage },
   { href: '/profile', labelKey: 'profile', icon: LuUser },
 ] as const
 
