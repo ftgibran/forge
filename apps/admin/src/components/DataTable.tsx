@@ -8,7 +8,7 @@ import {
 } from '@app/theme'
 import { Box, HStack, Table } from '@chakra-ui/react'
 
-interface Column<T> {
+export interface Column<T> {
   header: string
   accessor: keyof T | ((row: T) => React.ReactNode)
 }
@@ -22,7 +22,7 @@ interface DataTableProps<T> {
   onPageChange: (page: number) => void
 }
 
-export function DataTable<T extends { id: string }>({
+export function DataTable<T extends { id: string | number }>({
   columns,
   data,
   total,

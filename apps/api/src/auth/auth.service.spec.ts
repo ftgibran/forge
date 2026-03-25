@@ -82,6 +82,7 @@ describe('AuthService', () => {
         email: 'test@example.com',
         name: 'Test User',
         password: hashedPassword,
+        userRoles: [],
       })
 
       const result = await service.login({

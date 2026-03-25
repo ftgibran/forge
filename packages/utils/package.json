@@ -9,12 +9,18 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage"
   },
   "peerDependencies": {
     "react": ">=18"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
+    "happy-dom": "^20.8.8",
+    "vitest": "^4.0.18",
     "@types/react": "^19.2.13",
     "eslint": "^9.25.0",
     "eslint-config-prettier": "^10.1.8",

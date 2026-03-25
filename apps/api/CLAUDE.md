@@ -69,3 +69,5 @@ src/
 - **E2E tests:** Use real AppModule + database, located in `test/` directory.
 - **Vitest config:** `vitest.config.ts` (unit), `vitest.config.e2e.ts` (e2e with sequential file execution).
 - E2E tests clean the database in `beforeAll` and set up their own fixtures.
+- **When to run:** Always run `pnpm test` after modifying a service or controller. Run `pnpm test:e2e` after changes that affect request/response contracts.
+- **When to write:** Add a `*.spec.ts` alongside every new service or controller. Add an `*.e2e-spec.ts` in `test/` for every new module. Use `src/users/users.controller.spec.ts` as the controller template and `test/roles.e2e-spec.ts` as the e2e template.

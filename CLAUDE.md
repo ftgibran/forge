@@ -52,6 +52,18 @@ pnpm --filter @app/utils run <script>
 
 ## Code Quality
 - **Always run `pnpm lint` after making changes** to verify and fix ESLint errors before considering a task complete.
+- **Run tests after significant changes:** After adding or modifying features, services, controllers, or components, run the relevant test command to verify nothing is broken.
+- **Write tests for new code:** When adding a new service method, controller endpoint, utility function, or UI component, add a corresponding test. Follow existing patterns in `*.spec.ts` (API) and `*.test.tsx` (admin).
+
+### Testing Commands
+```bash
+pnpm test                                    # Run API unit tests
+pnpm test:e2e                                # Run API e2e tests (requires Docker DB)
+pnpm --filter @app/utils run test            # Run utils unit tests
+pnpm --filter @app/admin run test            # Run admin component/page tests
+pnpm --filter @app/api run test:cov          # API unit tests with coverage
+pnpm --filter @app/admin run test:cov        # Admin tests with coverage
+```
 
 ## Key Conventions
 - Each app has its own `CLAUDE.md` with app-specific guidance — refer to those for details.

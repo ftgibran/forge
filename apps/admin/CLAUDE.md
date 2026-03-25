@@ -18,6 +18,19 @@ pnpm --filter @app/admin run lint       # ESLint
 ## Code Quality
 - **Always run `pnpm --filter @app/admin run lint` after making changes** to verify and fix ESLint errors before considering a task complete.
 
+## Testing
+
+- **Framework:** Vitest + React Testing Library
+- **Run:** `pnpm test` (unit/component), `pnpm test:cov` (with coverage)
+- **When to run:** After modifying any component, hook, or page logic.
+- **When to write:** Add a `*.test.tsx` alongside every new component or dialog. Add a `*.test.ts` for every new hook. Follow existing test files as templates.
+- **Mocking strategy:**
+  - SDK hooks mocked via `vi.mock('@app/sdk', ...)` — use `vi.hoisted()` for variables referenced in the factory (avoids TDZ errors).
+  - Use `mockReturnValue` / stable object references for hooks whose return values are used as `useEffect` dependencies (prevents infinite re-render loops).
+  - Translations mocked globally — keys returned as-is (e.g. `t('createUser')` → `'createUser'`).
+  - See `src/test/setup.ts` for global mocks (Chakra UI, next-intl, next/navigation, next/link, @app/theme).
+  - Dialog sub-components should be stubbed in page tests; test dialogs independently in their own test files.
+
 ## Architecture
 
 ### Route Groups
